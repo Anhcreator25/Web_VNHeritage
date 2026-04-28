@@ -1,0 +1,123 @@
+:root {
+            --forest-green: #1a2e1a;
+            --bronze-accent: #c8a96e;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fcfcfc;
+        }
+
+.text-forest { color: var(--forest-green); }
+.text-bronze { color: var(--bronze-accent); }
+.bg-bronze { background-color: var(--bronze-accent) !important; }
+.bg-green { background-color: var(--forest-green) !important; }
+.border-bronze { border-color: var(--bronze-accent) !important; }
+.border-green { border-color: var(--forest-green) !important; }
+
+/* Navbar */
+  .navbar {
+            background-color: var(--forest-green) !important;
+            padding: 1rem 0;
+        }
+        
+        .navbar-brand, .nav-link {
+            color: white !important;
+        }
+
+        .nav-link:hover {
+            color: var(--bronze-accent) !important;
+        }
+
+        /* Sửa lỗi Dropdown xấu */
+        .dropdown-menu {
+            background-color: var(--forest-green);
+            border: 1px solid var(--bronze-accent);
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-top: 15px !important;
+            padding: 0;
+            overflow: hidden;
+            min-width: 220px;
+        }
+
+        .dropdown-item {
+            color:white !important;
+            padding: 12px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--bronze-accent) !important;
+            color: var(--forest-green) !important;
+            padding-left: 25px; /* Hiệu ứng đẩy nhẹ */
+        }
+
+        /* Căn giữa dropdown mũi tên */
+        @media (min-width: 992px) {
+            .dropdown-menu {
+                left: 50% !important;
+                transform: translateX(-50%) !important;
+            }
+        }
+/* Main Tab Buttons */
+.main-tab-btn {
+    width: 120px;
+    height: 75px;
+    border-radius: 15px;
+    border: 1px solid #ddd;
+    background: #1a2e1d;
+    color: #666;
+    transition: all 0.3s ease;
+}
+
+.main-tab-btn.active {
+    background-color: var(--forest-green) !important;
+    color: var(--bronze-accent) !important;
+    border-color: var(--bronze-accent) !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.btn-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    margin-top: 6px;
+}
+
+/* Unified Heritage Card Style */
+.heritage-card-v2 {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.heritage-card-v2:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+}
+
+/* Fix image ratio */
+.img-container {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+}
+
+.img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Giúp ảnh không bị méo, luôn lấp đầy khung */
+    transition: transform 0.5s ease;
+}
+
+.heritage-card-v2:hover .img-container img {
+    transform: scale(1.1);
+}
+
+.card-body {
+    background: #fff;
+}
+
+/* Search bar */
+.search-wrapper { max-width: 600px; }
+.btn-search { background-color: var(--forest-green) !important; border-radius: 0 50px 50px 0 !important; }
+.form-control { border-radius: 50px 0 0 50px !important; }
