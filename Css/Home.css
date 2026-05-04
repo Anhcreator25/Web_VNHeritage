@@ -92,3 +92,32 @@
         }
 
         .text-bronze { color: var(--bronze-accent); }
+
+        /* --- FOOTER --- */
+      
+footer.bg-dark {
+    background-color: #1a2a1a !important; 
+}
+
+.hover-gold:hover {
+    color: #e0c080 !important;
+    padding-left: 5px;
+    transition: all 0.3s ease;
+}
+
+
+.main-layout {
+    min-height: calc(100vh - 60px); 
+}
+
+
+.btn-primary-heritage {
+    background-color: #1a2a1a;
+    border-color: #e0c080;
+    color: #e0c080;
+}
+
+.btn-primary-heritage:hover {
+    background-color: #e0c080;
+    color: #1a2a1a;
+}
