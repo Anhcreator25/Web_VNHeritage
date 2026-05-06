@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <title>Hành trình di sản | VietHeritage</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="Css/Map.css" />
+    <style>
+        .journey-card {
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid rgba(40, 62, 47, 0.1);
+            background: white;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .journey-card img.card-img-top {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            display: block;
+        }
+        .journey-card-body {
+            padding: 1rem 1rem 1.2rem;
+            flex: 1 1 auto;
+        }
+        .journey-card-title {
+            font-size: 1.05rem;
+            margin-bottom: 0.35rem;
+            line-height: 1.2;
+        }
+        .journey-card-desc {
+            min-height: 56px;
+            color: #52604f;
+        }
+        .journey-card .btn {
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+        }
+        .add-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 44px;
+            min-height: 44px;
+            padding: 0 0.75rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+        .add-btn[disabled] {
+            opacity: 0.65;
+            pointer-events: none;
+        }
+        .journey-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+        }
+        @media (min-width: 992px) {
+            .journey-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+        .save-actions button {
+            min-width: 0;
+        }
+        .save-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+        .itinerary-item {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 0.9rem;
+            align-items: center;
+            background: #fff;
+            border: 1px solid rgba(40, 62, 47, 0.08);
+            border-radius: 16px;
+            padding: 0.9rem 0.9rem 0.9rem 0.75rem;
+            margin-bottom: 0.85rem;
+            cursor: grab;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+        .itinerary-item.drag-over {
+            border-color: var(--bronze-accent);
+            transform: scale(1.01);
+        }
+        .itinerary-number {
+            min-width: 2rem;
+            min-height: 2rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bronze-accent);
+            color: white;
+            font-weight: 700;
+            border-radius: 999px;
+            font-size: 0.95rem;
+        }
+        .itinerary-body {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            color: #334236;
+            font-size: 0.95rem;
+        }
+        .itinerary-body strong {
+            font-size: 1rem;
+        }
+        .itinerary-body span {
+            color: #6b7b71;
+            font-size: 0.88rem;
+        }
+        .marker-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            background: var(--forest-green);
+            color: white;
+            border-radius: 50%;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        .itinerary-remove {
+            min-width: 2.5rem;
+            min-height: 2.5rem;
+            border: 1px solid rgba(40, 62, 47, 0.08);
+            border-radius: 999px;
+            padding: 0;
+            font-size: 1.2rem;
+            line-height: 1;
+            color: var(--forest-green);
+        }
+        .itinerary-remove:hover {
+            background: rgba(200, 169, 110, 0.1);
+        }
+        .map-panel {
+            min-height: 410px;
+        }
+        .map-wrapper {
+            min-height: 320px;
+        }
+        .journey-heading {
+            max-width: 720px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg sticky-top shadow">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-3" href="Home.html">
+                <i class="fas fa-star text-bronze me-1"></i> Viet<span class="text-bronze">Heritage</span>
+            </a>
+            <button class="navbar-toggler border-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav ms-auto align-items-center">
+                    <a class="nav-link mx-2" href="Home.html">Trang chủ</a>
+                    <div class="nav-item dropdown mx-2">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            Khám phá
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="Map.html"><i class="fas fa-map-marked-alt me-2"></i>Bản đồ di sản</a></li>
+                            <li><a class="dropdown-item" href="Heritage.html"><i class="fas fa-building me-2"></i>Các di sản</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-item dropdown mx-2">
+                        <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-bs-toggle="dropdown">
+                            Hành trình
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item active" href="Journey.html"><i class="fas fa-book me-2"></i>Tạo lịch trình</a></li>
+                        </ul>
+                    </div>
+                    <a class="nav-link mx-2" href="#">Bài viết</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <main class="container py-5">
+        <div class="page-header mb-4">
+            <div class="journey-heading">
+                <p class="eyebrow mb-2">Hành trình du lịch</p>
+                <h1 class="page-title">Lên kế hoạch hành trình di sản</h1>
+                <p class="page-description mb-0">Chọn điểm di sản yêu thích, thêm vào lịch trình và theo dõi chuyến đi ngay trên bản đồ.</p>
+            </div>
+        </div>
+        <div class="row gy-4">
+            <div class="col-xl-8">
+                <section>
+                    <div class="mb-3 d-flex align-items-center justify-content-between">
+                        <div>
+                            <span class="info-label">Danh sách điểm</span>
+                            <h2 class="schedule-title mb-0">Các di sản có thể thêm</h2>
+                        </div>
+                        <div class="btn-group map-toggle" role="group" aria-label="Chọn loại di sản">
+                            <button id="physicalBtn" type="button" class="btn btn-sm btn-outline-success active">Vật thể</button>
+                            <button id="intangibleBtn" type="button" class="btn btn-sm btn-outline-success">Phi vật thể</button>
+                        </div>
+                    </div>
+                    <div id="site-list" class="journey-grid"></div>
+                </section>
+            </div>
+            <div class="col-xl-4">
+                <aside class="info-panel p-4 shadow-sm">
+                    <div class="info-label">Giỏ hàng hành trình</div>
+                    <h2 class="schedule-title mb-3">Lịch trình của bạn</h2>
+                    <div class="save-actions mb-4">
+                        <button id="save-itinerary-btn" type="button" class="btn btn-success">Lưu hành trình</button>
+                        <button id="clear-itinerary-btn" type="button" class="btn btn-outline-danger">Xóa tất cả</button>
+                    </div>
+                    <div class="text-secondary mb-3">Kéo thả để sắp xếp lại chuyến đi. Nhấn vào biểu tượng + để thêm điểm.</div>
+                    <ul id="itinerary-list" class="list-unstyled mb-3"></ul>
+                    <div id="empty-itinerary" class="text-muted">Chưa có điểm nào trong hành trình.</div>
+                    <div id="route-analysis" class="mt-4 pt-4 border-top"></div>
+                    <div class="text-secondary mt-4">Hành trình được lưu trong bộ nhớ trình duyệt để bạn có thể quay lại sau.</div>
+                </aside>
+            </div>
+        </div>
+    </main>
+    <script src="JS/Detail_info.js"></script>
+    <script src="JS/Journey.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

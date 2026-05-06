@@ -97,6 +97,14 @@ body {
     width: 100%;
 }
 
+.route-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
 .map-bg {
     width: 100%;
     height: auto;
@@ -112,17 +120,18 @@ body {
 
 .map-marker {
     position: absolute;
-    width: 32px;
-    height: 32px;
-    background: none;
-    border: none;
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(206, 141, 35, 0.45);
+    border-radius: 50%;
     padding: 0;
     color: #ce8d23;
-    font-size: 32px;
+    font-size: 20px;
     cursor: pointer;
     pointer-events: auto;
     transform: translate(-50%, -50%);
-    transition: all 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -133,10 +142,44 @@ body {
     content: none;
 }
 
+.marker-year {
+    display: none;
+}
+
+.map-marker:hover .marker-year,
+.map-marker.active .marker-year {
+    display: block;
+    position: absolute;
+    top: -34px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.95);
+    color: #2f3d2e;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    white-space: nowrap;
+    border: 1px solid rgba(46, 67, 47, 0.15);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
 .map-marker:hover,
 .map-marker.active {
     transform: translate(-50%, -50%) scale(1.35);
     filter: drop-shadow(0 0 8px rgba(206, 141, 35, 0.6));
+}
+
+.itinerary-marker {
+    background: rgba(200, 169, 110, 0.95);
+    border-color: rgba(56, 40, 20, 0.35);
+    color: white;
+}
+
+.itinerary-marker:hover,
+.itinerary-marker.active {
+    transform: translate(-50%, -50%) scale(1.5);
+    filter: drop-shadow(0 0 10px rgba(200, 169, 110, 0.7));
 }
 
 .marker-year {
@@ -210,21 +253,121 @@ body {
     font-size: 0.95rem;
 }
 
-.btn-detail {
+.schedule-panel {
+    background: #fbf7f0;
+    border: 1px solid rgba(200, 169, 110, 0.35);
+    border-radius: 24px;
+}
+
+.schedule-panel-header .schedule-title {
+    font-size: 1.3rem;
+    margin: 0;
+    color: var(--forest-green);
+}
+
+.schedule-count {
+    color: #6b7b71;
+    font-size: 0.95rem;
+}
+
+.itinerary-list {
+    min-height: 140px;
+    padding: 0;
+    margin: 0;
+}
+
+.itinerary-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.9rem;
+    align-items: center;
+    background: white;
+    border: 1px solid rgba(40, 62, 47, 0.08);
+    border-radius: 16px;
+    padding: 0.9rem 0.9rem 0.9rem 0.75rem;
+    margin-bottom: 0.8rem;
+    cursor: grab;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.itinerary-item.drag-over {
+    border-color: var(--bronze-accent);
+    transform: scale(1.01);
+}
+
+.itinerary-number {
+    min-width: 2rem;
+    min-height: 2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bronze-accent);
+    color: white;
+    font-weight: 700;
+    border-radius: 999px;
+    font-size: 0.95rem;
+}
+
+.itinerary-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    color: #334236;
+    font-size: 0.95rem;
+}
+
+.itinerary-body strong {
+    font-size: 1rem;
+}
+
+.itinerary-body span {
+    color: #6b7b71;
+    font-size: 0.88rem;
+}
+
+.itinerary-remove {
+    min-width: 2.5rem;
+    min-height: 2.5rem;
+    border: 1px solid rgba(40, 62, 47, 0.08);
+    border-radius: 999px;
+    padding: 0;
+    font-size: 1.2rem;
+    line-height: 1;
+    color: var(--forest-green);
+}
+
+.itinerary-remove:hover {
+    background: rgba(200, 169, 110, 0.1);
+}
+
+.itinerary-footer {
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.btn-detail,
+#add-itinerary-btn {
     background-color: var(--forest-green);
     color: white;
     border: none;
-    border-radius: 8px;
-    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    padding: 0.65rem 1.25rem;
     font-weight: 600;
-    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    min-height: 44px;
+    width: 100%;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
-.btn-detail:hover {
-    background-color: var(--bronze-accent);
-    color: var(--forest-green);
+.btn-detail:hover,
+#add-itinerary-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(26, 46, 26, 0.2);
+    box-shadow: 0 10px 20px rgba(26, 46, 26, 0.18);
+}
+
+.btn-detail:active,
+#add-itinerary-btn:active {
+    transform: translateY(0);
 }
 
 @media (max-width: 991px) {

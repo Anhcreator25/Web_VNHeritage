@@ -34,7 +34,7 @@
                             Hành trình
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-book me-2"></i>Tạo lịch trình</a></li>
+                            <li><a class="dropdown-item" href="Journey.html"><i class="fas fa-book me-2"></i>Tạo lịch trình</a></li>
                         </ul>
                     </div>
                     <a class="nav-link mx-2" href="#">Bài viết</a>
@@ -47,8 +47,8 @@
         <div class="page-header d-flex flex-column flex-lg-row align-items-start justify-content-between gap-3 mb-4">
             <div>
                 <p class="eyebrow mb-2">Bản đồ di sản</p>
-                <h1 class="page-title">Di sản vật thể & phi vật thể</h1>
-                <p class="page-description mb-0">Chọn lớp di sản để xem các điểm trên bản đồ và thông tin chi tiết từ dữ liệu hiện có.</p>
+                <h1 class="page-title">Khám phá hành trình trên bản đồ</h1>
+                <p class="page-description mb-0">Chọn điểm di sản trên bản đồ, thêm vào hành trình và quan sát lộ trình du lịch của bạn.</p>
             </div>
             <div class="btn-group map-toggle" role="group" aria-label="Chọn loại di sản">
                 <button id="physicalBtn" type="button" class="btn btn-outline-success active">Vật thể</button>
@@ -60,6 +60,7 @@
                 <div class="map-panel p-3">
                     <div class="map-wrapper position-relative">
                         <img src="image/VIETNAM1.jpg" alt="Bản đồ Việt Nam" class="map-bg">
+                        <svg id="route-svg" class="route-svg" aria-hidden="true"></svg>
                         <div id="marker-container"></div>
                     </div>
                 </div>
@@ -80,6 +81,20 @@
                     </div>
                     <div id="info-description" class="info-description"></div>
                     <div id="info-extra" class="info-extra mt-4"></div>
+                    <br>
+                    <button id="add-itinerary-btn" class="btn btn-outline-success w-100 mb-4">Thêm vào lịch trình</button>
+                    <div class="schedule-panel p-4 mt-3">
+                        <div class="schedule-panel-header d-flex align-items-start justify-content-between gap-3 mb-3">
+                            <div>
+                                <span class="info-label">Giỏ hàng di sản</span>
+                                <h3 class="schedule-title mb-1">Hành trình của bạn</h3>
+                                <div id="itinerary-count" class="schedule-count">0 điểm</div>
+                            </div>
+                        </div>
+                        <div id="empty-itinerary" class="text-muted mb-3">Chưa có điểm đến nào. Bấm vào "Thêm vào lịch trình" để ghi nhớ điểm đến.</div>
+                        <ul id="itinerary-list" class="itinerary-list list-unstyled mb-3"></ul>
+                        <div class="itinerary-footer text-secondary">Kéo thả để sắp xếp thứ tự hành trình, hệ thống sẽ tự động đánh số cho bạn.</div>
+                    </div>
                 </aside>
             </div>
         </div>
