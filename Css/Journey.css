@@ -1,0 +1,260 @@
+:root {
+    --forest-green: #1a2e1a;
+    --bronze-accent: #c8a96e;
+    --soft-cream: #f8f3ea;
+    --text-dark: #26322f;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+        .text-bronze { color: var(--bronze-accent); }
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: radial-gradient(circle at top, #f7f2e9, #eef0ec 35%, #f8f3ea 100%);
+    color: var(--text-dark);
+}
+
+.navbar {
+    background-color: var(--forest-green) !important;
+    padding: 1rem 0;
+}
+
+.navbar-brand, .nav-link {
+    color: white !important;
+}
+
+.nav-link:hover {
+    color: var(--bronze-accent) !important;
+}
+
+.dropdown-menu {
+    background-color: var(--forest-green);
+    border: 1px solid var(--bronze-accent);
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+    margin-top: 15px !important;
+    padding: 0;
+    overflow: hidden;
+}
+
+.dropdown-item {
+    color: white !important;
+    padding: 12px 18px;
+    transition: all 0.25s ease;
+}
+
+.dropdown-item:hover {
+    background-color: var(--bronze-accent) !important;
+    color: var(--forest-green) !important;
+}
+
+.navbar {
+            background-color: var(--forest-green) !important;
+            padding: 1rem 0;
+        }
+        
+        .navbar-brand, .nav-link {
+            color: white !important;
+        }
+
+        .nav-link:hover {
+            color: var(--bronze-accent) !important;
+        }
+
+   
+        .dropdown-menu {
+            background-color: var(--forest-green);
+            border: 1px solid var(--bronze-accent);
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-top: 15px !important;
+            padding: 0;
+            overflow: hidden;
+            min-width: 220px;
+        }
+
+        .dropdown-item {
+            color: white !important;
+            padding: 12px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--bronze-accent) !important;
+            color: var(--forest-green) !important;
+            padding-left: 25px; /* Hiệu ứng đẩy nhẹ */
+        }
+
+        /* Căn giữa dropdown mũi tên */
+        @media (min-width: 992px) {
+            .dropdown-menu {
+                left: 50% !important;
+                transform: translateX(-50%) !important;
+            }
+        }
+
+        /* --- HERO SECTION --- */
+        .hero-title {
+            color: var(--forest-green);
+            line-height: 1.2;
+        }
+
+        .btn-primary-custom {
+            background-color: var(--forest-green);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+        }
+
+        .btn-primary-custom:hover {
+            background-color: #2a4d2a;
+            color: var(--bronze-accent);
+        }
+.journey-card {
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid rgba(40, 62, 47, 0.1);
+            background: white;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .journey-card img.card-img-top {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            display: block;
+        }
+        .journey-card-body {
+            padding: 1rem 1rem 1.2rem;
+            flex: 1 1 auto;
+        }
+        .journey-card-title {
+            font-size: 1.05rem;
+            margin-bottom: 0.35rem;
+            line-height: 1.2;
+        }
+        .journey-card-desc {
+            min-height: 56px;
+            color: #52604f;
+        }
+        .journey-card .btn {
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+        }
+        .add-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 44px;
+            min-height: 44px;
+            padding: 0 0.75rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+        .add-btn[disabled] {
+            opacity: 0.65;
+            pointer-events: none;
+        }
+        .journey-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+        }
+        @media (min-width: 992px) {
+            .journey-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+        .save-actions button {
+            min-width: 0;
+        }
+        .save-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+        .itinerary-item {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 0.9rem;
+            align-items: center;
+            background: #fff;
+            border: 1px solid rgba(40, 62, 47, 0.08);
+            border-radius: 16px;
+            padding: 0.9rem 0.9rem 0.9rem 0.75rem;
+            margin-bottom: 0.85rem;
+            cursor: grab;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+        .itinerary-item.drag-over {
+            border-color: var(--bronze-accent);
+            transform: scale(1.01);
+        }
+        .itinerary-number {
+            min-width: 2rem;
+            min-height: 2rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bronze-accent);
+            color: white;
+            font-weight: 700;
+            border-radius: 999px;
+            font-size: 0.95rem;
+        }
+        .itinerary-body {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            color: #334236;
+            font-size: 0.95rem;
+        }
+        .itinerary-body strong {
+            font-size: 1rem;
+        }
+        .itinerary-body span {
+            color: #6b7b71;
+            font-size: 0.88rem;
+        }
+        .marker-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            background: var(--forest-green);
+            color: white;
+            border-radius: 50%;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        .itinerary-remove {
+            min-width: 2.5rem;
+            min-height: 2.5rem;
+            border: 1px solid rgba(40, 62, 47, 0.08);
+            border-radius: 999px;
+            padding: 0;
+            font-size: 1.2rem;
+            line-height: 1;
+            color: var(--forest-green);
+        }
+        .itinerary-remove:hover {
+            background: rgba(200, 169, 110, 0.1);
+        }
+        .map-panel {
+            min-height: 410px;
+        }
+        .map-wrapper {
+            min-height: 320px;
+        }
+        .journey-heading {
+            max-width: 720px;
+        }
