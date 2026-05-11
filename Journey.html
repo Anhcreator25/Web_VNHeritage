@@ -8,8 +8,10 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="Css/Journey.css" />
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg sticky-top shadow">
+
         <div class="container">
             <a class="navbar-brand fw-bold fs-3" href="Home.html">
                 <i class="fas fa-star text-bronze me-1"></i> Viet<span class="text-bronze">Heritage</span>
@@ -68,22 +70,29 @@
                 <aside class="info-panel p-4 shadow-sm bg-white" style="border-radius: 15px; position: sticky; top: 100px;">
                     <div class="info-label">Giỏ hàng hành trình</div>
                     <h2 class="schedule-title mb-3">Lịch trình của bạn</h2>
+
                     <div class="save-actions mb-4 d-flex gap-2">
                         <button id="save-itinerary-btn" type="button" class="btn btn-success flex-grow-1">Lưu</button>
-                        <button id="clear-itinerary-btn" type="button" class="btn btn-outline-danger">Xóa</button>
+                        <button id="clear-itinerary-btn" type="button" class="btn btn-outline-danger">Xóa</button>   
                     </div>
-                    
+
+                 <button onclick="getCurrentLocation()" class="btn btn-info w-100 mb-2 fw-bold text-white">
+                     <i class="fas fa-location-arrow me-2"></i> Sử dụng vị trí của tôi
+                 </button>
+
+
                     <ul id="itinerary-list" class="list-unstyled mb-3"></ul>
                     <div id="empty-itinerary" class="text-muted text-center py-4">Chưa có điểm nào.</div>
-                    
                     <div id="route-analysis" class="mt-4 pt-4 border-top"></div>
                 </aside>
             </div>
         </div>
     </main>
-
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="JS/Detail_info.js"></script>
     <script src="JS/Journey.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

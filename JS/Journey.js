@@ -77,38 +77,170 @@ function calculateDistance(lat1, lng1, lat2, lng2) {
     return (R * c) * 1.25; // Hệ số uốn lượn đường bộ Việt Nam
 }
 
+function getCurrentLocation() {
+    if (!navigator.geolocation) {
+        alert("Trình duyệt không hỗ trợ định vị!");
+        return;
+    }
+
+    const btn = event.currentTarget;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lấy...';
+
+    navigator.geolocation.getCurrentPosition((position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        const myLocationKey = `custom_pos`; // Dùng key cố định để không bị thêm trùng nhiều lần
+
+        heritageDataSource[myLocationKey] = {
+            title: "Vị trí của tôi",
+            location: "Tọa độ GPS",
+            isGPS: true
+        };
+        realCoordinates[myLocationKey] = { lat, lng };
+
+        if (!itinerary.includes(myLocationKey)) {
+            itinerary.unshift(myLocationKey);
+        }
+
+        saveItinerary(); // Lưu lại vào localStorage
+        renderItinerary();
+        btn.innerHTML = '<i class="fas fa-location-crosshairs me-2"></i> Lấy vị trí của tôi';
+    }, (error) => {
+        alert("Lỗi GPS: " + error.message);
+    }, { enableHighAccuracy: true });
+}
+
 function openInGoogleMaps() {
-    if (itinerary.length === 0) return;
+    if (itinerary.length < 2) {
+        alert("Vui lòng chọn ít nhất 2 địa điểm!");
+        return;
+    }
+
+    // Lấy danh sách tọa độ từ itinerary
     const coordsList = itinerary.map(key => realCoordinates[key]).filter(c => c);
+    
+    if (coordsList.length < 2) return;
+
+    // Điểm khởi đầu
     const origin = `${coordsList[0].lat},${coordsList[0].lng}`;
+    
+    // Điểm kết thúc
     const destination = `${coordsList[coordsList.length - 1].lat},${coordsList[coordsList.length - 1].lng}`;
+    
+    // Các điểm trung gian
     let waypoints = "";
     if (coordsList.length > 2) {
         waypoints = coordsList.slice(1, -1).map(c => `${c.lat},${c.lng}`).join('|');
     }
-    const mode = (transportMode === 'motorcycle') ? 'motorcycling' : 'driving';
+
+    // travelmode: 'driving' cho ô tô, 'walking' cho đi bộ, 'bicycling' cho xe máy (tùy khu vực)
+    const mode = (transportMode === 'car') ? 'driving' : 'motorcycling';
+    
+    // Tạo link Google Maps chuẩn (dùng bản đồ hướng dẫn đường đi)
     const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&waypoints=${waypoints}&travelmode=${mode}`;
+    
     window.open(url, '_blank');
 }
+
+
+function shareJourney() {
+    if (itinerary.length < 2) {
+        alert("Vui lòng tạo hành trình trước khi chia sẻ!");
+        return;
+    }
+
+    const coordsList = itinerary.map(key => realCoordinates[key]).filter(c => c);
+    const origin = `${coordsList[0].lat},${coordsList[0].lng}`;
+    const destination = `${coordsList[coordsList.length - 1].lat},${coordsList[coordsList.length - 1].lng}`;
+    const waypoints = coordsList.slice(1, -1).map(c => `${c.lat},${c.lng}`).join('|');
+    
+    const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&waypoints=${waypoints}`;
+
+    if (navigator.share) {
+        navigator.share({
+            title: 'Hành trình di sản của tôi',
+            text: 'Cùng khám phá lộ trình di sản mình vừa tạo nhé!',
+            url: googleMapsUrl,
+        }).catch(console.error);
+    } else {
+        navigator.clipboard.writeText(googleMapsUrl);
+        alert("Đã sao chép link hành trình vào bộ nhớ tạm!");
+    }
+}
+
 
 function calculateJourneyStats() {
     if (itinerary.length < 2) return null;
     let totalDistance = 0, totalDrivingTime = 0, segments = [];
+
+    // 1. Tính toán khoảng cách và thời gian di chuyển
     for (let i = 0; i < itinerary.length - 1; i++) {
         const from = realCoordinates[itinerary[i]], to = realCoordinates[itinerary[i+1]];
         if (from && to) {
             const dist = calculateDistance(from.lat, from.lng, to.lat, to.lng);
             const dTime = dist / transportSettings[transportMode].speed;
-            totalDistance += dist; totalDrivingTime += dTime;
-            segments.push({ from: heritageDataSource[itinerary[i]].title, to: heritageDataSource[itinerary[i+1]].title, distance: dist, drivingTime: dTime });
+            totalDistance += dist; 
+            totalDrivingTime += dTime;
+            segments.push({ 
+                from: heritageDataSource[itinerary[i]].title, 
+                to: heritageDataSource[itinerary[i+1]].title, 
+                distance: dist, 
+                drivingTime: dTime 
+            });
         }
     }
-    const totalSiteTime = (itinerary.length * transportSettings[transportMode].timePerSite) / 60;
+
+    // 2. Tính thời gian tham quan (giảm dần nếu đi quá nhiều điểm để tránh kiệt sức)
+    const timePerSite = transportSettings[transportMode].timePerSite;
+    const totalSiteTime = (itinerary.length * timePerSite) / 60;
     const totalTime = totalDrivingTime + totalSiteTime;
-    let suggestedDays = Math.ceil(totalTime / 8) + ' ngày';
-    let suggestedTime = totalTime <= 8 ? 'Khởi hành sáng sớm' : 'Nên lên kế hoạch nhiều chặng nghỉ';
-    return { totalDistance, totalDrivingTime, totalSiteTime, totalTime, segments, suggestedDays, suggestedTime };
+
+    // 3. Phân tích các trường hợp (Nâng cấp ở đây)
+    let suggestedDays = "";
+    let suggestedTime = "";
+    let intensity = ""; // Mức độ dày đặc của lịch trình
+
+    if (totalTime <= 5) {
+        // TRƯỜNG HỢP 1: Chuyến đi ngắn trong buổi
+        suggestedDays = "Nửa ngày (Sáng hoặc Chiều)";
+        suggestedTime = "Khởi hành lúc 7:30 sáng hoặc 13:30 chiều";
+        intensity = "Thoải mái";
+    } else if (totalTime <= 10) {
+        // TRƯỜNG HỢP 2: Chuyến đi trong ngày
+        suggestedDays = "1 ngày trọn vẹn";
+        suggestedTime = "Nên khởi hành sớm từ 7:00 để kịp về trước buổi tối";
+        intensity = "Vừa sức";
+    } else if (totalTime <= 20) {
+        // TRƯỜNG HỢP 3: Chuyến đi cuối tuần (2 ngày)
+        suggestedDays = "2 ngày 1 đêm";
+        suggestedTime = "Nên nghỉ đêm tại " + segments[Math.floor(segments.length/2)].to;
+        intensity = "Lý tưởng cho cuối tuần";
+    } else if (totalDistance > 500) {
+        // TRƯỜNG HỢP 4: Hành trình xuyên tỉnh/Xuyên Việt
+        const days = Math.ceil(totalTime / 7); // Mỗi ngày đi 7 tiếng để đảm bảo sức khỏe
+        suggestedDays = `${days} ngày ${days - 1} đêm`;
+        suggestedTime = "Hành trình dài: Cần kiểm tra bảo dưỡng xe và chuẩn bị thể lực";
+        intensity = "Khám phá chuyên sâu";
+    } else {
+        // TRƯỜNG HỢP 5: Các tour trung bình
+        const days = Math.ceil(totalTime / 8);
+        suggestedDays = `${days} ngày`;
+        suggestedTime = "Lịch trình dàn trải, phù hợp đi cùng gia đình";
+        intensity = "Trung bình";
+    }
+
+    return { 
+        totalDistance, 
+        totalDrivingTime, 
+        totalSiteTime, 
+        totalTime, 
+        segments, 
+        suggestedDays, 
+        suggestedTime,
+        intensity 
+    };
 }
+
 
 function updateRouteAnalysis() {
     routeAnalysis.innerHTML = '';
@@ -131,10 +263,20 @@ function updateRouteAnalysis() {
             <div class="h3 mb-1 text-success fw-bold">${stats.totalDistance.toFixed(1)} km</div>
             <div class="small text-muted mb-2">Tổng thời gian dự kiến: ${formatTime(stats.totalTime)}</div>
             <div class="badge bg-success-subtle text-success p-2 w-100 text-start">📅 Ước tính: ${stats.suggestedDays}</div>
+            <div class="badge bg-success-subtle text-success p-2 w-100 text-start text-wrap ">⏰ Kế hoạch: ${stats.suggestedTime}</div>
+            <div class="badge bg-success-subtle text-success p-2 w-100 text-start">🔥 Mức độ: ${stats.intensity}</div>
         </div>
-        <button onclick="openInGoogleMaps()" class="btn btn-primary w-100 mb-4 shadow-sm" style="background:#4285F4; border:none">
+        <button onclick="openInGoogleMaps()" class="btn btn-primary w-100 mt-2 shadow-sm" style="background:#4285F4; border:none">
             <i class="fab fa-google me-2"></i> Bắt đầu trên Google Maps
         </button>
+        <button onclick="exportDetailedPDF()" class="btn btn-danger w-100 mt-2">
+              <i class="fas fa-file-pdf me-2"></i> Xuất hành trình 
+        </button>
+
+        <button onclick="shareJourney()" class="btn btn-primary w-100 mt-2">
+            <i class="fas fa-share-alt me-2"></i> Chia sẻ lộ trình
+        </button>
+
         <div class="small text-muted">Chi tiết lộ trình:</div>
         <div class="mt-2" style="max-height: 200px; overflow-y: auto;">
             ${stats.segments.map((s, i) => `<div class="mb-2 border-bottom pb-1"><strong>${i+1}.</strong> ${s.from} → ${s.to} <br> <span class="text-success">${s.distance.toFixed(1)}km</span></div>`).join('')}
@@ -203,5 +345,45 @@ intangibleBtn.addEventListener('click', () => { activeCategory='intangible'; int
 saveItineraryBtn.addEventListener('click', () => { saveItinerary(); alert('Hành trình đã được lưu!'); });
 clearItineraryBtn.addEventListener('click', clearItinerary);
 
+function saveItinerary() {
+    // Lưu danh sách ID
+    localStorage.setItem('vhJourney', JSON.stringify(itinerary));
+    // Lưu thêm dữ liệu của các điểm tự tạo (như GPS) để trang khác nạp lại được
+    const customPoints = {};
+    itinerary.forEach(key => {
+        if (key.startsWith('custom_')) {
+            customPoints[key] = {
+                data: heritageDataSource[key],
+                coords: realCoordinates[key]
+            };
+        }
+    });
+    localStorage.setItem('vhCustomPoints', JSON.stringify(customPoints));
+}
+
+function loadItinerary() {
+    try {
+        itinerary = JSON.parse(localStorage.getItem('vhJourney')) || [];
+        const customPoints = JSON.parse(localStorage.getItem('vhCustomPoints')) || {};
+        
+        // Nạp lại các điểm GPS vào nguồn dữ liệu hiện tại của trang
+        for (let key in customPoints) {
+            heritageDataSource[key] = customPoints[key].data;
+            realCoordinates[key] = customPoints[key].coords;
+        }
+    } catch (e) {
+        itinerary = [];
+    }
+}
+
 loadItinerary();
 renderItinerary();
+
+
+window.addEventListener('storage', (e) => {
+    if (e.key === 'vhJourney' || e.key === 'vhCustomPoints') {
+        console.log("Dữ liệu hành trình đã thay đổi từ trang khác, đang cập nhật...");
+        loadItinerary();
+        renderItinerary();
+    }
+});
