@@ -270,12 +270,10 @@ function updateRouteAnalysis() {
             <i class="fab fa-google me-2"></i> Bắt đầu trên Google Maps
         </button>
         <button onclick="exportDetailedPDF()" class="btn btn-danger w-100 mt-2">
-              <i class="fas fa-file-pdf me-2"></i> Xuất hành trình 
+               <i class="fas fa-share-alt me-2"></i> Chia sẻ lộ trình
         </button>
 
-        <button onclick="shareJourney()" class="btn btn-primary w-100 mt-2">
-            <i class="fas fa-share-alt me-2"></i> Chia sẻ lộ trình
-        </button>
+     
 
         <div class="small text-muted">Chi tiết lộ trình:</div>
         <div class="mt-2" style="max-height: 200px; overflow-y: auto;">

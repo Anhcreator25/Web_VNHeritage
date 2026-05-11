@@ -10,6 +10,7 @@
 </head>
 
 <body>
+    
     <nav class="navbar navbar-expand-lg sticky-top shadow">
 
         <div class="container">
@@ -51,6 +52,7 @@
         </div>
 
         <div class="row gy-4">
+            
             <div class="col-xl-8">
                 <section>
                     <div class="mb-3 d-flex align-items-center justify-content-between">
@@ -66,8 +68,10 @@
                     <div id="site-list" class="journey-grid"></div>
                 </section>
             </div>
+
             <div class="col-xl-4">
                 <aside class="info-panel p-4 shadow-sm bg-white" style="border-radius: 15px; position: sticky; top: 100px;">
+
                     <div class="info-label">Giỏ hàng hành trình</div>
                     <h2 class="schedule-title mb-3">Lịch trình của bạn</h2>
 
@@ -76,19 +80,19 @@
                         <button id="clear-itinerary-btn" type="button" class="btn btn-outline-danger">Xóa</button>   
                     </div>
 
-                 <button onclick="getCurrentLocation()" class="btn btn-info w-100 mb-2 fw-bold text-white">
-                     <i class="fas fa-location-arrow me-2"></i> Sử dụng vị trí của tôi
-                 </button>
-
+                    <button onclick="getCurrentLocation()" class="btn w-100 mb-2 fw-bold text-white" style="background-color: #1d845e;">
+                         <i class="fas fa-location-arrow me-2"></i> Sử dụng vị trí của tôi
+                    </button>
 
                     <ul id="itinerary-list" class="list-unstyled mb-3"></ul>
                     <div id="empty-itinerary" class="text-muted text-center py-4">Chưa có điểm nào.</div>
                     <div id="route-analysis" class="mt-4 pt-4 border-top"></div>
                 </aside>
             </div>
+
         </div>
     </main>
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="JS/Detail_info.js"></script>
     <script src="JS/Journey.js"></script>
