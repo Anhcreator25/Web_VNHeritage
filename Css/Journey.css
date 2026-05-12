@@ -1,57 +1,15 @@
 :root {
-    --forest-green: #1a2e1a;
-    --bronze-accent: #c8a96e;
-    --soft-cream: #f8f3ea;
-    --text-dark: #26322f;
-}
+            --forest-green: #1a2e1a;
+            --bronze-accent: #c8a96e;
+        }
 
-* {
-    box-sizing: border-box;
-}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fcfcfc;
+        }
 
-        .text-bronze { color: var(--bronze-accent); }
-body {
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: radial-gradient(circle at top, #f7f2e9, #eef0ec 35%, #f8f3ea 100%);
-    color: var(--text-dark);
-}
-
-.navbar {
-    background-color: var(--forest-green) !important;
-    padding: 1rem 0;
-}
-
-.navbar-brand, .nav-link {
-    color: white !important;
-}
-
-.nav-link:hover {
-    color: var(--bronze-accent) !important;
-}
-
-.dropdown-menu {
-    background-color: var(--forest-green);
-    border: 1px solid var(--bronze-accent);
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
-    margin-top: 15px !important;
-    padding: 0;
-    overflow: hidden;
-}
-
-.dropdown-item {
-    color: white !important;
-    padding: 12px 18px;
-    transition: all 0.25s ease;
-}
-
-.dropdown-item:hover {
-    background-color: var(--bronze-accent) !important;
-    color: var(--forest-green) !important;
-}
-
-.navbar {
+        /* --- NAVBAR & DROPDOWN --- */
+        .navbar {
             background-color: var(--forest-green) !important;
             padding: 1rem 0;
         }
@@ -64,7 +22,7 @@ body {
             color: var(--bronze-accent) !important;
         }
 
-   
+        /* Sửa lỗi Dropdown xấu */
         .dropdown-menu {
             background-color: var(--forest-green);
             border: 1px solid var(--bronze-accent);
@@ -95,6 +53,9 @@ body {
                 left: 50% !important;
                 transform: translateX(-50%) !important;
             }
+        }
+        .text-bronze {
+            color: var(--bronze-accent);
         }
 
        .map-toggle .btn {
@@ -170,14 +131,26 @@ body {
                 grid-template-columns: repeat(3, minmax(0, 1fr));
             }
         }
-        .save-actions button {
-            min-width: 0;
-        }
-        .save-actions {
+.save-actions button {
+    min-width: 0;
+}
+
+
+ .save-actions {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 0.75rem;
         }
+
+/* Custom style for location button (outline) */
+.location-btn {
+    transition: background-color 0.2s, color 0.2s;
+}
+.location-btn:hover {
+    background-color: #1A7F48;
+    color: white;
+    border-color: #1A7F48;
+}
         .itinerary-item {
             display: grid;
             grid-template-columns: auto 1fr auto;
