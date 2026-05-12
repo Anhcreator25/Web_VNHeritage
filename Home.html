@@ -65,13 +65,17 @@
                 và viết tiếp câu chuyện tự hào của dân tộc.
             </p>
 
-            <div class="search-box">
-                <input type="text" placeholder="Bạn muốn khám phá di sản nào hôm nay?">
-                <button>
-                    <i class="fas fa-search me-2"></i>
-                    Tìm ngay
-                </button>
-            </div>
+            <div class="position-relative" id="home-search-wrapper">
+    <div class="search-box">
+        <input type="text" id="home-search" class="form-control" placeholder="Bạn muốn khám phá di sản nào hôm nay?">
+        <button id="home-search-btn" class="btn btn-primary">
+            <i class="fas fa-search me-2"></i>
+            Tìm ngay
+        </button>
+    </div>
+    <!-- Suggestions dropdown -->
+    <div id="home-search-suggestions" class="list-group position-absolute w-100" style="top:100%; left:0; z-index:1050; max-height:200px; overflow-y:auto; display:none;"></div>
+</div>
         </div>
     </div>
 </section>
@@ -197,6 +201,76 @@
     </div>
 </footer>
 
+    <script src="JS/Detail_info.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const input   = document.getElementById('home-search');
+        const btn     = document.getElementById('home-search-btn');
+        const suggDiv = document.getElementById('home-search-suggestions');
+
+        const updateSuggestions = () => {
+            const query = input.value.trim().toLowerCase();
+            suggDiv.innerHTML = '';
+            if (!query) { suggDiv.style.display = 'none'; return; }
+            if (typeof heritageData === 'undefined') { suggDiv.style.display = 'none'; return; }
+
+            // Heritage matches (title or location)
+            const heritageMatches = Object.entries(heritageData)
+                .filter(([id, d]) => d.title.toLowerCase().includes(query) || (d.location && d.location.toLowerCase().includes(query)));
+
+            // Page shortcut matches
+            const pageLinks = [
+                {name: 'Trang chủ', url: 'Home.html'},
+                {name: 'Bản đồ di sản', url: 'Map.html'},
+                {name: 'Các di sản', url: 'Heritage.html'},
+                {name: 'Hành trình', url: 'Journey.html'},
+                {name: 'Bài viết', url: 'Article.html'}
+            ];
+            const pageMatches = pageLinks.filter(p => p.name.toLowerCase().includes(query));
+
+            const allMatches = [];
+            heritageMatches.forEach(([id, d]) => {
+                allMatches.push({type: 'heritage', id, d});
+            });
+            pageMatches.forEach(p => {
+                allMatches.push({type: 'page', name: p.name, url: p.url});
+            });
+
+            const limited = allMatches.slice(0, 5);
+            if (!limited.length) { suggDiv.style.display = 'none'; return; }
+            limited.forEach(item => {
+                const a = document.createElement('a');
+                a.className = 'list-group-item list-group-item-action';
+                if (item.type === 'heritage') {
+                    a.href = `Detail.html?id=${item.id}`;
+                    a.textContent = `${item.d.title} (${item.d.location || ''})`;
+                } else {
+                    a.href = item.url;
+                    a.textContent = item.name;
+                }
+                suggDiv.appendChild(a);
+            });
+            suggDiv.style.display = 'block';
+        };
+
+        const doSearch = () => {
+            const q = input.value.trim();
+            if (q) {
+                window.location.href = `Article.html?search=${encodeURIComponent(q)}`;
+            }
+        };
+
+        btn.addEventListener('click', doSearch);
+        input.addEventListener('keypress', e => { if (e.key === 'Enter') doSearch(); });
+        input.addEventListener('input', updateSuggestions);
+
+        document.addEventListener('click', e => {
+            if (!e.target.closest('#home-search-wrapper')) {
+                suggDiv.style.display = 'none';
+            }
+        });
+    });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
