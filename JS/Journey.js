@@ -247,6 +247,19 @@ function showShareOptions() {
         window.open(zaloUrl, '_blank', 'width=600,height=400');
     };
     btnGroup.appendChild(zaloBtn);
+    // Messenger share (Facebook Messenger)
+    const messengerBtn = document.createElement('button');
+    messengerBtn.type = 'button';
+    messengerBtn.className = 'btn btn-primary btn-sm';
+    messengerBtn.innerHTML = '<i class="fab fa-facebook-messenger me-1"></i>Messenger';
+    messengerBtn.onclick = () => {
+        // Replace YOUR_APP_ID with a real Facebook App ID if you have one
+        const appId = 'YOUR_APP_ID';
+        const redirectUri = encodeURIComponent(window.location.href);
+        const messengerUrl = `https://www.facebook.com/dialog/send?link=${encodeURIComponent(shareUrl)}&app_id=${appId}&redirect_uri=${redirectUri}`;
+        window.open(messengerUrl, '_blank', 'width=600,height=400');
+    };
+    btnGroup.appendChild(messengerBtn);
     // Copy link (text)
     const copyBtn = document.createElement('button');
     copyBtn.type = 'button';
@@ -390,9 +403,6 @@ function updateRouteAnalysis() {
 </button>
 <button onclick="showShareOptions()" class="btn btn-danger w-100 mt-2">
     <i class="fas fa-share-alt me-2"></i> Chia sẻ lộ trình
-</button>
-<button onclick="exportDetailedPDF()" class="btn btn-secondary w-100 mt-2">
-    <i class="fas fa-file-pdf me-2"></i> Xuất PDF
 </button>
 
      
