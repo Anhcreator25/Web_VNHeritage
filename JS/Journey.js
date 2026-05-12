@@ -213,8 +213,9 @@ function showShareOptions() {
     // Create container
     container = document.createElement('div');
     container.id = 'share-options';
-    container.className = 'mt-2 p-2 border rounded';
+    container.className = 'mt-2 p-2 border rounded mx-auto';
     container.style.backgroundColor = '#f8f9fa';
+    container.style.maxWidth = '350px';
     // URL textarea (read‑only)
     const textarea = document.createElement('textarea');
     textarea.id = 'share-url';
@@ -384,15 +385,11 @@ function updateRouteAnalysis() {
             <div class="badge bg-success-subtle text-success p-2 w-100 text-start text-wrap ">⏰ Kế hoạch: ${stats.suggestedTime}</div>
             <div class="badge bg-success-subtle text-success p-2 w-100 text-start">🔥 Mức độ: ${stats.intensity}</div>
         </div>
-        <button onclick="openInGoogleMaps()" class="btn btn-primary w-100 mt-2 shadow-sm" style="background:#4285F4; border:none">
-            <i class="fab fa-google me-2"></i> Bắt đầu trên Google Maps
-        </button>
-<button onclick="showShareOptions()" class="btn btn-danger w-100 mt-2">
-               <i class="fas fa-share-alt me-2"></i> Chia sẻ lộ trình
-         </button>
-         <button onclick="exportDetailedPDF()" class="btn btn-secondary w-100 mt-2">
-               <i class="fas fa-file-pdf me-2"></i> Xuất PDF
-         </button>
+<div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+    <button onclick="openInGoogleMaps()" class="btn btn-primary shadow-sm" style="background:#4285F4; border:none"><i class="fab fa-google me-2"></i> Bắt đầu trên Google Maps</button>
+    <button onclick="showShareOptions()" class="btn btn-danger"><i class="fas fa-share-alt me-2"></i> Chia sẻ lộ trình</button>
+    <button onclick="exportDetailedPDF()" class="btn btn-secondary"><i class="fas fa-file-pdf me-2"></i> Xuất PDF</button>
+</div>
 
      
 
