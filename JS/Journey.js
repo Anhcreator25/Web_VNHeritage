@@ -343,7 +343,11 @@ function updateRouteAnalysis() {
                 correctLevel: QRCode.CorrectLevel.H
             });
         } else {
-            console.warn('QRCode library not loaded');
+            console.warn('QRCode library not loaded, using image fallback.');
+            const img = document.createElement('img');
+            img.src = `https://api.qrserver.com/v1/create-qr-code/?size=128x128&data=${encodeURIComponent(qrGoogleMapsUrl)}`;
+            img.alt = 'QR code';
+            qrDiv.appendChild(img);
         }
     }
 
