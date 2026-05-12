@@ -153,9 +153,9 @@ function shareJourney() {
     const origin = `${coordsList[0].lat},${coordsList[0].lng}`;
     const destination = `${coordsList[coordsList.length - 1].lat},${coordsList[coordsList.length - 1].lng}`;
     const waypoints = coordsList.slice(1, -1).map(c => `${c.lat},${c.lng}`).join('|');
-    
     const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&waypoints=${waypoints}`;
 
+    // Try native share API
     if (navigator.share) {
         navigator.share({
             title: 'Hành trình di sản của tôi',
@@ -163,9 +163,16 @@ function shareJourney() {
             url: googleMapsUrl,
         }).catch(console.error);
     } else {
-        navigator.clipboard.writeText(googleMapsUrl);
-        alert("Đã sao chép link hành trình vào bộ nhớ tạm!");
+        // Fallback: copy to clipboard and show the link
+        navigator.clipboard.writeText(googleMapsUrl).then(() => {
+            alert("Đã sao chép link hành trình vào bộ nhớ tạm!");
+        }).catch(() => {
+            // If clipboard fails, just show the link
+            alert("Link hành trình:\n" + googleMapsUrl);
+        });
     }
+    // Also open the route in a new tab for immediate preview
+    window.open(googleMapsUrl, '_blank');
 }
 
 
