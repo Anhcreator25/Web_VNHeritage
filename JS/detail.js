@@ -2,7 +2,7 @@ const params = new URLSearchParams(window.location.search);
 
 const id = params.get('id');
 
-const article = articleData[id];
+const article = articlesData[id];
 
 if(article){
 
