@@ -169,6 +169,22 @@ function shareJourney() {
 }
 
 
+function exportDetailedPDF() {
+    const element = document.getElementById('route-analysis');
+    if (!element) {
+        alert('Không có nội dung để xuất PDF');
+        return;
+    }
+    const opt = {
+        margin: 0.5,
+        filename: 'lo_trinh.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    html2pdf().set(opt).from(element).save();
+}
+
 function calculateJourneyStats() {
     if (itinerary.length < 2) return null;
     let totalDistance = 0, totalDrivingTime = 0, segments = [];
@@ -269,9 +285,12 @@ function updateRouteAnalysis() {
         <button onclick="openInGoogleMaps()" class="btn btn-primary w-100 mt-2 shadow-sm" style="background:#4285F4; border:none">
             <i class="fab fa-google me-2"></i> Bắt đầu trên Google Maps
         </button>
-        <button onclick="exportDetailedPDF()" class="btn btn-danger w-100 mt-2">
+<button onclick="shareJourney()" class="btn btn-danger w-100 mt-2">
                <i class="fas fa-share-alt me-2"></i> Chia sẻ lộ trình
-        </button>
+         </button>
+         <button onclick="exportDetailedPDF()" class="btn btn-secondary w-100 mt-2">
+               <i class="fas fa-file-pdf me-2"></i> Xuất PDF
+         </button>
 
      
 
@@ -280,6 +299,24 @@ function updateRouteAnalysis() {
             ${stats.segments.map((s, i) => `<div class="mb-2 border-bottom pb-1"><strong>${i+1}.</strong> ${s.from} → ${s.to} <br> <span class="text-success">${s.distance.toFixed(1)}km</span></div>`).join('')}
         </div>
     `;
+    // Generate QR code for Google Maps link
+    const qrCoords = itinerary.map(key => realCoordinates[key]).filter(c => c);
+    const qrOrigin = `${qrCoords[0].lat},${qrCoords[0].lng}`;
+    const qrDestination = `${qrCoords[qrCoords.length - 1].lat},${qrCoords[qrCoords.length - 1].lng}`;
+    const qrWaypoints = qrCoords.slice(1, -1).map(c => `${c.lat},${c.lng}`).join('|');
+    const qrGoogleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${qrOrigin}&destination=${qrDestination}&waypoints=${qrWaypoints}`;
+    const qrDiv = document.createElement('div');
+    qrDiv.id = 'qr-code';
+    qrDiv.className = 'mt-3 text-center';
+    routeAnalysis.appendChild(qrDiv);
+    if (typeof QRCode !== 'undefined') {
+        new QRCode(qrDiv, {
+            text: qrGoogleMapsUrl,
+            width: 128,
+            height: 128,
+            correctLevel: QRCode.CorrectLevel.H
+        });
+    }
 
     document.querySelectorAll('.transport-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
