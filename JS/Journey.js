@@ -385,11 +385,15 @@ function updateRouteAnalysis() {
             <div class="badge bg-success-subtle text-success p-2 w-100 text-start text-wrap ">⏰ Kế hoạch: ${stats.suggestedTime}</div>
             <div class="badge bg-success-subtle text-success p-2 w-100 text-start">🔥 Mức độ: ${stats.intensity}</div>
         </div>
-<div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
-    <button onclick="openInGoogleMaps()" class="btn btn-primary shadow-sm" style="background:#4285F4; border:none"><i class="fab fa-google me-2"></i> Bắt đầu trên Google Maps</button>
-    <button onclick="showShareOptions()" class="btn btn-danger"><i class="fas fa-share-alt me-2"></i> Chia sẻ lộ trình</button>
-    <button onclick="exportDetailedPDF()" class="btn btn-secondary"><i class="fas fa-file-pdf me-2"></i> Xuất PDF</button>
-</div>
+<button onclick="openInGoogleMaps()" class="btn btn-primary w-100 mt-2 shadow-sm" style="background:#4285F4; border:none">
+    <i class="fab fa-google me-2"></i> Bắt đầu trên Google Maps
+</button>
+<button onclick="shareJourney()" class="btn btn-danger w-100 mt-2">
+    <i class="fas fa-share-alt me-2"></i> Chia sẻ lộ trình
+</button>
+<button onclick="exportDetailedPDF()" class="btn btn-secondary w-100 mt-2">
+    <i class="fas fa-file-pdf me-2"></i> Xuất PDF
+</button>
 
      
 
