@@ -306,23 +306,31 @@ function updateRouteAnalysis() {
             ${stats.segments.map((s, i) => `<div class="mb-2 border-bottom pb-1"><strong>${i+1}.</strong> ${s.from} → ${s.to} <br> <span class="text-success">${s.distance.toFixed(1)}km</span></div>`).join('')}
         </div>
     `;
-    // Generate QR code for Google Maps link
+    // Generate QR code for Google Maps link (ensuring clean container)
     const qrCoords = itinerary.map(key => realCoordinates[key]).filter(c => c);
-    const qrOrigin = `${qrCoords[0].lat},${qrCoords[0].lng}`;
-    const qrDestination = `${qrCoords[qrCoords.length - 1].lat},${qrCoords[qrCoords.length - 1].lng}`;
-    const qrWaypoints = qrCoords.slice(1, -1).map(c => `${c.lat},${c.lng}`).join('|');
-    const qrGoogleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${qrOrigin}&destination=${qrDestination}&waypoints=${qrWaypoints}`;
-    const qrDiv = document.createElement('div');
-    qrDiv.id = 'qr-code';
-    qrDiv.className = 'mt-3 text-center';
-    routeAnalysis.appendChild(qrDiv);
-    if (typeof QRCode !== 'undefined') {
-        new QRCode(qrDiv, {
-            text: qrGoogleMapsUrl,
-            width: 128,
-            height: 128,
-            correctLevel: QRCode.CorrectLevel.H
-        });
+    if (qrCoords.length >= 2) {
+        const qrOrigin = `${qrCoords[0].lat},${qrCoords[0].lng}`;
+        const qrDestination = `${qrCoords[qrCoords.length - 1].lat},${qrCoords[qrCoords.length - 1].lng}`;
+        const qrWaypoints = qrCoords.slice(1, -1).map(c => `${c.lat},${c.lng}`).join('|');
+        const qrGoogleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${qrOrigin}&destination=${qrDestination}&waypoints=${qrWaypoints}`;
+        // Remove any existing QR code element
+        const existingQr = document.getElementById('qr-code');
+        if (existingQr) existingQr.remove();
+        const qrDiv = document.createElement('div');
+        qrDiv.id = 'qr-code';
+        qrDiv.className = 'mt-3 text-center';
+        routeAnalysis.appendChild(qrDiv);
+        console.log('Generating QR code for URL:', qrGoogleMapsUrl);
+        if (typeof QRCode !== 'undefined') {
+            new QRCode(qrDiv, {
+                text: qrGoogleMapsUrl,
+                width: 128,
+                height: 128,
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        } else {
+            console.warn('QRCode library not loaded');
+        }
     }
 
     document.querySelectorAll('.transport-btn').forEach(btn => {
