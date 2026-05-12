@@ -31,31 +31,6 @@ const mapPositions = {
     'dong-ho': { left: '33.3%', top: '28%' }
 };
 
-const realCoordinates = {
-    'hue': { lat: 16.4637, lng: 107.5905 },
-    'ha-long': { lat: 20.9100, lng: 107.1839 },
-    'hoi-an': { lat: 15.8801, lng: 108.3202 },
-    'my-son': { lat: 15.7440, lng: 107.8268 },
-    'thang-long': { lat: 21.0285, lng: 105.8542 },
-    'phong-nha': { lat: 17.5906, lng: 106.2625 },
-    'thanh-nha-ho': { lat: 20.0775, lng: 105.6045 },
-    'nha-nhac': { lat: 16.4637, lng: 107.5905 },
-    'cong-chieng': { lat: 13.9833, lng: 108.0000 },
-    'quan-ho': { lat: 21.1861, lng: 106.0763 },
-    'ca-tru': { lat: 21.0285, lng: 105.8542 },
-    'hoi-giong': { lat: 21.2444, lng: 105.8239 },
-    'hat-xoan': { lat: 21.3200, lng: 105.4000 },
-    'don-ca-tai-tu': { lat: 10.0333, lng: 105.7833 },
-    'vi-giam': { lat: 18.6700, lng: 105.6800 },
-    'keo-co': { lat: 21.1333, lng: 105.8667 },
-    'tho-mau': { lat: 20.4461, lng: 106.1750 },
-    'bai-choi': { lat: 13.7820, lng: 109.2190 },
-    'hat-then': { lat: 22.3000, lng: 105.8000 },
-    'xoe-thai': { lat: 21.6000, lng: 104.5000 },
-    'gom-cham': { lat: 11.5200, lng: 108.9400 },
-    'via-ba': { lat: 10.6800, lng: 105.0800 },
-    'dong-ho': { lat: 21.1000, lng: 106.1000 }
-};
 const markerContainer = document.getElementById('marker-container');
 const infoTitle = document.getElementById('info-title');
 const infoImg = document.getElementById('info-img');
@@ -75,13 +50,6 @@ const mapImg = document.querySelector('.map-bg');
 let activeCategory = 'physical';
 let activeSiteKey = categories.physical[0];
 let itinerary = [];
-let transportMode = 'motorcycle';
-const transportSettings = {
-    motorcycle: { speed: 40, timePerSite: 90 },
-    car: { speed: 60, timePerSite: 90 }
-};
-const routeAnalysis = document.getElementById('route-analysis');
-const geoBtn = document.getElementById('geo-btn');
 
 function loadItinerary() {
     try {
@@ -382,13 +350,12 @@ function setCategory(category) {
 physicalBtn.addEventListener('click', () => setCategory('physical'));
 intangibleBtn.addEventListener('click', () => setCategory('intangible'));
 addItineraryBtn.addEventListener('click', () => addToItinerary(activeSiteKey));
-geoBtn && geoBtn.addEventListener('click', getCurrentLocation);
 
 // reposition markers and redraw route when the image or window changes size
 if (mapImg) {
     mapImg.addEventListener('load', () => {
         positionMarkers();
-    updateRoute(); updateRouteAnalysis();
+        updateRoute();
     });
 }
 window.addEventListener('resize', () => {
@@ -399,108 +366,4 @@ window.addEventListener('resize', () => {
 renderMarkers();
 selectSite(activeSiteKey);
 loadItinerary();
-
-// Additional map enhancements
-
-function calculateDistance(lat1, lng1, lat2, lng2) {
-    const R = 6371;
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLng = (lng2 - lng1) * Math.PI / 180;
-    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-              Math.sin(dLng / 2) * Math.sin(dLng / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return (R * c) * 1.25;
-}
-
-function calculateJourneyStats() {
-    if (itinerary.length < 2) return null;
-    let totalDistance = 0, totalDrivingTime = 0;
-    for (let i = 0; i < itinerary.length - 1; i++) {
-        const from = realCoordinates[itinerary[i]];
-        const to = realCoordinates[itinerary[i + 1]];
-        if (from && to) {
-            const dist = calculateDistance(from.lat, from.lng, to.lat, to.lng);
-            const dTime = dist / transportSettings[transportMode].speed;
-            totalDistance += dist;
-            totalDrivingTime += dTime;
-        }
-    }
-    const timePerSite = transportSettings[transportMode].timePerSite;
-    const totalSiteTime = (itinerary.length * timePerSite) / 60;
-    const totalTime = totalDrivingTime + totalSiteTime;
-    return { totalDistance, totalDrivingTime, totalSiteTime, totalTime };
-}
-
-function updateRouteAnalysis() {
-    routeAnalysis.innerHTML = '';
-    if (itinerary.length < 2) {
-        routeAnalysis.innerHTML = '<div class=\'text-muted\'>Thêm ít nhất 2 điểm để xem phân tích.</div>';
-        return;
-    }
-    const stats = calculateJourneyStats();
-    const formatTime = (h) => `${Math.floor(h)}h ${Math.round((h - Math.floor(h)) * 60)}m`;
-    routeAnalysis.innerHTML = `
-        <div class='mb-2'>Tổng khoảng cách: ${stats.totalDistance.toFixed(1)} km</div>
-        <div class='mb-2'>Thời gian dự kiến: ${formatTime(stats.totalTime)}</div>
-        <button class='btn btn-primary w-100 mt-2' onclick='openInGoogleMaps()'>Mở trên Google Maps</button>
-        <button class='btn btn-secondary w-100 mt-2' onclick='showShareOptions()'>Chia sẻ</button>
-    `;
-}
-
-function openInGoogleMaps() {
-    if (itinerary.length < 2) {
-        alert('Vui lòng chọn ít nhất 2 địa điểm!');
-        return;
-    }
-    const coordsList = itinerary.map(key => realCoordinates[key]).filter(c => c);
-    const origin = `${coordsList[0].lat},${coordsList[0].lng}`;
-    const destination = `${coordsList[coordsList.length - 1].lat},${coordsList[coordsList.length - 1].lng}`;
-    let waypoints = '';
-    if (coordsList.length > 2) {
-        waypoints = coordsList.slice(1, -1).map(c => `${c.lat},${c.lng}`).join('|');
-    }
-    const mode = (transportMode === 'car') ? 'driving' : 'motorcycling';
-    const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&waypoints=${waypoints}&travelmode=${mode}`;
-    window.open(url, '_blank');
-}
-
-function showShareOptions() {
-    const coordsList = itinerary.map(key => realCoordinates[key]).filter(c => c);
-    const origin = `${coordsList[0].lat},${coordsList[0].lng}`;
-    const destination = `${coordsList[coordsList.length - 1].lat},${coordsList[coordsList.length - 1].lng}`;
-    const waypoints = coordsList.slice(1, -1).map(c => `${c.lat},${c.lng}`).join('|');
-    const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&waypoints=${waypoints}`;
-    if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(url).then(() => {
-            alert('Đã sao chép link hành trình vào bộ nhớ tạm.');
-        }).catch(() => {
-            prompt('Sao chép link dưới đây:', url);
-        });
-    } else {
-        prompt('Sao chép link dưới đây:', url);
-    }
-}
-
-function getCurrentLocation() {
-    if (!navigator.geolocation) {
-        alert('Trình duyệt không hỗ trợ định vị!');
-        return;
-    }
-    const btn = event.currentTarget;
-    btn.innerHTML = '<i class=\'fas fa-spinner fa-spin\'></i> Đang lấy...';
-    navigator.geolocation.getCurrentPosition((pos) => {
-        const lat = pos.coords.latitude;
-        const lng = pos.coords.longitude;
-        const key = 'custom_pos';
-        heritageDataSource[key] = { title: 'Vị trí của tôi', location: 'Tọa độ GPS', isGPS: true };
-        realCoordinates[key] = { lat, lng };
-        if (!itinerary.includes(key)) itinerary.unshift(key);
-        saveItinerary();
-        renderItinerary();
-        btn.innerHTML = '<i class=\'fas fa-location-crosshairs me-2\'></i>Lấy vị trí của tôi';
-    }, (error) => {
-        alert('Lỗi GPS: ' + error.message);
-    }, { enableHighAccuracy: true });
-}
 renderItinerary();
