@@ -155,23 +155,37 @@ function shareJourney() {
     const waypoints = coordsList.slice(1, -1).map(c => `${c.lat},${c.lng}`).join('|');
     const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&waypoints=${waypoints}`;
 
-    // Try native share API
-    if (navigator.share) {
+    // Helper: fallback copy/display
+    const fallbackCopy = (url) => {
+        // Clipboard API requires secure context
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(url).then(() => {
+                alert("Đã sao chép link hành trình vào bộ nhớ tạm!");
+            }).catch(() => {
+                // If clipboard fails, prompt the user
+                prompt("Sao chép link dưới đây:", url);
+            });
+        } else {
+            // Non‑secure context: just show the URL
+            prompt("Sao chép link dưới đây:", url);
+        }
+    };
+
+    // Try native share API only in secure contexts (required by Web Share)
+    if (navigator.share && window.isSecureContext) {
         navigator.share({
             title: 'Hành trình di sản của tôi',
             text: 'Cùng khám phá lộ trình di sản mình vừa tạo nhé!',
             url: googleMapsUrl,
-        }).catch(console.error);
-    } else {
-        // Fallback: copy to clipboard and show the link
-        navigator.clipboard.writeText(googleMapsUrl).then(() => {
-            alert("Đã sao chép link hành trình vào bộ nhớ tạm!");
-        }).catch(() => {
-            // If clipboard fails, just show the link
-            alert("Link hành trình:\n" + googleMapsUrl);
+        }).catch(err => {
+            console.error('Share API failed:', err);
+            fallbackCopy(googleMapsUrl);
         });
+    } else {
+        fallbackCopy(googleMapsUrl);
     }
-    // Also open the route in a new tab for immediate preview
+
+    // Open the route in a new tab for immediate preview (should be allowed as a user gesture)
     window.open(googleMapsUrl, '_blank');
 }
 
