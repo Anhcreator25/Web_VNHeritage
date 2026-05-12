@@ -1,17 +1,20 @@
-# Article.html (Nâng cấp đầy đủ chức năng)
-
-```html
-<!doctype html>
+<!DOCTYPE html>
 <html lang="vi">
 
 <head>
-    <title>BÀI VIẾT | Di Sản Việt Nam</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="Css/Home.css">
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Bài viết | VietHeritage</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+          rel="stylesheet">
 
     <style>
 
@@ -19,191 +22,72 @@
             background: #f8f6f1;
         }
 
-        .article-hero{
+        .hero{
+
             background:
-            linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
+            linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.5)),
             url('image/hoian.jpg');
+
             background-size: cover;
+
             background-position: center;
-            min-height: 65vh;
-            display: flex;
-            align-items: center;
+
+            padding: 120px 0;
+
             color: white;
+
+            text-align: center;
         }
 
-        .article-hero h1{
-            font-size: 4rem;
-            font-weight: 700;
-            line-height: 1.3;
+        .hero h1{
+            font-size: 60px;
+            font-weight: bold;
         }
 
-        .article-search{
-            background: white;
-            padding: 8px;
-            border-radius: 50px;
-            display: flex;
-            overflow: hidden;
+        .search-box{
+            max-width: 600px;
+            margin: auto;
             margin-top: 30px;
-            max-width: 700px;
-        }
-
-        .article-search input{
-            border: none;
-            outline: none;
-            flex: 1;
-            padding: 15px;
-        }
-
-        .article-search button{
-            border: none;
-            background: #16351f;
-            color: white;
-            padding: 15px 30px;
-            border-radius: 40px;
-        }
-
-        .category-btn{
-            border: none;
-            background: white;
-            padding: 12px 24px;
-            border-radius: 30px;
-            margin: 8px;
-            font-weight: 600;
-            transition: 0.3s;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-        }
-
-        .category-btn:hover,
-        .category-btn.active{
-            background: #16351f;
-            color: white;
-        }
-
-        .featured-card,
-        .article-card,
-        .sidebar-box,
-        .newsletter{
-            background: white;
-            border-radius: 25px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-        }
-
-        .featured-card img{
-            width: 100%;
-            height: 500px;
-            object-fit: cover;
-        }
-
-        .featured-content{
-            padding: 40px;
-        }
-
-        .featured-content h2{
-            font-weight: 700;
-            line-height: 1.5;
         }
 
         .article-card{
-            transition: 0.4s;
-            height: 100%;
+
+            border: none;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+
+            transition: .3s;
+
+            background: white;
         }
 
         .article-card:hover{
+
             transform: translateY(-10px);
+
+            box-shadow: 0 10px 25px rgba(0,0,0,.15);
         }
 
         .article-card img{
-            width: 100%;
-            height: 240px;
+
+            height: 250px;
+
             object-fit: cover;
-        }
-
-        .article-content{
-            padding: 25px;
-        }
-
-        .article-tag{
-            background: #16351f;
-            color: white;
-            display: inline-block;
-            padding: 8px 18px;
-            border-radius: 30px;
-            font-size: 13px;
-        }
-
-        .recent-post{
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-            cursor: pointer;
-        }
-
-        .recent-post img{
-            width: 90px;
-            height: 90px;
-            object-fit: cover;
-            border-radius: 15px;
         }
 
         .tag{
-            display: inline-block;
-            background: #f1f1f1;
-            padding: 10px 18px;
-            border-radius: 30px;
-            margin: 5px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
 
-        .tag:hover{
-            background: #16351f;
+            background: black;
+
             color: white;
-        }
 
-        .newsletter{
-            padding: 60px;
-        }
+            padding: 5px 12px;
 
-        .newsletter-input{
-            display: flex;
-            overflow: hidden;
-            border: 1px solid #ddd;
             border-radius: 50px;
-            margin-top: 30px;
-        }
 
-        .newsletter-input input{
-            border: none;
-            outline: none;
-            flex: 1;
-            padding: 18px;
-        }
-
-        .newsletter-input button{
-            border: none;
-            background: #16351f;
-            color: white;
-            padding: 18px 35px;
-            font-weight: 600;
-        }
-
-        .hidden{
-            display: none !important;
-        }
-
-        @media(max-width:768px){
-
-            .article-hero h1{
-                font-size: 2.5rem;
-            }
-
-            .article-search,
-            .newsletter-input{
-                flex-direction: column;
-                border-radius: 20px;
-            }
-
+            font-size: 14px;
         }
 
     </style>
@@ -212,93 +96,28 @@
 
 <body>
 
-<nav class="navbar navbar-expand-lg sticky-top shadow">
-    <div class="container">
 
-        <a class="navbar-brand fw-bold fs-3" href="Home.html">
-            <i class="fas fa-star text-bronze me-1"></i>
-            Viet<span class="text-bronze">Heritage</span>
-        </a>
 
-        <button class="navbar-toggler border-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
-        </button>
+<!-- HERO -->
 
-        <div class="collapse navbar-collapse" id="navbarNav">
-
-            <div class="navbar-nav ms-auto align-items-center">
-
-                <a class="nav-link mx-2" href="Home.html">Trang chủ</a>
-                <a class="nav-link mx-2" href="Map.html">Bản đồ</a>
-                <a class="nav-link mx-2" href="Heritage.html">Di sản</a>
-                <a class="nav-link mx-2" href="Journey.html">Hành trình</a>
-                <a class="nav-link active mx-2" href="Article.html">Bài viết</a>
-
-            </div>
-
-        </div>
-
-    </div>
-</nav>
-
-<section class="article-hero">
+<section class="hero">
 
     <div class="container">
 
         <h1>
-            Những câu chuyện phía sau di sản Việt Nam
+            Bài viết Di sản Việt Nam
         </h1>
 
-        <p class="lead mt-4">
-            Khám phá văn hóa, lịch sử và những giá trị vượt thời gian của các di sản UNESCO Việt Nam.
+        <p class="lead mt-3">
+            Khám phá vẻ đẹp văn hóa và thiên nhiên Việt Nam
         </p>
 
-        <div class="article-search">
-            <input type="text" id="searchInput" placeholder="Tìm kiếm bài viết...">
+        <div class="search-box">
 
-            <button id="searchBtn">
-                <i class="fas fa-search me-2"></i>
-                Tìm kiếm
-            </button>
-        </div>
-
-    </div>
-
-</section>
-
-<section class="container text-center py-5">
-
-    <button class="category-btn active" data-category="all">Tất cả</button>
-    <button class="category-btn" data-category="Thiên nhiên">Thiên nhiên</button>
-    <button class="category-btn" data-category="Kiến trúc">Kiến trúc</button>
-    <button class="category-btn" data-category="Du lịch">Du lịch</button>
-    <button class="category-btn" data-category="Ẩm thực">Ẩm thực</button>
-
-</section>
-
-<section class="container mb-5">
-
-    <div class="featured-card">
-
-        <img src="image/hoian.jpg">
-
-        <div class="featured-content">
-
-            <span class="text-uppercase fw-bold text-bronze">
-                Bài viết nổi bật
-            </span>
-
-            <h2 class="mt-3">
-                Khám phá vẻ đẹp cổ kính của Phố cổ Hội An về đêm
-            </h2>
-
-            <p class="mt-4">
-                Hội An mang trong mình vẻ đẹp giao thoa giữa lịch sử và văn hóa.
-            </p>
-
-            <a href="Detail.html?id=hoian" class="btn btn-outline-dark rounded-pill px-4 mt-3">
-                Đọc bài viết
-            </a>
+            <input type="text"
+                   id="searchInput"
+                   class="form-control form-control-lg"
+                   placeholder="Tìm kiếm bài viết...">
 
         </div>
 
@@ -306,129 +125,50 @@
 
 </section>
 
-<section class="container pb-5">
 
-    <div class="row">
 
-        <div class="col-lg-8">
+<!-- ARTICLES -->
 
-            <div class="row g-4" id="articleContainer">
+<section class="container py-5">
 
-                <div class="col-md-6 article-item" data-category="Thiên nhiên" data-title="Vịnh Hạ Long">
+    <div class="row g-4"
+         id="article-list">
 
-                    <div class="article-card">
 
-                        <img src="image/vhl.jpg">
 
-                        <div class="article-content">
+        <!-- HOI AN -->
 
-                            <span class="article-tag">Thiên nhiên</span>
+        <div class="col-lg-4 article-item">
 
-                            <h5>
-                                <a href="Detail.html?id=halong" class="text-dark text-decoration-none">
-                                    5 trải nghiệm không thể bỏ lỡ tại Vịnh Hạ Long
-                                </a>
-                            </h5>
+            <div class="card article-card h-100">
 
-                            <p>
-                                Hành trình khám phá kỳ quan thiên nhiên thế giới.
-                            </p>
+                <img src="image/hoian.jpg"
+                     class="card-img-top">
 
-                            <div class="d-flex justify-content-between mt-4">
+                <div class="card-body p-4">
 
-                                <small class="text-muted">
-                                    <i class="far fa-calendar me-1"></i>
-                                    07/05/2026
-                                </small>
+                    <span class="tag">
+                        Văn hóa
+                    </span>
 
-                                <small class="text-muted">
-                                    <i class="far fa-eye me-1"></i>
-                                    2.1k lượt xem
-                                </small>
+                    <h4 class="fw-bold mt-3">
 
-                            </div>
+                        Khám phá vẻ đẹp cổ kính của Hội An
 
-                        </div>
+                    </h4>
 
-                    </div>
+                    <p class="text-muted">
 
-                </div>
+                        Những ngôi nhà vàng cổ kính và đèn lồng rực rỡ tạo nên vẻ đẹp đặc trưng.
 
-                <div class="col-md-6 article-item" data-category="Kiến trúc" data-title="Huế">
+                    </p>
 
-                    <div class="article-card">
+                    <a href="Detail.html?id=hoian"
+                       class="btn btn-outline-dark rounded-pill px-4">
 
-                        <img src="image/hue.jpg">
+                        Đọc bài viết
 
-                        <div class="article-content">
-
-                            <span class="article-tag">Kiến trúc</span>
-
-                            <h5>
-                                <a href="Detail.html?id=hue" class="text-dark text-decoration-none">
-                                    Những nét kiến trúc độc đáo của Cố đô Huế
-                                </a>
-                            </h5>
-
-                            <p>
-                                Khám phá vẻ đẹp cung đình triều Nguyễn.
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="col-md-6 article-item" data-category="Du lịch" data-title="Tràng An">
-
-                    <div class="article-card">
-
-                        <img src="image/trangan.jpg">
-
-                        <div class="article-content">
-
-                            <span class="article-tag">Du lịch</span>
-
-                            <h5>
-                                <a href="Detail.html?id=trangan" class="text-dark text-decoration-none">
-                                    Hành trình khám phá Tràng An trong 2 ngày
-                                </a>
-                            </h5>
-
-                            <p>
-                                Gợi ý lịch trình hợp lý giúp bạn trải nghiệm trọn vẹn.
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="col-md-6 article-item" data-category="Ẩm thực" data-title="Ẩm thực">
-
-                    <div class="article-card">
-
-                        <img src="image/amthuc.jpg">
-
-                        <div class="article-content">
-
-                            <span class="article-tag">Ẩm thực</span>
-
-                            <h5>
-                                <a href="Detail.html?id=amthuc" class="text-dark text-decoration-none">
-                                    Ẩm thực đặc sắc tại các vùng di sản Việt Nam
-                                </a>
-                            </h5>
-
-                            <p>
-                                Hành trình khám phá hương vị Việt Nam.
-                            </p>
-
-                        </div>
-
-                    </div>
+                    </a>
 
                 </div>
 
@@ -436,189 +176,161 @@
 
         </div>
 
-        <div class="col-lg-4 mt-5 mt-lg-0">
 
-            <div class="sidebar-box">
 
-                <h4 class="fw-bold mb-4">Bài viết gần đây</h4>
+        <!-- HA LONG -->
 
-                <div class="recent-post" onclick="window.location.href='Detail.html?id=hoian'">
-                    <img src="image/hoian.jpg">
-                    <div>
-                        <h6>Khám phá Hội An về đêm</h6>
-                        <small class="text-muted">07/05/2026</small>
-                    </div>
+        <div class="col-lg-4 article-item">
+
+            <div class="card article-card h-100">
+
+                <img src="image/vhl.jpg"
+                     class="card-img-top">
+
+                <div class="card-body p-4">
+
+                    <span class="tag">
+                        Thiên nhiên
+                    </span>
+
+                    <h4 class="fw-bold mt-3">
+
+                        5 trải nghiệm không thể bỏ lỡ tại Vịnh Hạ Long
+
+                    </h4>
+
+                    <p class="text-muted">
+
+                        Hành trình khám phá kỳ quan thiên nhiên nổi tiếng nhất Việt Nam.
+
+                    </p>
+
+                    <a href="Detail.html?id=halong"
+                       class="btn btn-outline-dark rounded-pill px-4">
+
+                        Đọc bài viết
+
+                    </a>
+
                 </div>
-
-                <div class="recent-post" onclick="window.location.href='Detail.html?id=hue'">
-                    <img src="image/hue.jpg">
-                    <div>
-                        <h6>Di sản kiến trúc triều Nguyễn</h6>
-                        <small class="text-muted">05/05/2026</small>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="sidebar-box">
-
-                <h4 class="fw-bold mb-4">Tags phổ biến</h4>
-
-                <span class="tag" data-tag="Huế">Huế</span>
-                <span class="tag" data-tag="Hội An">Hội An</span>
-                <span class="tag" data-tag="Vịnh Hạ Long">Vịnh Hạ Long</span>
-                <span class="tag" data-tag="Ẩm thực">Ẩm thực</span>
 
             </div>
 
         </div>
 
-    </div>
 
-</section>
 
-<section class="container my-5 pb-5">
+        <!-- HUE -->
 
-    <div class="newsletter text-center">
+        <div class="col-lg-4 article-item">
 
-        <h2 class="fw-bold display-5">
-            Đăng ký nhận bài viết mới
-        </h2>
+            <div class="card article-card h-100">
 
-        <p class="text-muted mt-4">
-            Nhận thông tin mới nhất về di sản và du lịch Việt Nam.
-        </p>
+                <img src="image/hue.jpg"
+                     class="card-img-top">
 
-        <div class="newsletter-input">
+                <div class="card-body p-4">
 
-            <input type="email" id="emailInput" placeholder="Nhập email của bạn...">
+                    <span class="tag">
+                        Kiến trúc
+                    </span>
 
-            <button id="subscribeBtn">
-                Đăng ký
-            </button>
+                    <h4 class="fw-bold mt-3">
+
+                        Những nét kiến trúc độc đáo của Cố đô Huế
+
+                    </h4>
+
+                    <p class="text-muted">
+
+                        Huế mang đậm dấu ấn triều Nguyễn với các công trình cổ kính.
+
+                    </p>
+
+                    <a href="Detail.html?id=hue"
+                       class="btn btn-outline-dark rounded-pill px-4">
+
+                        Đọc bài viết
+
+                    </a>
+
+                </div>
+
+            </div>
 
         </div>
 
+
+
     </div>
 
 </section>
 
-<footer class="bg-dark text-light pt-5 pb-3">
 
-    <div class="container text-center">
-
-        <p class="small text-secondary mb-0">
-            © 2026 VietHeritage - Tôn vinh giá trị Việt
-        </p>
-
-    </div>
-
-</footer>
 
 <script>
 
-    const searchInput = document.getElementById('searchInput');
-    const searchBtn = document.getElementById('searchBtn');
-    const articles = document.querySelectorAll('.article-item');
-    const categoryBtns = document.querySelectorAll('.category-btn');
+    const input =
+    document.getElementById("searchInput");
 
-    function filterArticles(){
+    input.addEventListener("keyup", function(){
 
-        const keyword = searchInput.value.toLowerCase();
-        const activeCategory = document.querySelector('.category-btn.active').dataset.category;
+        const value =
+        input.value.toLowerCase();
 
-        articles.forEach(article => {
+        const items =
+        document.querySelectorAll(".article-item");
 
-            const title = article.dataset.title.toLowerCase();
-            const category = article.dataset.category;
+        items.forEach(item => {
 
-            const matchKeyword = title.includes(keyword);
-            const matchCategory = activeCategory === 'all' || category === activeCategory;
+            const text =
+            item.innerText.toLowerCase();
 
-            if(matchKeyword && matchCategory){
-                article.classList.remove('hidden');
-            }
-            else{
-                article.classList.add('hidden');
-            }
-
-        });
-    }
-
-    searchBtn.addEventListener('click', filterArticles);
-
-    searchInput.addEventListener('keyup', filterArticles);
-
-    categoryBtns.forEach(btn => {
-
-        btn.addEventListener('click', () => {
-
-            categoryBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            filterArticles();
+            item.style.display =
+            text.includes(value)
+            ? "block"
+            : "none";
 
         });
 
     });
 
-    document.querySelectorAll('.tag').forEach(tag => {
 
-        tag.addEventListener('click', () => {
 
-            searchInput.value = tag.dataset.tag;
-            filterArticles();
+    // SEARCH FROM HOME PAGE
 
-            window.scrollTo({
-                top: document.getElementById('articleContainer').offsetTop - 100,
-                behavior: 'smooth'
-            });
+    const params =
+    new URLSearchParams(window.location.search);
+
+    const search =
+    params.get('search');
+
+    if(search){
+
+        input.value = search;
+
+        const items =
+        document.querySelectorAll(".article-item");
+
+        items.forEach(item => {
+
+            const text =
+            item.innerText.toLowerCase();
+
+            item.style.display =
+            text.includes(search.toLowerCase())
+            ? "block"
+            : "none";
 
         });
 
-    });
-
-    document.getElementById('subscribeBtn').addEventListener('click', () => {
-
-        const email = document.getElementById('emailInput').value;
-
-        if(email === ''){
-            alert('Vui lòng nhập email');
-            return;
-        }
-
-        alert('Đăng ký thành công: ' + email);
-
-        document.getElementById('emailInput').value = '';
-
-    });
-
-    const params = new URLSearchParams(window.location.search);
-    const searchValue = params.get('search');
-
-    if(searchValue){
-        searchInput.value = searchValue;
-        filterArticles();
     }
 
 </script>
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
-```
-
-# Chức năng đã hoạt động
-
-* Thanh tìm kiếm bài viết
-* Filter theo category
-* Tag filter
-* Đọc bài viết → chuyển trang
-* Search từ Home.html sang Article.html
-* Newsletter subscribe
-* Recent posts clickable
-* Responsive mobile
-* Hover animation
-* URL search parameter
-* Active navigation
