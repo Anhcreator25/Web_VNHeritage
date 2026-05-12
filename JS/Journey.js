@@ -190,6 +190,87 @@ function shareJourney() {
 }
 
 
+function getShareUrl() {
+    const coordsList = itinerary.map(key => realCoordinates[key]).filter(c => c);
+    const origin = `${coordsList[0].lat},${coordsList[0].lng}`;
+    const destination = `${coordsList[coordsList.length - 1].lat},${coordsList[coordsList.length - 1].lng}`;
+    const waypoints = coordsList.slice(1, -1).map(c => `${c.lat},${c.lng}`).join('|');
+    return `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&waypoints=${waypoints}`;
+}
+
+function showShareOptions() {
+    if (itinerary.length < 2) {
+        alert("Vui lòng tạo hành trình trước khi chia sẻ!");
+        return;
+    }
+    const shareUrl = getShareUrl();
+    // Toggle existing container
+    let container = document.getElementById('share-options');
+    if (container) {
+        container.style.display = container.style.display === 'none' ? 'block' : 'none';
+        return;
+    }
+    // Create container
+    container = document.createElement('div');
+    container.id = 'share-options';
+    container.className = 'mt-2 p-2 border rounded';
+    container.style.backgroundColor = '#f8f9fa';
+    // URL textarea (read‑only)
+    const textarea = document.createElement('textarea');
+    textarea.id = 'share-url';
+    textarea.className = 'form-control mb-2';
+    textarea.rows = 3;
+    textarea.readOnly = true;
+    textarea.value = shareUrl;
+    container.appendChild(textarea);
+    // Buttons container
+    const btnGroup = document.createElement('div');
+    btnGroup.className = 'd-flex flex-wrap gap-2';
+    // Facebook share
+    const fbBtn = document.createElement('button');
+    fbBtn.type = 'button';
+    fbBtn.className = 'btn btn-primary btn-sm';
+    fbBtn.innerHTML = '<i class="fab fa-facebook me-1"></i>Facebook';
+    fbBtn.onclick = () => {
+        const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+        window.open(fbUrl, '_blank', 'width=600,height=400');
+    };
+    btnGroup.appendChild(fbBtn);
+    // Zalo share (web)
+    const zaloBtn = document.createElement('button');
+    zaloBtn.type = 'button';
+    zaloBtn.className = 'btn btn-success btn-sm';
+    zaloBtn.innerHTML = '<i class="fas fa-sms me-1"></i>Zalo';
+    zaloBtn.onclick = () => {
+        const zaloUrl = `https://zalo.me/share?url=${encodeURIComponent(shareUrl)}`;
+        window.open(zaloUrl, '_blank', 'width=600,height=400');
+    };
+    btnGroup.appendChild(zaloBtn);
+    // Copy link (text)
+    const copyBtn = document.createElement('button');
+    copyBtn.type = 'button';
+    copyBtn.className = 'btn btn-secondary btn-sm';
+    copyBtn.innerHTML = '<i class="fas fa-copy me-1"></i>Sao chép link';
+    copyBtn.onclick = () => {
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(shareUrl).then(() => {
+                alert('Đã sao chép link vào bộ nhớ tạm!');
+            }).catch(() => {
+                prompt('Sao chép link dưới đây:', shareUrl);
+            });
+        } else {
+            prompt('Sao chép link dưới đây:', shareUrl);
+        }
+    };
+    btnGroup.appendChild(copyBtn);
+    container.appendChild(btnGroup);
+    // Insert after the share button
+    const shareBtn = document.querySelector('button[onclick="showShareOptions()"]');
+    if (shareBtn) {
+        shareBtn.parentNode.insertBefore(container, shareBtn.nextSibling);
+    }
+}
+
 function exportDetailedPDF() {
     const element = document.getElementById('route-analysis');
     if (!element) {
@@ -306,7 +387,7 @@ function updateRouteAnalysis() {
         <button onclick="openInGoogleMaps()" class="btn btn-primary w-100 mt-2 shadow-sm" style="background:#4285F4; border:none">
             <i class="fab fa-google me-2"></i> Bắt đầu trên Google Maps
         </button>
-<button onclick="shareJourney()" class="btn btn-danger w-100 mt-2">
+<button onclick="showShareOptions()" class="btn btn-danger w-100 mt-2">
                <i class="fas fa-share-alt me-2"></i> Chia sẻ lộ trình
          </button>
          <button onclick="exportDetailedPDF()" class="btn btn-secondary w-100 mt-2">
