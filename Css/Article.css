@@ -1,0 +1,59 @@
+:root {
+            --forest-green: #1a2e1a;
+            --bronze-accent: #c8a96e;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fcfcfc;
+        }
+
+        /* --- NAVBAR & DROPDOWN --- */
+        .navbar {
+            background-color: var(--forest-green) !important;
+            padding: 1rem 0;
+        }
+        
+        .navbar-brand, .nav-link {
+            color: white !important;
+        }
+
+        .nav-link:hover {
+            color: var(--bronze-accent) !important;
+        }
+
+        /* Sửa lỗi Dropdown xấu */
+        .dropdown-menu {
+            background-color: var(--forest-green);
+            border: 1px solid var(--bronze-accent);
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-top: 15px !important;
+            padding: 0;
+            overflow: hidden;
+            min-width: 220px;
+        }
+
+        .dropdown-item {
+            color: white !important;
+            padding: 12px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--bronze-accent) !important;
+            color: var(--forest-green) !important;
+            padding-left: 25px; /* Hiệu ứng đẩy nhẹ */
+        }
+
+        /* Căn giữa dropdown mũi tên */
+        @media (min-width: 992px) {
+            .dropdown-menu {
+                left: 50% !important;
+                transform: translateX(-50%) !important;
+            }
+        }
+
+          .text-bronze { color: var(--bronze-accent); }
+
