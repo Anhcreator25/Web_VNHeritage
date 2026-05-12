@@ -75,6 +75,16 @@ function calculateDistance(lat1, lng1, lat2, lng2) {
               Math.sin(dLng / 2) * Math.sin(dLng / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return (R * c) * 1.25; // Hệ số uốn lượn đường bộ Việt Nam
+    }
+
+// Escape HTML to prevent injection when inserting user‑controlled text
+function escapeHTML(str) {
+    if (!str) return '';
+    return str.replace(/&/g, '&amp;')
+              .replace(/</g, '&lt;')
+              .replace(/>/g, '&gt;')
+              .replace(/"/g, '&quot;')
+              .replace(/'/g, '&#39;');
 }
 
 function getCurrentLocation() {
@@ -230,7 +240,7 @@ function showShareOptions() {
     // Facebook share
     const fbBtn = document.createElement('button');
     fbBtn.type = 'button';
-    fbBtn.className = 'btn btn-primary btn-sm';
+    fbBtn.className = 'btn btn-primary btn-sm flex-fill';
     fbBtn.innerHTML = '<i class="fab fa-facebook me-1"></i>Facebook';
     fbBtn.onclick = () => {
         const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
@@ -240,7 +250,7 @@ function showShareOptions() {
     // Zalo share (web)
     const zaloBtn = document.createElement('button');
     zaloBtn.type = 'button';
-    zaloBtn.className = 'btn btn-success btn-sm';
+    zaloBtn.className = 'btn btn-success btn-sm flex-fill';
     zaloBtn.innerHTML = '<i class="fas fa-sms me-1"></i>Zalo';
     zaloBtn.onclick = () => {
         const zaloUrl = `https://zalo.me/share?url=${encodeURIComponent(shareUrl)}`;
@@ -250,7 +260,7 @@ function showShareOptions() {
     // Messenger share (Facebook Messenger)
     const messengerBtn = document.createElement('button');
     messengerBtn.type = 'button';
-    messengerBtn.className = 'btn btn-primary btn-sm';
+    messengerBtn.className = 'btn btn-primary btn-sm flex-fill';
     messengerBtn.innerHTML = '<i class="fab fa-facebook-messenger me-1"></i>Messenger';
     messengerBtn.onclick = () => {
         // Replace YOUR_APP_ID with a real Facebook App ID if you have one
@@ -260,10 +270,20 @@ function showShareOptions() {
         window.open(messengerUrl, '_blank', 'width=600,height=400');
     };
     btnGroup.appendChild(messengerBtn);
+    // WhatsApp share
+    const whatsappBtn = document.createElement('button');
+    whatsappBtn.type = 'button';
+    whatsappBtn.className = 'btn btn-success btn-sm flex-fill';
+    whatsappBtn.innerHTML = '<i class="fab fa-whatsapp me-1"></i>WhatsApp';
+    whatsappBtn.onclick = () => {
+        const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareUrl)}`;
+        window.open(whatsappUrl, '_blank', 'width=600,height=400');
+    };
+    btnGroup.appendChild(whatsappBtn);
     // Copy link (text)
     const copyBtn = document.createElement('button');
     copyBtn.type = 'button';
-    copyBtn.className = 'btn btn-secondary btn-sm';
+    copyBtn.className = 'btn btn-secondary btn-sm flex-fill';
     copyBtn.innerHTML = '<i class="fas fa-copy me-1"></i>Sao chép link';
     copyBtn.onclick = () => {
         if (navigator.clipboard && window.isSecureContext) {
@@ -334,31 +354,31 @@ function calculateJourneyStats() {
 
     if (totalTime <= 5) {
         // TRƯỜNG HỢP 1: Chuyến đi ngắn trong buổi
-        suggestedDays = "Nửa ngày (Sáng hoặc Chiều)";
-        suggestedTime = "Khởi hành lúc 7:30 sáng hoặc 13:30 chiều";
-        intensity = "Thoải mái";
+        suggestedDays = "Nửa ngày (Sáng hoặc Chiều) - Thời gian di chuyển ngắn, phù hợp cho chuyến đi nhanh.";
+        suggestedTime = "Khởi hành lúc 7:30 sáng hoặc 13:30 chiều, lịch trình nhẹ nhàng và không gây áp lực.";
+        intensity = "Thoải mái - Nhịp độ nhẹ nhàng, tập trung vào nghỉ ngơi.";
     } else if (totalTime <= 10) {
         // TRƯỜNG HỢP 2: Chuyến đi trong ngày
-        suggestedDays = "1 ngày trọn vẹn";
-        suggestedTime = "Nên khởi hành sớm từ 7:00 để kịp về trước buổi tối";
-        intensity = "Vừa sức";
+        suggestedDays = "1 ngày trọn vẹn - Khám phá các điểm nổi bật trong một ngày.";
+        suggestedTime = "Nên khởi hành sớm từ 7:00 để kịp về trước buổi tối, tối đa 10h di chuyển và tham quan.";
+        intensity = "Vừa sức - Cân bằng giữa di chuyển và tham quan.";
     } else if (totalTime <= 20) {
         // TRƯỜNG HỢP 3: Chuyến đi cuối tuần (2 ngày)
-        suggestedDays = "2 ngày 1 đêm";
-        suggestedTime = "Nên nghỉ đêm tại " + segments[Math.floor(segments.length/2)].to;
-        intensity = "Lý tưởng cho cuối tuần";
+        suggestedDays = "2 ngày 1 đêm - Thời gian nghỉ ngơi hợp lý, trải nghiệm sâu hơn.";
+        suggestedTime = "Nên nghỉ đêm tại " + segments[Math.floor(segments.length/2)].to + ", bắt đầu sớm ngày đầu và tiếp tục ngày thứ hai.";
+        intensity = "Lý tưởng cho cuối tuần - Thời gian vừa đủ, không gấp rối.";
     } else if (totalDistance > 500) {
         // TRƯỜNG HỢP 4: Hành trình xuyên tỉnh/Xuyên Việt
         const days = Math.ceil(totalTime / 7); // Mỗi ngày đi 7 tiếng để đảm bảo sức khỏe
-        suggestedDays = `${days} ngày ${days - 1} đêm`;
-        suggestedTime = "Hành trình dài: Cần kiểm tra bảo dưỡng xe và chuẩn bị thể lực";
-        intensity = "Khám phá chuyên sâu";
+        suggestedDays = `${days} ngày ${days - 1} đêm - Hành trình kéo dài, khám phá nhiều địa điểm.`;
+        suggestedTime = "Hành trình dài: Cần kiểm tra bảo dưỡng xe, chuẩn bị thể lực, và nghỉ ngơi mỗi ngày để duy trì sức khỏe.";
+        intensity = "Khám phá chuyên sâu - Mức độ dày đặc, phù hợp cho du khách yêu thích khám phá.";
     } else {
         // TRƯỜNG HỢP 5: Các tour trung bình
         const days = Math.ceil(totalTime / 8);
-        suggestedDays = `${days} ngày`;
-        suggestedTime = "Lịch trình dàn trải, phù hợp đi cùng gia đình";
-        intensity = "Trung bình";
+        suggestedDays = `${days} ngày - Lịch trình dàn trải, thích hợp cho gia đình và nhóm.`;
+        suggestedTime = "Lịch trình dàn trải, phù hợp đi cùng gia đình, mỗi ngày không quá 8h di chuyển và tham quan.";
+        intensity = "Trung bình - Nhịp độ cân bằng, thích hợp cho mọi nhóm.";
     }
 
     return { 
@@ -391,13 +411,14 @@ function updateRouteAnalysis() {
                 <button class="btn btn-sm btn-outline-success transport-btn ${transportMode === 'car'?'active':''}" data-mode="car"><i class="fas fa-car"></i> Ô tô</button>
             </div>
         </div>
-        <div class="p-3 bg-light rounded-3 mb-3">
-            <div class="h3 mb-1 text-success fw-bold">${stats.totalDistance.toFixed(1)} km</div>
-            <div class="small text-muted mb-2">Tổng thời gian dự kiến: ${formatTime(stats.totalTime)}</div>
-            <div class="badge bg-success-subtle text-success p-2 w-100 text-start">📅 Ước tính: ${stats.suggestedDays}</div>
-            <div class="badge bg-success-subtle text-success p-2 w-100 text-start text-wrap ">⏰ Kế hoạch: ${stats.suggestedTime}</div>
-            <div class="badge bg-success-subtle text-success p-2 w-100 text-start">🔥 Mức độ: ${stats.intensity}</div>
-        </div>
+         <div class="p-3 bg-light rounded-3 mb-3">
+             <div class="h3 mb-1 text-success fw-bold">${stats.totalDistance.toFixed(1)} km</div>
+             <div class="small text-muted mb-2">Tổng thời gian dự kiến: ${formatTime(stats.totalTime)}</div>
+             <div class="small text-muted mb-2">Thời gian tham quan: ${formatTime(stats.totalSiteTime)}</div>
+             <div class="badge bg-success-subtle text-dark p-2 w-100 text-start text-wrap">📅 Ước tính: ${escapeHTML(stats.suggestedDays)}</div>
+             <div class="badge bg-success-subtle text-dark p-2 w-100 text-start text-wrap">⏰ Kế hoạch: ${escapeHTML(stats.suggestedTime)}</div>
+             <div class="badge bg-success-subtle text-dark p-2 w-100 text-start text-wrap">🔥 Mức độ: ${escapeHTML(stats.intensity)}</div>
+         </div>
 <button onclick="openInGoogleMaps()" class="btn btn-primary w-100 mt-2 shadow-sm" style="background:#4285F4; border:none">
     <i class="fab fa-google me-2"></i> Bắt đầu trên Google Maps
 </button>
@@ -405,13 +426,16 @@ function updateRouteAnalysis() {
     <i class="fas fa-share-alt me-2"></i> Chia sẻ lộ trình
 </button>
 
-     
-
-        <div class="small text-muted">Chi tiết lộ trình:</div>
-        <div class="mt-2" style="max-height: 200px; overflow-y: auto;">
-            ${stats.segments.map((s, i) => `<div class="mb-2 border-bottom pb-1"><strong>${i+1}.</strong> ${s.from} → ${s.to} <br> <span class="text-success">${s.distance.toFixed(1)}km</span></div>`).join('')}
-        </div>
-    `;
+      
+          <div class="d-flex align-items-center justify-content-center mt-3">
+              <div id="qr-code" class="text-center"></div>
+              <p class="ms-3 mb-0 small text-muted">Quét mã QR để mở lộ trình trên Google Maps</p>
+          </div>
+          <div class="small text-muted">Chi tiết lộ trình:</div>
+          <div class="mt-2" style="max-height: 200px; overflow-y: auto;">
+              ${stats.segments.map((s, i) => `<div class="mb-2 border-bottom pb-1"><strong>${i+1}.</strong> ${s.from} → ${s.to} <br> <span class="text-success">${s.distance.toFixed(1)}km</span></div>`).join('')}
+          </div>
+     `;
     // Generate QR code for Google Maps link (ensuring clean container)
     const qrCoords = itinerary.map(key => realCoordinates[key]).filter(c => c);
     if (qrCoords.length >= 2) {
@@ -419,13 +443,16 @@ function updateRouteAnalysis() {
         const qrDestination = `${qrCoords[qrCoords.length - 1].lat},${qrCoords[qrCoords.length - 1].lng}`;
         const qrWaypoints = qrCoords.slice(1, -1).map(c => `${c.lat},${c.lng}`).join('|');
         const qrGoogleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${qrOrigin}&destination=${qrDestination}&waypoints=${qrWaypoints}`;
-        // Remove any existing QR code element
-        const existingQr = document.getElementById('qr-code');
-        if (existingQr) existingQr.remove();
-        const qrDiv = document.createElement('div');
-        qrDiv.id = 'qr-code';
-        qrDiv.className = 'mt-3 text-center';
-        routeAnalysis.appendChild(qrDiv);
+         // Ensure QR code container exists and is empty
+         let qrDiv = document.getElementById('qr-code');
+         if (!qrDiv) {
+             qrDiv = document.createElement('div');
+             qrDiv.id = 'qr-code';
+             qrDiv.className = 'mt-3 text-center';
+             routeAnalysis.appendChild(qrDiv);
+         } else {
+             qrDiv.innerHTML = '';
+         }
         console.log('Generating QR code for URL:', qrGoogleMapsUrl);
         if (typeof QRCode !== 'undefined') {
             new QRCode(qrDiv, {
@@ -443,12 +470,14 @@ function updateRouteAnalysis() {
         }
     }
 
-    document.querySelectorAll('.transport-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            transportMode = e.currentTarget.dataset.mode;
-            updateRouteAnalysis();
-        });
-    });
+     // Delegated click handler for transport mode buttons (single listener)
+     document.addEventListener('click', function(e) {
+         const btn = e.target.closest('.transport-btn');
+         if (btn) {
+             transportMode = btn.dataset.mode;
+             updateRouteAnalysis();
+         }
+     });
 }
 
 function renderSiteCards() {
@@ -460,12 +489,12 @@ function renderSiteCards() {
         const col = document.createElement('div');
         col.className = 'col';
         col.innerHTML = `
-            <div class="journey-card card h-100 shadow-sm border-0">
+            <div class="journey-card card h-100 shadow-sm border-0 d-flex flex-column">
                 <img src="${site.img || 'image/VIETNAM1.jpg'}" class="card-img-top" style="height:150px; object-fit:cover">
-                <div class="card-body p-3">
+                <div class="card-body p-3 d-flex flex-column">
                     <h6 class="fw-bold mb-1">${site.title}</h6>
                     <p class="small text-muted mb-2">${site.location}</p>
-                    <button class="btn btn-sm ${isAdded?'btn-secondary':'btn-success'} w-100" onclick="addToItinerary('${key}')" ${isAdded?'disabled':''}>
+                    <button class="btn btn-sm ${isAdded?'btn-secondary':'btn-success'} w-100 mt-auto" onclick="addToItinerary('${key}')" ${isAdded?'disabled':''}>
                         ${isAdded?'Đã thêm':'<i class="fas fa-plus"></i> Thêm'}
                     </button>
                 </div>
