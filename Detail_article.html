@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VietHeritage - Chi tiết bài viết</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="Css/Article.css">
+    <style>
+        body { background-color: #fff; color: #222; }
+        
+        /* ===== BREADCRUMB ===== */
+        .breadcrumb-custom {
+            font-size: 0.8rem;
+            color: #999;
+            margin-bottom: 15px;
+        }
+        .breadcrumb-custom a { color: #999; text-decoration: none; }
+        .breadcrumb-custom a:hover { color: var(--red-accent); }
+        .breadcrumb-custom span { color: var(--text-muted); }
+
+        /* ===== ARTICLE HEADER ===== */
+        .article-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            line-height: 1.25;
+            color: var(--text-dark);
+            flex: 1;
+        }
+
+        /* ===== ARTICLE META BAR ===== */
+        .article-meta-bar {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 15px 0;
+            border-top: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-light);
+            margin-bottom: 25px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .article-meta-bar .meta-date i { margin-right: 5px; }
+        .article-meta-bar .meta-source {
+            font-weight: 600;
+            color: var(--red-accent);
+        }
+        .article-meta-bar .meta-views i { margin-right: 5px; }
+
+        /* ===== FEATURED IMAGE ===== */
+        .featured-image {
+            margin-bottom: 25px;
+            border-radius: 0;
+        }
+
+        /* ===== NỘI DUNG CHI TIẾT ===== */
+        .article-full-content {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            color: #333;
+            text-align: justify;
+            white-space: pre-line;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .article-full-content::first-letter {
+            font-size: 4rem;
+            font-weight: bold;
+            float: left;
+            margin-right: 12px;
+            line-height: 0.9;
+            color: var(--red-accent);
+            font-family: 'Playfair Display', serif;
+        }
+        .article-full-content p { margin-bottom: 20px; }
+
+        /* ===== BACK BUTTON ===== */
+        .btn-back {
+            white-space: nowrap;
+            background: transparent;
+            border: 1px solid #ddd;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            padding: 6px 16px;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .btn-back:hover {
+            background: var(--forest-green);
+            border-color: var(--forest-green);
+            color: #fff;
+        }
+
+        /* ===== CÓ THỂ BẠN QUAN TÂM ===== */
+        .related-section {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid var(--border-light);
+        }
+        .related-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--forest-green);
+            margin-bottom: 25px;
+            padding-left: 15px;
+            border-left: 4px solid var(--bronze-accent);
+        }
+        .related-card {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            background: #fff;
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        .related-card:hover {
+            border-color: var(--bronze-accent);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+        .related-card-img {
+            width: 100%;
+            height: 170px;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+        .related-card:hover .related-card-img { transform: scale(1.05); }
+        .related-card-body { padding: 12px 15px; }
+        .related-card-source {
+            font-size: 0.7rem;
+            color: var(--red-accent);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .related-card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 6px 0 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.4;
+            transition: color 0.2s;
+        }
+        .related-card:hover .related-card-title { color: var(--red-accent); }
+        .related-card-date { font-size: 0.78rem; color: #999; }
+
+        /* ===== BÌNH LUẬN ===== */
+        .comment-section {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid var(--border-light);
+        }
+        .comment-section h4 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: var(--forest-green);
+            margin-bottom: 25px;
+        }
+        .comment-box {
+            background: var(--light-bg);
+            padding: 25px;
+        }
+        .comment-box .form-control {
+            border-radius: 0;
+            border: 1px solid var(--border-light);
+            font-size: 0.9rem;
+            padding: 10px 14px;
+        }
+        .comment-box .form-control:focus {
+            border-color: var(--bronze-accent);
+            box-shadow: none;
+        }
+        .comment-box .btn-submit {
+            background: var(--forest-green);
+            color: #fff;
+            border: none;
+            padding: 8px 28px;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+        .comment-box .btn-submit:hover { background: var(--bronze-accent); }
+        
+        .comment-item {
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .comment-item:last-child { border-bottom: none; }
+        .comment-item .comment-author { font-weight: 600; color: var(--text-dark); }
+        .comment-item .comment-time { font-size: 0.78rem; color: #999; }
+        .comment-item .comment-email { font-size: 0.8rem; color: var(--text-muted); }
+        .comment-item .comment-content { color: #444; margin-top: 5px; line-height: 1.5; }
+
+        .excerpt-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #555;
+            font-style: italic;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            padding: 0 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="detail-content">
+                <p>Đang tải nội dung bài viết...</p>
+            </div>
+
+    <div class="comment-section">
+        <h4><i class="fas fa-comments me-2" style="color: var(--bronze-accent);"></i>Bình luận (<span id="comment-count">0</span>)</h4>
+        <div id="comment-list" class="mb-4"></div>
+        <div class="comment-box">
+            <h6 class="fw-bold mb-3" style="color: var(--forest-green);"><i class="far fa-edit me-2"></i>Để lại ý kiến của bạn</h6>
+            <input type="text" id="comment-author" class="form-control mb-2" placeholder="Tên của bạn (tùy chọn)">
+            <input type="email" id="comment-email" class="form-control mb-2" placeholder="Email của bạn (bắt buộc)" required>
+            <textarea id="comment-input" class="form-control mb-3" rows="3" placeholder="Chia sẻ suy nghĩ của bạn về bài viết..."></textarea>
+            <div class="text-end">
+                <button id="comment-submit" type="button" class="btn btn-submit"><i class="fas fa-paper-plane me-1"></i> Gửi bình luận</button>
+            </div>
+        </div>
+    </div>
+        </div>
+        <div id="comment-list" class="mt-4"></div>
+    </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    // 1. Lấy ID từ thanh địa chỉ URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const articleId = urlParams.get('id');
+    const ADMIN_SECRET = "super-secret-admin";
+    const adminSecret = urlParams.get('adminSecret') || '';
+    const isAdmin = adminSecret === ADMIN_SECRET;
+
+    // 2. Gọi dữ liệu từ Server
+    fetch('http://localhost:5000/api/articles')
+        .then(res => res.json())
+        .then(data => {
+            // Tìm đúng bài viết đang xem
+            const article = data.find(a => a.id == articleId);
+            const others = data.filter(a => a.id != articleId).slice(0, 4);
+            if (article) {
+                // Hiển thị nội dung chính
+                document.getElementById('detail-content').innerHTML = `
+                    <div class="breadcrumb-custom">
+                        <i class="fas fa-home me-1"></i> <a href="Home.html">Trang chủ</a> &rsaquo; <a href="Article.html">Bài viết</a> &rsaquo; <span>${article.title}</span>
+                    </div>
+                    <div class="article-header">
+                        <div class="d-flex justify-content-between align-items-start gap-3">
+                            <h1 class="mb-0">${article.title}</h1>
+                            <a href="Article.html" class="btn btn-back rounded-pill"><i class="fas fa-arrow-left"></i> Quay lại</a>
+                        </div>
+                    </div>
+                    <div class="article-meta-bar">
+                        <span class="meta-source">${article.source || 'Tin tức'}</span>
+                        <span class="meta-date"><i class="far fa-clock"></i> ${article.date}</span>
+                        <span class="meta-views"><i class="far fa-eye"></i> 2.450 lượt xem</span>
+                    </div>
+                    <img src="${article.img}" class="w-100 featured-image" onerror="this.src='https://via.placeholder.com/800x400?text=Viet'">
+                    <p class="excerpt-text">${article.excerpt}</p>
+                    <div class="article-full-content">
+                        ${(article.content || "Nội dung đang được cập nhật...").replace(/<div class="letweb-related-wrap">[\s\S]*?<\/div>\s*$/, '')}
+                    </div>
+                    <div class="related-section">
+                        <h3 class="related-heading"><i class="fas fa-star"></i> CÓ THỂ BẠN QUAN TÂM</h3>
+                        <p class="text-muted mb-4" style="font-size:0.9rem;">Những bài viết liên quan bạn không nên bỏ lỡ</p>
+                        <div class="row g-3" id="related-grid"></div>
+                    </div>
+                `;
+                document.getElementById('related-grid').innerHTML = others.map(item => {
+                    const cleanTitle = (item.title || '').replace(/heritage/gi, '').replace(/nghệ thuật văn hóa/gi, '').trim();
+                    const excerpt = (item.excerpt || '').replace(/<[^>]*>/g, '').slice(0, 80);
+                    return `
+                    <div class="col-md-3 col-6">
+                        <a href="Detail_article.html?id=${item.id}" class="related-card">
+                            <div class="related-card-img-wrap">
+                                <img src="${item.img}" class="related-card-img" loading="lazy" onerror="this.src='https://via.placeholder.com/300x180?text=Viet'">
+                                <div class="related-card-overlay">
+                                    <span class="related-card-btn">Đọc tiếp →</span>
+                                </div>
+                                <span class="related-card-location">${item.location || 'Di sản'}</span>
+                            </div>
+                            <div class="related-card-body">
+                                <div class="related-card-source">${item.source || 'Tin tức'}</div>
+                                <div class="related-card-title">${cleanTitle}</div>
+                                <div class="related-card-excerpt">${excerpt || 'Khám phá di sản văn hóa Việt Nam'}</div>
+                                <div class="related-card-date"><i class="far fa-clock"></i> ${item.date}</div>
+                            </div>
+                        </a>
+                    </div>`;
+                }).join('');
+            }
+            loadComments();
+        })
+        .catch(err => {
+            document.getElementById('detail-content').innerHTML = "<h3>Lỗi kết nối tới Server!</h3>";
+        });
+
+    // --- LOGIC BÌNH LUẬN ---
+    // Load existing comments from backend
+    function loadComments() {
+        const headers = {};
+        if (isAdmin && adminSecret) {
+            headers['X-Admin-Secret'] = adminSecret;
+        }
+        fetch(`http://localhost:5000/api/articles/${articleId}/comments`, { headers })
+            .then(r => r.json())
+            .then(list => {
+                document.getElementById('comment-count').innerText = list.length;
+                const listDiv = document.getElementById('comment-list');
+                listDiv.innerHTML = list.map(c => `
+                    <div class="comment-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="comment-author">${c.author || 'Bạn đọc ẩn danh'}</span>
+                            <span class="comment-time">${new Date(c.createdAt).toLocaleString()}</span>
+                        </div>
+                        <div class="comment-email">${c.email}</div>
+                        <div class="comment-content">${c.content}</div>
+                    </div>
+                `).join('');
+            })
+            .catch(err => console.error('Error loading comments', err));
+    }
+
+    // Post a new comment to backend
+    function postComment() {
+        const author = document.getElementById('comment-author').value.trim();
+        const email = document.getElementById('comment-email').value.trim();
+        const content = document.getElementById('comment-input').value.trim();
+        if (!email) { alert('Email là bắt buộc'); return; }
+        if (!/^\S+@\S+\.\S+$/.test(email)) { alert('Email không hợp lệ'); return; }
+        if (!content) return;
+        const headers = { 'Content-Type': 'application/json' };
+        if (isAdmin && adminSecret) {
+            headers['X-Admin-Secret'] = adminSecret;
+        }
+        fetch(`http://localhost:5000/api/articles/${articleId}/comments`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({ author, email, content })
+        })
+            .then(r => r.json())
+            .then(() => {
+                document.getElementById('comment-author').value = '';
+                document.getElementById('comment-email').value = '';
+                document.getElementById('comment-input').value = '';
+                loadComments();
+            })
+            .catch(err => console.error('Error posting comment', err));
+    }
+
+    // Attach event listener to submit button
+    document.getElementById('comment-submit').addEventListener('click', postComment);
+
+
+</script>
+</body>
+</html>

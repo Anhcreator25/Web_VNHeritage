@@ -32,8 +32,6 @@
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="Map.html"><i class="fas fa-map-marked-alt me-2"></i>Bản đồ di sản</a></li>
                             <li><a class="dropdown-item" href="Heritage.html"><i class="fas fa-building me-2"></i>Các di sản</a></li>
-                            
-                            
                         </ul>
                     </div>
 
@@ -43,7 +41,6 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="Journey.html"><i class="fas fa-book me-2"></i>Tạo lịch trình</a></li>
-                            
                         </ul>
                     </div>
                     <a class="nav-link mx-2" href="Article.html">Bài viết</a>
@@ -55,92 +52,137 @@
 
    <section class="blog-hero">
     <div class="container">
-        <div data-aos="fade-up">
+        <div style="animation: fadeInUp 0.8s ease;">
+            <span class="hero-badge"><i class="fas fa-flag me-2"></i>Di sản Việt Nam</span>
             <h1 class="mt-3">
-                Chạm vào Di sản Việt
+                Chạm vào <span class="highlight">Di sản</span> Việt
             </h1>
-
+            <div class="hero-accent"></div>
             <p class="lead mt-4">
                 Cùng VietHeritage lên kế hoạch khám phá những giá trị văn hóa vượt thời gian 
                 và viết tiếp câu chuyện tự hào của dân tộc.
             </p>
 
             <div class="position-relative" id="home-search-wrapper">
-    <div class="search-box">
-        <input type="text" id="home-search" class="form-control" placeholder="Bạn muốn khám phá di sản nào hôm nay?">
-        <button id="home-search-btn" class="btn btn-primary">
-            <i class="fas fa-search me-2"></i>
-            Tìm ngay
-        </button>
-    </div>
-    <!-- Suggestions dropdown -->
-    <div id="home-search-suggestions" class="list-group position-absolute w-100" style="top:100%; left:0; z-index:1050; max-height:200px; overflow-y:auto; display:none;"></div>
-</div>
+                <div class="search-box">
+                    <input type="text" id="home-search" class="form-control" placeholder="Bạn muốn khám phá di sản nào hôm nay?">
+                    <button id="home-search-btn" class="btn btn-primary">
+                        <i class="fas fa-search me-2"></i>
+                        Tìm ngay
+                    </button>
+                </div>
+                <div id="home-search-suggestions" class="list-group position-absolute w-100" style="top:100%; left:0; z-index:1050; max-height:240px; overflow-y:auto; display:none;"></div>
+            </div>
         </div>
+    </div>
+    <div class="scroll-indicator">
+        <span>Khám phá</span>
+        <i class="fas fa-chevron-down"></i>
     </div>
 </section>
 
-    <section class="container my-5">
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100">
-                    <h2 class="display-5 fw-bold text-bronze">
-                        <i class="fas fa-landmark me-2"></i>25</h2>
-                    <p class="text-muted mb-0 fw-bold text-uppercase small">Di sản UNESCO</p>
+    <section class="intro-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 fade-in-up">
+                    <h2>Về VietHeritage</h2>
+                    <div class="intro-divider"></div>
+                    <p>VietHeritage là nền tảng kết nối và bảo tồn những giá trị di sản văn hóa vật thể và phi vật thể của dân tộc Việt Nam. Chúng tôi mong muốn mang vẻ đẹp trường tồn của di sản đến gần hơn với mọi người.</p>
+                    <div class="intro-features">
+                        <a href="Map.html" class="feat"><i class="fas fa-map-marked-alt"></i> Bản đồ tương tác</a>
+                        <a href="Heritage.html" class="feat"><i class="fas fa-building"></i> Danh sách di sản</a>
+                        <a href="Article.html" class="feat"><i class="fas fa-newspaper"></i> Bài viết chuyên sâu</a>
+                        <a href="Journey.html" class="feat"><i class="fas fa-route"></i> Lịch trình thông minh</a>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100">
-                    <h2 class="display-5 fw-bold text-bronze"><i class="fas fa-map-marker-alt me-2"></i>63</h2>
-                    <p class="text-muted mb-0 fw-bold text-uppercase small">Tỉnh thành</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100">
-                    <h2 class="display-5 fw-bold text-bronze"><i class="fas fa-history me-2"></i>4000+</h2>
-                    <p class="text-muted mb-0 fw-bold text-uppercase small">Năm lịch sử</p>
+                <div class="col-lg-6 fade-in-up mt-4 mt-lg-0">
+                    <img src="image/thanhdiamyson.jpg" alt="Vietnam heritage" class="w-100 rounded-4 shadow" style="height:320px; object-fit:cover;">
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="container my-5 pb-5">
-        <div class="d-flex justify-content-between align-items-end mb-4">
-            <div>
-                <h2 class="fw-bold mb-0">Di sản tiêu biểu</h2>
-                <div style="width: 50px; height: 3px; background: var(--bronze-accent); margin-top: 10px;"></div>
+    <section class="stats-section container">
+        <div class="row g-4">
+            <div class="col-md-4 fade-in-up">
+                <div class="stats-card">
+                    <div class="stat-icon"><i class="fas fa-landmark"></i></div>
+                    <h2>25</h2>
+                    <p>Di sản UNESCO</p>
+                </div>
             </div>
-            <a href="#" class="text-decoration-none fw-bold text-bronze">Xem tất cả <i class="fas fa-arrow-right ms-1"></i></a>
+            <div class="col-md-4 fade-in-up">
+                <div class="stats-card">
+                    <div class="stat-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <h2>63</h2>
+                    <p>Tỉnh thành</p>
+                </div>
+            </div>
+            <div class="col-md-4 fade-in-up">
+                <div class="stats-card">
+                    <div class="stat-icon"><i class="fas fa-history"></i></div>
+                    <h2>4000+</h2>
+                    <p>Năm lịch sử</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="heritage-section container">
+        <div class="section-header">
+            <div>
+                <h2>Di sản tiêu biểu</h2>
+                <div class="header-line"></div>
+            </div>
+            <a href="Heritage.html" class="header-link">Xem tất cả <i class="fas fa-arrow-right ms-1"></i></a>
         </div>
         
         <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card shadow-sm rounded-4 h-100">
-                    <img src="image/vhl.jpg" class="card-img-top fixed-img" alt="Vịnh Hạ Long">
-                    <div class="card-body p-4">
-                        <h5 class="card-title fw-bold">Vịnh Hạ Long</h5>
-                        <p class="card-text text-muted small">Kỳ quan thiên nhiên thế giới với hàng ngàn đảo đá vôi hùng vĩ giữa làn nước xanh lục bảo.</p>
-                        <a href="Heritage.html" class="btn btn-outline-dark btn-sm rounded-pill px-4">Chi tiết</a>
+            <div class="col-md-4 fade-in-up">
+                <div class="heritage-card">
+                    <div class="heritage-card-img-wrap">
+                        <img src="image/vhl.jpg" alt="Vịnh Hạ Long">
+                        <div class="heritage-card-overlay">
+                            <a href="Detail.html?id=ha-long" class="overlay-btn">Khám phá →</a>
+                        </div>
+                        <span class="heritage-card-badge">Thiên nhiên</span>
+                    </div>
+                    <div class="heritage-card-body">
+                        <h5>Vịnh Hạ Long</h5>
+                        <p>Kỳ quan thiên nhiên thế giới với hàng ngàn đảo đá vôi hùng vĩ giữa làn nước xanh lục bảo.</p>
+                       
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card shadow-sm rounded-4 h-100">
-                    <img src="image/hoian.jpg" class="card-img-top fixed-img" alt="Hội An">
-                    <div class="card-body p-4">
-                        <h5 class="card-title fw-bold">Phố cổ Hội An</h5>
-                        <p class="card-text text-muted small">Thương cảng sầm uất thế kỷ 17, nơi giao thoa văn hóa giữa Việt Nam, Nhật Bản và Trung Hoa.</p>
-                        <a href="Heritage.html" class="btn btn-outline-dark btn-sm rounded-pill px-4">Chi tiết</a>
+            <div class="col-md-4 fade-in-up">
+                <div class="heritage-card">
+                    <div class="heritage-card-img-wrap">
+                        <img src="image/hoian.jpg" alt="Phố cổ Hội An">
+                        <div class="heritage-card-overlay">
+                            <a href="Detail.html?id=hoi-an" class="overlay-btn">Khám phá →</a>
+                        </div>
+                        <span class="heritage-card-badge">Văn hóa</span>
+                    </div>
+                    <div class="heritage-card-body">
+                        <h5>Phố cổ Hội An</h5>
+                        <p>Thương cảng sầm uất thế kỷ 17, nơi giao thoa văn hóa giữa Việt Nam, Nhật Bản và Trung Hoa.</p>
+                       
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card shadow-sm rounded-4 h-100">
-                    <img src="image/congchieng.jpg" class="card-img-top fixed-img" alt="Cồng chiêng Tây Nguyên">
-                    <div class="card-body p-4">
-                        <h5 class="card-title fw-bold">Cồng chiêng Tây Nguyên</h5>
-                        <p class="card-text text-muted small">Di sản văn hóa phi vật thể đặc sắc của Việt Nam, thể hiện bản sắc văn hóa của các dân tộc thiểu số.</p>
-                        <a href="Heritage.html" class="btn btn-outline-dark btn-sm rounded-pill px-4">Chi tiết</a>
+            <div class="col-md-4 fade-in-up">
+                <div class="heritage-card">
+                    <div class="heritage-card-img-wrap">
+                        <img src="image/congchieng.jpg" alt="Cồng chiêng Tây Nguyên">
+                        <div class="heritage-card-overlay">
+                            <a href="Detail.html?id=cong-chieng" class="overlay-btn">Khám phá →</a>
+                        </div>
+                        <span class="heritage-card-badge">Phi vật thể</span>
+                    </div>
+                    <div class="heritage-card-body">
+                        <h5>Cồng chiêng Tây Nguyên</h5>
+                        <p>Di sản văn hóa phi vật thể đặc sắc, thể hiện bản sắc văn hóa của các dân tộc thiểu số Tây Nguyên.</p>
+                        
                     </div>
                 </div>
             </div>
@@ -170,6 +212,7 @@
                     <li class="mb-2"><a href="Map.html" class="text-secondary text-decoration-none hover-gold">Bản đồ di sản</a></li>
                     <li class="mb-2"><a href="Heritage.html" class="text-secondary text-decoration-none hover-gold">Di sản UNESCO</a></li>
                     <li class="mb-2"><a href="Journey.html" class="text-secondary text-decoration-none hover-gold">Hành trình mẫu</a></li>
+                    <li class="mb-2"><a href="Article.html" class="text-secondary text-decoration-none hover-gold">Bài viết</a></li>
                 </ul>
             </div>
 
@@ -185,7 +228,7 @@
             <div class="col-lg-4 col-md-6">
                 <h5 class="text-uppercase fw-bold mb-4">Liên Hệ</h5>
                 <p class="text-secondary mb-2"><i class="fas fa-envelope me-2"></i> info@vietheritage.vn</p>
-                <p class="text-secondary mb-2"><i class="fas fa-phone me-2"></i> +84 123 456 789</p>
+                <p class="text-secondary mb-2"><i class="fas fa-phone me-2"></i> +0822.173.222</p>
                 <div class="mt-4 p-3 border border-secondary rounded">
                     <small class="d-block text-center text-uppercase fw-bold" style="color: #e0c080;">Khẳng định chủ quyền</small>
                     <small class="d-block text-center text-secondary">Bản đồ bao gồm đầy đủ quần đảo Hoàng Sa & Trường Sa</small>
@@ -214,11 +257,9 @@
             if (!query) { suggDiv.style.display = 'none'; return; }
             if (typeof heritageData === 'undefined') { suggDiv.style.display = 'none'; return; }
 
-            // Heritage matches (title or location)
             const heritageMatches = Object.entries(heritageData)
                 .filter(([id, d]) => d.title.toLowerCase().includes(query) || (d.location && d.location.toLowerCase().includes(query)));
 
-            // Page shortcut matches
             const pageLinks = [
                 {name: 'Trang chủ', url: 'Home.html'},
                 {name: 'Bản đồ di sản', url: 'Map.html'},
@@ -243,10 +284,10 @@
                 a.className = 'list-group-item list-group-item-action';
                 if (item.type === 'heritage') {
                     a.href = `Detail.html?id=${item.id}`;
-                    a.textContent = `${item.d.title} (${item.d.location || ''})`;
+                    a.innerHTML = `<i class="fas fa-landmark me-2 text-bronze"></i>${item.d.title} <small class="text-muted">(${item.d.location || ''})</small>`;
                 } else {
                     a.href = item.url;
-                    a.textContent = item.name;
+                    a.innerHTML = `<i class="fas fa-link me-2 text-bronze"></i>${item.name}`;
                 }
                 suggDiv.appendChild(a);
             });
@@ -268,6 +309,20 @@
             if (!e.target.closest('#home-search-wrapper')) {
                 suggDiv.style.display = 'none';
             }
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('.fade-in-up').forEach(el => {
+            el.style.animationPlayState = 'paused';
+            observer.observe(el);
         });
     });
     </script>
