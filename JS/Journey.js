@@ -9,6 +9,20 @@ const categories = {
     intangible: ['nha-nhac', 'cong-chieng', 'quan-ho', 'ca-tru', 'hoi-giong', 'hat-xoan', 'don-ca-tai-tu', 'vi-giam', 'keo-co', 'tho-mau', 'bai-choi', 'hat-then', 'xoe-thai', 'gom-cham', 'via-ba', 'dong-ho']
 };
 
+const siteRegions = {
+    'thang-long': 'Bắc Bộ', 'ha-long': 'Bắc Bộ', 'thanh-nha-ho': 'Bắc Bộ',
+    'hoi-giong': 'Bắc Bộ', 'hat-xoan': 'Bắc Bộ', 'keo-co': 'Bắc Bộ',
+    'quan-ho': 'Bắc Bộ', 'ca-tru': 'Bắc Bộ', 'dong-ho': 'Bắc Bộ',
+    'tho-mau': 'Bắc Bộ', 'hat-then': 'Bắc Bộ', 'xoe-thai': 'Bắc Bộ',
+    'hue': 'Trung Bộ', 'my-son': 'Trung Bộ', 'hoi-an': 'Trung Bộ',
+    'phong-nha': 'Trung Bộ', 'nha-nhac': 'Trung Bộ', 'bai-choi': 'Trung Bộ',
+    'vi-giam': 'Trung Bộ', 'cong-chieng': 'Trung Bộ', 'gom-cham': 'Trung Bộ',
+    'don-ca-tai-tu': 'Nam Bộ', 'via-ba': 'Nam Bộ'
+};
+
+const regionColors = { 'Bắc Bộ': '#4A90D9', 'Trung Bộ': '#E67E22', 'Nam Bộ': '#27AE60' };
+const regionEmojis = { 'Bắc Bộ': '🏔️', 'Trung Bộ': '🏛️', 'Nam Bộ': '🌴' };
+
 const realCoordinates = {
     'hue': { lat: 16.4637, lng: 107.5905 }, 'ha-long': { lat: 20.9100, lng: 107.1839 },
     'hoi-an': { lat: 15.8801, lng: 108.3202 }, 'my-son': { lat: 15.7440, lng: 107.8268 },
@@ -543,6 +557,8 @@ function calculateJourneyStats() {
             segments.push({
                 from: heritageDataSource[itinerary[i]].title,
                 to: heritageDataSource[itinerary[i + 1]].title,
+                fromKey: itinerary[i],
+                toKey: itinerary[i + 1],
                 distance: dist,
                 drivingTime: dTime
             });
@@ -581,27 +597,129 @@ function calculateJourneyStats() {
         intensity = "Trung bình - Nhịp độ cân bằng, thích hợp cho mọi nhóm.";
     }
 
+    let physicalCount = 0, intangibleCount = 0;
+    itinerary.forEach(key => {
+        if (categories.physical.includes(key)) physicalCount++;
+        else if (categories.intangible.includes(key)) intangibleCount++;
+    });
+
+    const regionCount = {};
+    itinerary.forEach(key => {
+        const region = siteRegions[key] || 'Chưa xác định';
+        regionCount[region] = (regionCount[region] || 0) + 1;
+    });
+
+    const fuelCostPerKm = transportMode === 'motorcycle' ? 2000 : 3500;
+    const fuelCost = Math.round(totalDistance * fuelCostPerKm);
+    const estimatedDays = Math.max(1, Math.ceil(totalTime / 7));
+    const foodCost = estimatedDays * 300000;
+    const entranceFee = itinerary.filter(k => !k.startsWith('custom_')).length * 75000;
+    const totalCost = fuelCost + foodCost + entranceFee;
+
     return {
-        totalDistance,
-        totalDrivingTime,
-        totalSiteTime,
-        totalTime,
-        segments,
-        suggestedDays,
-        suggestedTime,
-        intensity
+        totalDistance, totalDrivingTime, totalSiteTime, totalTime, segments,
+        suggestedDays, suggestedTime, intensity,
+        physicalCount, intangibleCount, regionCount,
+        fuelCost, foodCost, entranceFee, totalCost, estimatedDays
     };
+}
+
+function formatCurrency(num) {
+    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'tr';
+    if (num >= 1000) return Math.round(num / 1000) + 'k';
+    return num + 'đ';
+}
+
+function getWeekendLabel() {
+    const regions = [...new Set(itinerary.map(k => siteRegions[k]).filter(Boolean))];
+    const allTips = [];
+
+    if (regions.includes('Bắc Bộ')) {
+        allTips.push('Miền Bắc: Thời tiết mát mẻ, nên mang áo khoác nhẹ. Ghé chợ đêm, thưởng thức phở và cà phê trứng.');
+    }
+    if (regions.includes('Trung Bộ')) {
+        allTips.push('Miền Trung: Nắng ấm quanh năm, nên mang kem chống nắng. Đừng bỏ lỡ ẩm thực đường phố và các lễ hội truyền thống.');
+    }
+    if (regions.includes('Nam Bộ')) {
+        allTips.push('Miền Nam: Khí hậu nhiệt đới, mang trang phục thoáng mát. Thưởng thức trái cây và đờn ca tài tử trên sông.');
+    }
+
+    const uniqueCount = [...new Set(itinerary.map(k => siteRegions[k]).filter(Boolean))].length;
+    if (uniqueCount >= 3) {
+        allTips.push('Lộ trình xuyên Việt: Chuẩn bị sức khỏe tốt, kiểm tra phương tiện kỹ lưỡng, mang theo bản đồ offline.');
+    } else if (uniqueCount >= 2) {
+        allTips.push('Lộ trình liên vùng: Kết hợp đa dạng trải nghiệm, chuẩn bị trang phục phù hợp từng vùng.');
+    }
+
+    return allTips;
 }
 
 function updateRouteAnalysis() {
     routeAnalysis.innerHTML = '';
     if (itinerary.length < 2) {
-        routeAnalysis.innerHTML = '<div class="text-muted text-center">Thêm ít nhất 2 điểm để xem phân tích.</div>';
+        routeAnalysis.innerHTML = '<div class="text-muted text-center py-4"><i class="fas fa-map-marked-alt fa-2x mb-2 text-bronze"></i><br>Thêm ít nhất 2 điểm để xem phân tích chi tiết.</div>';
         return;
     }
 
     const stats = calculateJourneyStats();
     const formatTime = (h) => `${Math.floor(h)}h ${Math.round((h - Math.floor(h)) * 60)}m`;
+
+    const totalPct = stats.physicalCount + stats.intangibleCount || 1;
+    const physicalPct = (stats.physicalCount / totalPct * 100).toFixed(0);
+    const intangiblePct = (stats.intangibleCount / totalPct * 100).toFixed(0);
+
+    const regions = Object.keys(stats.regionCount).sort();
+    const maxRegionCount = Math.max(...Object.values(stats.regionCount), 1);
+
+    const tips = getWeekendLabel();
+
+    let regionBarsHtml = regions.map(r => {
+        const cnt = stats.regionCount[r];
+        const pct = (cnt / maxRegionCount * 100).toFixed(0);
+        const color = regionColors[r] || '#888';
+        const emoji = regionEmojis[r] || '📍';
+        return `
+            <div class="region-row">
+                <span class="region-name">${emoji} ${r}</span>
+                <div class="region-bar-bg">
+                    <div class="region-bar-fill" style="width:${pct}%;background:${color}"></div>
+                </div>
+                <span class="region-count">${cnt} điểm</span>
+            </div>`;
+    }).join('');
+
+    let timelineHtml = '';
+    stats.segments.forEach((s, i) => {
+        timelineHtml += `
+        <div class="timeline-item">
+            <div class="timeline-marker">${i + 1}</div>
+            <div class="timeline-content">
+                <div class="timeline-site">${escapeHTML(s.from)}</div>
+                <div class="timeline-connector">
+                    <span class="timeline-dist">${s.distance.toFixed(1)} km</span>
+                    <span class="timeline-time">${formatTime(s.drivingTime)}</span>
+                </div>
+            </div>
+        </div>`;
+    });
+    const lastSeg = stats.segments[stats.segments.length - 1];
+    timelineHtml += `
+        <div class="timeline-item">
+            <div class="timeline-marker timeline-marker-end">📍</div>
+            <div class="timeline-content">
+                <div class="timeline-site">${escapeHTML(lastSeg.to)}</div>
+            </div>
+        </div>`;
+
+    let intensityIcon = '🔥';
+    let intensityColor = '#28a745';
+    if (stats.intensity.includes('Khám phá chuyên sâu') || stats.intensity.includes('dày đặc')) {
+        intensityIcon = '🚀'; intensityColor = '#dc3545';
+    } else if (stats.intensity.includes('Trung bình') || stats.intensity.includes('Vừa sức')) {
+        intensityIcon = '⚡'; intensityColor = '#e67e22';
+    } else if (stats.intensity.includes('Lý tưởng')) {
+        intensityIcon = '🌟'; intensityColor = '#17a2b8';
+    }
 
     routeAnalysis.innerHTML = `
         <div class="mb-3">
@@ -611,60 +729,148 @@ function updateRouteAnalysis() {
                 <button class="btn btn-sm btn-outline-success transport-btn ${transportMode === 'car' ? 'active' : ''}" data-mode="car"><i class="fas fa-car"></i> Ô tô</button>
             </div>
         </div>
-        <div class="p-3 bg-light rounded-3 mb-3">
-            <div class="h3 mb-1 text-success fw-bold">${stats.totalDistance.toFixed(1)} km</div>
-            <div class="small text-muted mb-2">Tổng thời gian dự kiến: ${formatTime(stats.totalTime)}</div>
-            <div class="small text-muted mb-2">Thời gian tham quan: ${formatTime(stats.totalSiteTime)}</div>
-            <div class="badge bg-success-subtle text-dark p-2 w-100 text-start text-wrap">📅 Ước tính: ${escapeHTML(stats.suggestedDays)}</div>
-            <div class="badge bg-success-subtle text-dark p-2 w-100 text-start text-wrap">⏰ Kế hoạch: ${escapeHTML(stats.suggestedTime)}</div>
-            <div class="badge bg-success-subtle text-dark p-2 w-100 text-start text-wrap">🔥 Mức độ: ${escapeHTML(stats.intensity)}</div>
+
+        <div class="stats-row mb-3">
+            <div class="stat-card stat-card-distance">
+                <div class="stat-value">${stats.totalDistance.toFixed(0)}<span class="stat-unit"> km</span></div>
+                <div class="stat-label"><i class="fas fa-road me-1"></i> Khoảng cách</div>
+            </div>
+            <div class="stat-card stat-card-time">
+                <div class="stat-value">${formatTime(stats.totalTime)}</div>
+                <div class="stat-label"><i class="fas fa-clock me-1"></i> Thời gian</div>
+            </div>
+            <div class="stat-card stat-card-cost">
+                <div class="stat-value">${formatCurrency(stats.totalCost)}</div>
+                <div class="stat-label"><i class="fas fa-coins me-1"></i> Chi phí</div>
+            </div>
         </div>
+
+        <div class="analysis-card mb-3">
+            <div class="analysis-card-header">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Kế hoạch gợi ý</span>
+            </div>
+            <div class="analysis-card-body">
+                <div class="plan-row"><i class="far fa-clock"></i> ${escapeHTML(stats.suggestedDays)}</div>
+                <div class="plan-row"><i class="fas fa-clock"></i> ${escapeHTML(stats.suggestedTime)}</div>
+                <div class="plan-row"><i class="fas fa-hourglass-half"></i> Tham quan: ${formatTime(stats.totalSiteTime)} · Di chuyển: ${formatTime(stats.totalDrivingTime)}</div>
+                <div class="intensity-badge" style="background:${intensityColor}15;color:${intensityColor};border:1px solid ${intensityColor}30">
+                    ${intensityIcon} ${escapeHTML(stats.intensity)}
+                </div>
+            </div>
+        </div>
+
+        ${stats.physicalCount + stats.intangibleCount > 0 ? `
+        <div class="analysis-card mb-3">
+            <div class="analysis-card-header">
+                <i class="fas fa-tags"></i>
+                <span>Phân loại di sản</span>
+            </div>
+            <div class="analysis-card-body">
+                <div class="category-bar-container">
+                    <div class="category-bar">
+                        <div class="category-bar-fill category-physical" style="width:${physicalPct}%"></div>
+                        <div class="category-bar-fill category-intangible" style="width:${intangiblePct}%"></div>
+                    </div>
+                    <div class="category-legend">
+                        <span><span class="legend-dot" style="background:#1a2e1a"></span> Vật thể: ${stats.physicalCount}</span>
+                        <span><span class="legend-dot" style="background:#c8a96e"></span> Phi vật thể: ${stats.intangibleCount}</span>
+                    </div>
+                </div>
+            </div>
+        </div>` : ''}
+
+        ${regions.length > 0 ? `
+        <div class="analysis-card mb-3">
+            <div class="analysis-card-header">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Phân bố vùng miền</span>
+            </div>
+            <div class="analysis-card-body">
+                ${regionBarsHtml}
+            </div>
+        </div>` : ''}
+
+        <div class="analysis-card mb-3">
+            <div class="analysis-card-header">
+                <i class="fas fa-route"></i>
+                <span>Dòng thời gian lộ trình</span>
+            </div>
+            <div class="analysis-card-body">
+                <div class="timeline">${timelineHtml}</div>
+            </div>
+        </div>
+
+        ${tips.length > 0 ? `
+        <div class="analysis-card mb-3">
+            <div class="analysis-card-header">
+                <i class="fas fa-lightbulb"></i>
+                <span>Lời khuyên cho chuyến đi</span>
+            </div>
+            <div class="analysis-card-body">
+                <ul class="tips-list">
+                    ${tips.map(t => `<li><i class="fas fa-check-circle" style="color:var(--forest-green)"></i> ${escapeHTML(t)}</li>`).join('')}
+                </ul>
+            </div>
+        </div>` : ''}
+
         <button onclick="openInGoogleMaps()" class="btn btn-google-maps w-100 mt-2 shadow-sm">
             <i class="fab fa-google me-2"></i> Bắt đầu trên Google Maps
         </button>
-        <button onclick="showShareOptions()" class="btn btn-danger w-100 mt-2">
+        <button onclick="showShareOptions()" class="btn btn-share w-100 mt-2">
             <i class="fas fa-share-alt me-2"></i> Chia sẻ lộ trình
         </button>
-        <div class="d-flex align-items-center justify-content-center mt-3">
+        <div class="qr-section mt-3">
             <div id="qr-code" class="text-center"></div>
-            <p class="ms-3 mb-0 small text-muted">Quét mã QR để mở lộ trình trên Google Maps</p>
-        </div>
-        <div class="small text-muted">Chi tiết lộ trình:</div>
-        <div class="mt-2 route-segments">
-            ${stats.segments.map((s, i) => `<div class="mb-2 border-bottom pb-1"><strong>${i + 1}.</strong> ${escapeHTML(s.from)} → ${escapeHTML(s.to)} <br> <span class="text-success">${s.distance.toFixed(1)}km</span></div>`).join('')}
+            <p class="mb-0 small text-muted"><i class="fas fa-qrcode me-1"></i>Quét mã QR để mở lộ trình trên Google Maps</p>
         </div>
     `;
 
-    // Tạo QR code
     const qrCoords = itinerary.map(key => realCoordinates[key]).filter(c => c);
     if (qrCoords.length >= 2) {
         const qrOrigin = `${qrCoords[0].lat},${qrCoords[0].lng}`;
         const qrDestination = `${qrCoords[qrCoords.length - 1].lat},${qrCoords[qrCoords.length - 1].lng}`;
         const qrWaypoints = qrCoords.slice(1, -1).map(c => `${c.lat},${c.lng}`).join('|');
-        const qrGoogleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${qrOrigin}&destination=${qrDestination}&waypoints=${qrWaypoints}`;
+        const mode = (transportMode === 'car') ? 'driving' : 'motorcycling';
+        const qrGoogleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${qrOrigin}&destination=${qrDestination}&waypoints=${qrWaypoints}&travelmode=${mode}`;
 
         let qrDiv = document.getElementById('qr-code');
         if (!qrDiv) {
             qrDiv = document.createElement('div');
             qrDiv.id = 'qr-code';
-            qrDiv.className = 'mt-3 text-center';
+            qrDiv.className = 'text-center';
             routeAnalysis.appendChild(qrDiv);
         } else {
             qrDiv.innerHTML = '';
         }
 
+        const qrSize = 160;
+
         if (typeof QRCode !== 'undefined') {
-            new QRCode(qrDiv, {
+            const tempDiv = document.createElement('div');
+            new QRCode(tempDiv, {
                 text: qrGoogleMapsUrl,
-                width: 128,
-                height: 128,
-                correctLevel: QRCode.CorrectLevel.H
+                width: qrSize,
+                height: qrSize,
+                correctLevel: QRCode.CorrectLevel.L
             });
+            const canvas = tempDiv.querySelector('canvas');
+            if (canvas) {
+                const img = document.createElement('img');
+                img.src = canvas.toDataURL('image/png');
+                img.alt = 'QR code';
+                img.width = qrSize;
+                img.height = qrSize;
+                img.style.borderRadius = '8px';
+                qrDiv.appendChild(img);
+            }
         } else {
-            console.warn('QRCode library not loaded, using image fallback.');
             const img = document.createElement('img');
-            img.src = `https://api.qrserver.com/v1/create-qr-code/?size=128x128&data=${encodeURIComponent(qrGoogleMapsUrl)}`;
+            img.src = `https://api.qrserver.com/v1/create-qr-code/?size=${qrSize}x${qrSize}&data=${encodeURIComponent(qrGoogleMapsUrl)}`;
             img.alt = 'QR code';
+            img.width = qrSize;
+            img.height = qrSize;
+            img.style.borderRadius = '8px';
             qrDiv.appendChild(img);
         }
     }
@@ -673,6 +879,26 @@ function updateRouteAnalysis() {
 // ============================================================
 // RENDER DANH SÁCH DI SẢN
 // ============================================================
+
+function updateSiteStats() {
+    const bar = document.getElementById('site-stats');
+    if (!bar) return;
+    const keys = categories[activeCategory];
+    const total = keys.length;
+    const added = keys.filter(k => itinerary.includes(k)).length;
+    const notAdded = total - added;
+
+    const regions = [...new Set(keys.map(k => siteRegions[k]).filter(Boolean))];
+    const regionText = regions.length > 0 ? ` · ${regions.join(', ')}` : '';
+
+    bar.innerHTML = `
+        <div class="site-stats-inner">
+            <span><i class="fas fa-layer-group"></i> ${activeCategory === 'physical' ? 'Vật thể' : 'Phi vật thể'}: <strong>${total}</strong></span>
+            <span><i class="fas fa-check-circle text-success"></i> Đã thêm: <strong>${added}</strong></span>
+            <span><i class="fas fa-plus-circle text-muted"></i> Còn lại: <strong>${notAdded}</strong></span>
+            <span class="d-none d-md-inline"><i class="fas fa-map-marker-alt"></i>${regionText}</span>
+        </div>`;
+}
 
 function renderSiteCards() {
     siteList.innerHTML = '';
@@ -696,6 +922,7 @@ function renderSiteCards() {
             </div>`;
         siteList.appendChild(col);
     });
+    updateSiteStats();
 }
 
 // ============================================================

@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "id": "cmt-1778738535607",
+    "articleId": "hva-16",
+    "author": "Hoàng trọng chung",
+    "email": "abcd@gmail.com",
+    "content": "Tuyệt",
+    "createdAt": "2026-05-14T06:02:15.607Z"
+  },
+  {
+    "id": "cmt-1778740308033",
+    "articleId": "hva-1",
+    "author": "Thái Anh",
+    "email": "nta2512@gmail.com",
+    "content": "Trang web này rất tuyệt, nó giúp chúng tôi có thể tìm hiểu và tạo lịch trình cho chuyến đi phù hợp",
+    "createdAt": "2026-05-14T06:31:48.033Z"
+  }
+]
