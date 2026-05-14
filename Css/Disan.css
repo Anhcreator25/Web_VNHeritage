@@ -1,12 +1,13 @@
 :root {
-            --forest-green: #1a2e1a;
-            --bronze-accent: #c8a96e;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #fcfcfc;
-        }
+    --forest-green: #1a2e1a;
+    --forest-light: #2d4a2d;
+    --bronze-accent: #c8a96e;
+    --bronze-light: #e0c88a;
+    --bronze-dark: #a8894e;
+    --cream-bg: #faf8f4;
+    --card-shadow: 0 4px 20px rgba(26, 46, 26, 0.08);
+    --card-hover-shadow: 0 12px 35px rgba(26, 46, 26, 0.15);
+}
 
 .text-forest { color: var(--forest-green); }
 .text-bronze { color: var(--bronze-accent); }
@@ -15,97 +16,245 @@
 .border-bronze { border-color: var(--bronze-accent) !important; }
 .border-green { border-color: var(--forest-green) !important; }
 
-/* Navbar */
-  .navbar {
-            background-color: var(--forest-green) !important;
-            padding: 1rem 0;
-        }
-        
-        .navbar-brand, .nav-link {
-            color: white !important;
-        }
+body {
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--cream-bg);
+    color: #2c3a2c;
+}
 
-        .nav-link:hover {
-            color: var(--bronze-accent) !important;
-        }
+/* ============================
+   NAVBAR
+   ============================ */
 
-        /* Sửa lỗi Dropdown xấu */
-        .dropdown-menu {
-            background-color: var(--forest-green);
-            border: 1px solid var(--bronze-accent);
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            margin-top: 15px !important;
-            padding: 0;
-            overflow: hidden;
-            min-width: 220px;
-        }
+.navbar {
+    background-color: var(--forest-green) !important;
+    padding: 1rem 0;
+}
 
-        .dropdown-item {
-            color:white !important;
-            padding: 12px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            transition: all 0.3s;
-        }
+.navbar-brand,
+.nav-link {
+    color: white !important;
+}
 
-        .dropdown-item:hover {
-            background-color: var(--bronze-accent) !important;
-            color: var(--forest-green) !important;
-            padding-left: 25px; /* Hiệu ứng đẩy nhẹ */
-        }
+.nav-link:hover {
+    color: var(--bronze-accent) !important;
+}
 
-        /* Căn giữa dropdown mũi tên */
-        @media (min-width: 992px) {
-            .dropdown-menu {
-                left: 50% !important;
-                transform: translateX(-50%) !important;
-            }
-        }
-/* Main Tab Buttons */
+.dropdown-menu {
+    background-color: var(--forest-green);
+    border: 1px solid var(--bronze-accent);
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    margin-top: 15px !important;
+    padding: 0;
+    overflow: hidden;
+    min-width: 220px;
+}
+
+.dropdown-item {
+    color: white !important;
+    padding: 12px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s;
+}
+
+.dropdown-item:hover {
+    background-color: var(--bronze-accent) !important;
+    color: var(--forest-green) !important;
+    padding-left: 25px;
+}
+
+@media (min-width: 992px) {
+    .dropdown-menu {
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+    }
+}
+
+/* ============================
+   PAGE HEADER
+   ============================ */
+
+header.py-5 {
+    padding: 2.5rem 0 2rem !important;
+    background: white !important;
+    border-bottom: 2px solid rgba(200, 169, 110, 0.2) !important;
+}
+
+header.py-5 h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3.5vw, 2rem);
+    color: var(--forest-green);
+    margin-bottom: 0.5rem !important;
+    letter-spacing: -0.3px;
+}
+
+header.py-5 h2::after {
+    content: '';
+    display: block;
+    width: 50px;
+    height: 3px;
+    background: var(--bronze-accent);
+    margin: 0.7rem auto 0;
+    border-radius: 2px;
+}
+
+/* ============================
+   SEARCH BAR
+   ============================ */
+
+.search-wrapper {
+    max-width: 600px;
+    margin: 1.5rem auto 2rem !important;
+}
+
+.search-wrapper .input-group {
+    box-shadow: 0 2px 12px rgba(26, 46, 26, 0.06);
+    border-radius: 50px;
+    overflow: hidden;
+}
+
+.form-control {
+    border-radius: 50px 0 0 50px !important;
+    border: 2px solid rgba(40, 62, 47, 0.12);
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9rem;
+    background: white;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.form-control:focus {
+    border-color: var(--bronze-accent);
+    box-shadow: 0 0 0 3px rgba(200, 169, 110, 0.15);
+    outline: none;
+}
+
+.btn-search {
+    background-color: var(--forest-green) !important;
+    border: 2px solid var(--forest-green) !important;
+    border-radius: 0 50px 50px 0 !important;
+    padding: 0.75rem 1.5rem;
+    color: white;
+    transition: all 0.25s ease;
+}
+
+.btn-search:hover {
+    background-color: var(--forest-light) !important;
+    border-color: var(--forest-light) !important;
+}
+
+/* ============================
+   TAB BUTTONS
+   ============================ */
+
+#mainTab {
+    background: transparent;
+    display: inline-flex;
+    gap: 0.75rem;
+}
+
 .main-tab-btn {
-    width: 120px;
-    height: 75px;
-    border-radius: 15px;
-    border: 1px solid #ddd;
-    background: #1a2e1d;
-    color: #666;
+    border: 2px solid rgba(40, 62, 47, 0.15);
+    background: rgba(255, 255, 255, 0.5);
+    color: #8a9a8e;
+    min-width: 160px;
+    padding: 0.7rem 1.5rem;
+    border-radius: 60px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    font-weight: 500;
+    font-size: 0.9rem;
+    opacity: 0.55;
+    backdrop-filter: blur(4px);
+}
+
+.main-tab-btn i {
+    font-size: 1.1rem;
+    color: #8a9a8e;
     transition: all 0.3s ease;
 }
 
-.main-tab-btn.active {
-    background-color: var(--forest-green) !important;
-    color: var(--bronze-accent) !important;
-    border-color: var(--bronze-accent) !important;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+/* Vật thể - active = màu đồng */
+#vat-the-tab.active {
+    border-color: var(--bronze-accent);
+    background: linear-gradient(135deg, var(--bronze-accent), #d4b87a);
+    color: white;
+    opacity: 1;
+    box-shadow: 0 4px 15px rgba(200, 169, 110, 0.3);
+}
+
+#vat-the-tab.active i {
+    color: white;
+}
+
+/* Phi vật thể - active = màu xanh lá */
+#phi-vat-the-tab.active {
+    border-color: var(--forest-green);
+    background: linear-gradient(135deg, var(--forest-green), var(--forest-light));
+    color: white;
+    opacity: 1;
+    box-shadow: 0 4px 15px rgba(26, 46, 26, 0.3);
+}
+
+#phi-vat-the-tab.active i {
+    color: var(--bronze-accent);
+}
+
+/* Hover cho nút ko active */
+.main-tab-btn:not(.active):hover {
+    opacity: 0.8;
+    border-color: rgba(40, 62, 47, 0.25);
+    background: rgba(255, 255, 255, 0.7);
 }
 
 .btn-label {
-    font-size: 0.7rem;
-    font-weight: 700;
-    margin-top: 6px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    margin: 0;
 }
 
-/* Unified Heritage Card Style */
+/* ============================
+   HERITAGE CARDS
+   ============================ */
+
 .heritage-card-v2 {
+    border-radius: 20px;
+    overflow: hidden;
+    border: none !important;
+    background: white;
+    box-shadow: var(--card-shadow);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
 }
 
 .heritage-card-v2:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    box-shadow: var(--card-hover-shadow) !important;
 }
 
-/* Fix image ratio */
 .img-container {
     width: 100%;
     height: 200px;
     overflow: hidden;
+    position: relative;
+}
+
+.img-container::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 50%, rgba(0, 0, 0, 0.03));
+    pointer-events: none;
 }
 
 .img-container img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Giúp ảnh không bị méo, luôn lấp đầy khung */
+    object-fit: cover;
     transition: transform 0.5s ease;
 }
 
@@ -113,11 +262,65 @@
     transform: scale(1.1);
 }
 
-.card-body {
-    background: #fff;
+.heritage-card-v2 .card-body {
+    background: white;
+    padding: 1rem 1.15rem 1.15rem;
+    border-left: 4px solid var(--bronze-accent) !important;
 }
 
-/* Search bar */
-.search-wrapper { max-width: 600px; }
-.btn-search { background-color: var(--forest-green) !important; border-radius: 0 50px 50px 0 !important; }
-.form-control { border-radius: 50px 0 0 50px !important; }
+.heritage-card-v2 .card-body .badge {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.3rem 0.7rem;
+    border-radius: 8px;
+}
+
+.heritage-card-v2 .card-body h5 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--forest-green);
+    margin-bottom: 0.3rem;
+    line-height: 1.3;
+}
+
+.heritage-card-v2 .card-body p {
+    font-size: 0.82rem;
+    color: #6b7b71;
+    line-height: 1.4;
+}
+
+/* Intangible card different border */
+#phi-vat-the-content .heritage-card-v2 .card-body {
+    border-left-color: var(--forest-green) !important;
+}
+
+#phi-vat-the-content .heritage-card-v2 .card-body .badge {
+    background-color: var(--forest-green) !important;
+    color: white !important;
+}
+
+/* ============================
+   MAIN CONTENT
+   ============================ */
+
+main.py-5 {
+    padding-top: 2rem !important;
+}
+
+main.container {
+    max-width: 1200px;
+}
+
+/* ============================
+   FOOTER
+   ============================ */
+
+footer.bg-dark {
+    background: var(--forest-green) !important;
+    border-top: 2px solid var(--bronze-accent);
+}
+
+footer p {
+    font-size: 0.85rem;
+    opacity: 0.8;
+}

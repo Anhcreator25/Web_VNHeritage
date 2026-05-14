@@ -1,23 +1,12 @@
+// ============================================================
+// KHỞI TẠO DỮ LIỆU & BIẾN TOÀN CỤC
+// ============================================================
+
 const heritageDataSource = typeof heritageData !== 'undefined' ? heritageData : {};
 
 const categories = {
     physical: ['hue', 'ha-long', 'hoi-an', 'my-son', 'thang-long', 'phong-nha', 'thanh-nha-ho'],
     intangible: ['nha-nhac', 'cong-chieng', 'quan-ho', 'ca-tru', 'hoi-giong', 'hat-xoan', 'don-ca-tai-tu', 'vi-giam', 'keo-co', 'tho-mau', 'bai-choi', 'hat-then', 'xoe-thai', 'gom-cham', 'via-ba', 'dong-ho']
-};
-
-const mapPositions = {
-    'hue': { left: '44%', top: '48%' }, 'ha-long': { left: '39.7%', top: '14%' },
-    'hoi-an': { left: '49%', top: '61%' }, 'my-son': { left: '47%', top: '65%' },
-    'thang-long': { left: '32.7%', top: '30%' }, 'phong-nha': { left: '45%', top: '50%' },
-    'thanh-nha-ho': { left: '35.7%', top: '35%' }, 'nha-nhac': { left: '44%', top: '49%' },
-    'cong-chieng': { left: '48%', top: '58%' }, 'quan-ho': { left: '34.1%', top: '26%' },
-    'ca-tru': { left: '36%', top: '25%' }, 'hoi-giong': { left: '33.1%', top: '29%' },
-    'hat-xoan': { left: '35%', top: '23%' }, 'don-ca-tai-tu': { left: '46%', top: '68%' },
-    'vi-giam': { left: '37.6%', top: '38%' }, 'keo-co': { left: '36.9%', top: '24%' },
-    'tho-mau': { left: '42%', top: '44%' }, 'bai-choi': { left: '45%', top: '55%' },
-    'hat-then': { left: '31.7%', top: '18%' }, 'xoe-thai': { left: '34%', top: '20%' },
-    'gom-cham': { left: '49%', top: '67%' }, 'via-ba': { left: '48%', top: '70%' },
-    'dong-ho': { left: '33.3%', top: '28%' }
 };
 
 const realCoordinates = {
@@ -35,6 +24,7 @@ const realCoordinates = {
     'dong-ho': { lat: 21.1000, lng: 106.1000 }
 };
 
+// DOM elements
 const physicalBtn = document.getElementById('physicalBtn');
 const intangibleBtn = document.getElementById('intangibleBtn');
 const siteList = document.getElementById('site-list');
@@ -43,7 +33,11 @@ const emptyItinerary = document.getElementById('empty-itinerary');
 const saveItineraryBtn = document.getElementById('save-itinerary-btn');
 const clearItineraryBtn = document.getElementById('clear-itinerary-btn');
 const routeAnalysis = document.getElementById('route-analysis');
+const weatherSummary = document.getElementById('weather-summary');
+const savedList = document.getElementById('saved-list');
+const sampleToursContainer = document.getElementById('sample-tours-container');
 
+// State
 let activeCategory = 'physical';
 let itinerary = [];
 let dragSourceIndex = null;
@@ -54,38 +48,319 @@ const transportSettings = {
     car: { speed: 60, timePerSite: 90 }
 };
 
-function loadItinerary() {
-    try { itinerary = JSON.parse(localStorage.getItem('vhJourney')) || []; } catch { itinerary = []; }
+// ============================================================
+// TOUR MẪU GỢI Ý SẴN
+// ============================================================
+
+const sampleTours = [
+    {
+        id: 'central-3days',
+        name: 'Tour di sản miền Trung 3 ngày',
+        desc: 'Cố đô Huế, Mỹ Sơn, Hội An, Nhã nhạc cung đình',
+        sites: ['hue', 'my-son', 'hoi-an', 'nha-nhac', 'bai-choi'],
+        icon: 'fa-landmark'
+    },
+    {
+        id: 'hanoi-halong',
+        name: 'Tour Hà Nội - Hạ Long',
+        desc: 'Hoàng thành Thăng Long, Vịnh Hạ Long, Quan họ',
+        sites: ['thang-long', 'ha-long', 'quan-ho', 'dong-ho', 'ca-tru'],
+        icon: 'fa-city'
+    },
+    {
+        id: 'northern-heritage',
+        name: 'Tour di sản Bắc Bộ',
+        desc: 'Thành Nhà Hồ, Hát Xoan, Hội Gióng, Ca trù',
+        sites: ['thang-long', 'thanh-nha-ho', 'hoi-giong', 'hat-xoan', 'keo-co'],
+        icon: 'fa-mountain'
+    },
+    {
+        id: 'southern-journey',
+        name: 'Tour di sản phương Nam',
+        desc: 'Đờn ca tài tử, Gốm Chăm, Lễ Vía Bà, Bài Chòi',
+        sites: ['don-ca-tai-tu', 'via-ba', 'gom-cham', 'bai-choi'],
+        icon: 'fa-umbrella-beach'
+    },
+    {
+        id: 'grand-tour',
+        name: 'Tour di sản Việt Nam',
+        desc: 'Xuyên Việt qua các di sản tiêu biểu nhất',
+        sites: ['thang-long', 'ha-long', 'hue', 'hoi-an', 'my-son', 'phong-nha', 'don-ca-tai-tu'],
+        icon: 'fa-globe-asia'
+    }
+];
+
+function loadSampleTour(tourId) {
+    const tour = sampleTours.find(t => t.id === tourId);
+    if (!tour) return;
+
+    itinerary = tour.sites.filter(key => heritageDataSource[key]);
+    saveItinerary();
+    renderItinerary();
+
+    const aside = document.querySelector('.info-panel');
+    if (aside) {
+        aside.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 }
 
-function saveItinerary() { localStorage.setItem('vhJourney', JSON.stringify(itinerary)); }
+function renderSampleTours() {
+    const cards = sampleTours.map(tour => {
+        const firstSite = heritageDataSource[tour.sites[0]];
+        const imgSrc = firstSite?.img || 'image/VIETNAM1.jpg';
+        return `
+            <div class="tour-card" onclick="loadSampleTour('${tour.id}')">
+                <div class="tour-card-img">
+                    <img src="${imgSrc}" alt="${escapeHTML(tour.name)}">
+                    <div class="tour-card-overlay">
+                        <i class="fas ${tour.icon}"></i>
+                    </div>
+                </div>
+                <div class="tour-card-body">
+                    <h6 class="tour-card-title">${escapeHTML(tour.name)}</h6>
+                    <p class="tour-card-desc">${escapeHTML(tour.desc)}</p>
+                    <div class="tour-card-footer">
+                        <span class="tour-card-count"><i class="fas fa-map-pin me-1"></i>${tour.sites.length} điểm</span>
+                        <span class="tour-card-btn">Dùng ngay <i class="fas fa-arrow-right ms-1"></i></span>
+                    </div>
+                </div>
+            </div>`;
+    }).join('');
 
-function extractText(html) {
-    const container = document.createElement('div');
-    container.innerHTML = html || '';
-    return container.textContent.replace(/\s+/g, ' ').trim();
+    sampleToursContainer.innerHTML = `
+        <div class="tour-section">
+            <div class="tour-section-header">
+                <span class="info-label">Gợi ý</span>
+                <h6 class="mb-0 fw-bold">Tour mẫu cho bạn</h6>
+            </div>
+            <div class="tour-scroll-wrapper">
+                <div class="tour-scroll">
+                    ${cards}
+                </div>
+            </div>
+        </div>`;
 }
 
-function calculateDistance(lat1, lng1, lat2, lng2) {
-    const R = 6371; 
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLng = (lng2 - lng1) * Math.PI / 180;
-    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-              Math.sin(dLng / 2) * Math.sin(dLng / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return (R * c) * 1.25; // Hệ số uốn lượn đường bộ Việt Nam
+// ============================================================
+// LƯU / TẢI NHIỀU HÀNH TRÌNH (LOCALSTORAGE)
+// ============================================================
+
+const SAVED_KEY = 'vhSavedItineraries';
+
+function getSavedItineraries() {
+    try { return JSON.parse(localStorage.getItem(SAVED_KEY)) || {}; } catch { return {}; }
+}
+
+function saveNamedItinerary(name) {
+    const saved = getSavedItineraries();
+    const customPoints = {};
+    itinerary.forEach(key => {
+        if (key.startsWith('custom_')) {
+            customPoints[key] = { data: heritageDataSource[key], coords: realCoordinates[key] };
+        }
+    });
+    saved[name] = {
+        itinerary: [...itinerary],
+        customPoints: customPoints,
+        savedAt: new Date().toISOString()
+    };
+    localStorage.setItem(SAVED_KEY, JSON.stringify(saved));
+    renderSavedList();
+}
+
+function loadNamedItinerary(name) {
+    const saved = getSavedItineraries();
+    const entry = saved[name];
+    if (!entry) return;
+
+    if (entry.customPoints) {
+        for (let key in entry.customPoints) {
+            heritageDataSource[key] = entry.customPoints[key].data;
+            realCoordinates[key] = entry.customPoints[key].coords;
+        }
+    }
+    itinerary = [...(entry.itinerary || [])];
+    saveItinerary();
+    renderItinerary();
+}
+
+function deleteSavedItinerary(name) {
+    const saved = getSavedItineraries();
+    delete saved[name];
+    localStorage.setItem(SAVED_KEY, JSON.stringify(saved));
+    renderSavedList();
+}
+
+function renderSavedList() {
+    const saved = getSavedItineraries();
+    const names = Object.keys(saved);
+
+    savedList.innerHTML = '';
+    if (names.length === 0) {
+        savedList.innerHTML = '<li><span class="dropdown-item text-muted">Chưa có hành trình nào</span></li>';
+        return;
     }
 
-// Escape HTML to prevent injection when inserting user‑controlled text
+    names.forEach(name => {
+        const li = document.createElement('li');
+        li.className = 'dropdown-item d-flex align-items-center justify-content-between';
+        li.style.cursor = 'default';
+
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'flex-grow-1 py-1';
+        nameSpan.style.cursor = 'pointer';
+        nameSpan.innerHTML = `<i class="fas fa-map-marked-alt me-2 text-bronze"></i>${escapeHTML(name)} <small class="text-muted ms-1">(${(saved[name].itinerary || []).length} điểm)</small>`;
+        nameSpan.addEventListener('click', (e) => {
+            e.stopPropagation();
+            loadNamedItinerary(name);
+        });
+
+        const delBtn = document.createElement('button');
+        delBtn.className = 'btn btn-sm text-danger ms-2';
+        delBtn.title = 'Xoá';
+        delBtn.innerHTML = '<i class="fas fa-times"></i>';
+        delBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (confirm(`Xoá "${name}"?`)) {
+                deleteSavedItinerary(name);
+            }
+        });
+
+        li.appendChild(nameSpan);
+        li.appendChild(delBtn);
+        savedList.appendChild(li);
+    });
+}
+
+// ============================================================
+// HÀM TIỆN ÍCH
+// ============================================================
+
 function escapeHTML(str) {
     if (!str) return '';
     return str.replace(/&/g, '&amp;')
-              .replace(/</g, '&lt;')
-              .replace(/>/g, '&gt;')
-              .replace(/"/g, '&quot;')
-              .replace(/'/g, '&#39;');
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 }
+
+function calculateDistance(lat1, lng1, lat2, lng2) {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLng = (lng2 - lng1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return (R * c) * 1.25;
+}
+
+// ============================================================
+// THỜI TIẾT THEO LỘ TRÌNH
+// ============================================================
+
+const weatherCache = {};
+
+function getWeatherIcon(code) {
+    if (code === 0) return 'fa-sun';
+    if (code <= 2) return 'fa-cloud-sun';
+    if (code <= 3) return 'fa-cloud';
+    if (code <= 48) return 'fa-smog';
+    if (code <= 57) return 'fa-cloud-rain';
+    if (code <= 67) return 'fa-cloud-showers-heavy';
+    if (code <= 77) return 'fa-snowflake';
+    if (code <= 82) return 'fa-cloud-rain';
+    if (code <= 86) return 'fa-cloud-snow';
+    return 'fa-cloud-bolt';
+}
+
+function getWeatherLabel(code) {
+    if (code === 0) return 'Trời quang';
+    if (code <= 2) return 'Ít mây';
+    if (code <= 3) return 'Nhiều mây';
+    if (code <= 48) return 'Sương mù';
+    if (code <= 57) return 'Mưa phùn';
+    if (code <= 67) return 'Mưa lớn';
+    if (code <= 77) return 'Tuyết';
+    if (code <= 82) return 'Mưa rào';
+    if (code <= 86) return 'Mưa tuyết';
+    return 'Dông bão';
+}
+
+async function fetchWeather(key) {
+    const coord = realCoordinates[key];
+    if (!coord || key.startsWith('custom_')) return null;
+    const cacheKey = `${coord.lat.toFixed(1)}_${coord.lng.toFixed(1)}`;
+
+    if (weatherCache[cacheKey] && Date.now() - weatherCache[cacheKey].timestamp < 1800000) {
+        return weatherCache[cacheKey].data;
+    }
+
+    try {
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${coord.lat}&longitude=${coord.lng}&current_weather=true`;
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data.current_weather) {
+            weatherCache[cacheKey] = { data: data.current_weather, timestamp: Date.now() };
+            return data.current_weather;
+        }
+    } catch (e) {
+        console.warn('Weather fetch failed for', key);
+    }
+    return null;
+}
+
+async function updateWeather() {
+    const weatherDisplay = document.getElementById('weather-summary');
+    const uniqueKeys = [...new Set(itinerary.filter(k => !k.startsWith('custom_')))];
+
+    if (uniqueKeys.length === 0) {
+        if (weatherDisplay) weatherDisplay.innerHTML = '';
+        return;
+    }
+
+    if (weatherDisplay) {
+        weatherDisplay.innerHTML = `<div class="small text-muted text-center py-1"><i class="fas fa-spinner fa-spin me-1"></i>Đang cập nhật thời tiết...</div>`;
+    }
+
+    const results = await Promise.allSettled(uniqueKeys.map(k => fetchWeather(k)));
+
+    let weatherHtml = '';
+    let allTemps = [];
+    results.forEach((result, idx) => {
+        const key = uniqueKeys[idx];
+        if (result.status === 'fulfilled' && result.value) {
+            const w = result.value;
+            allTemps.push(w.temperature);
+            const icon = getWeatherIcon(w.weathercode);
+            const label = getWeatherLabel(w.weathercode);
+            weatherHtml += `<span class="me-2" title="${escapeHTML(heritageDataSource[key]?.title)}: ${label}, ${w.temperature}°C">
+                <i class="fas ${icon}"></i> ${Math.round(w.temperature)}°</span>`;
+        }
+    });
+
+    if (weatherDisplay) {
+        if (weatherHtml) {
+            let avgTemp = '--';
+            if (allTemps.length > 0) {
+                avgTemp = Math.round(allTemps.reduce((a, b) => a + b, 0) / allTemps.length) + '°C';
+            }
+            weatherDisplay.innerHTML = `
+                <div class="small p-2 bg-light rounded-3 text-center">
+                    <i class="fas fa-temperature-half me-1 text-bronze"></i>
+                    <strong>Thời tiết:</strong> ${weatherHtml}
+                    <span class="ms-1 badge bg-success">TB ${avgTemp}</span>
+                </div>`;
+        } else {
+            weatherDisplay.innerHTML = '';
+        }
+    }
+}
+
+// ============================================================
+// ĐỊNH VỊ GPS
+// ============================================================
 
 function getCurrentLocation() {
     if (!navigator.geolocation) {
@@ -99,7 +374,7 @@ function getCurrentLocation() {
     navigator.geolocation.getCurrentPosition((position) => {
         const lat = position.coords.latitude;
         const lng = position.coords.longitude;
-        const myLocationKey = `custom_pos`; // Dùng key cố định để không bị thêm trùng nhiều lần
+        const myLocationKey = `custom_pos`;
 
         heritageDataSource[myLocationKey] = {
             title: "Vị trí của tôi",
@@ -112,7 +387,7 @@ function getCurrentLocation() {
             itinerary.unshift(myLocationKey);
         }
 
-        saveItinerary(); // Lưu lại vào localStorage
+        saveItinerary();
         renderItinerary();
         btn.innerHTML = '<i class="fas fa-location-crosshairs me-2"></i> Lấy vị trí của tôi';
     }, (error) => {
@@ -120,85 +395,32 @@ function getCurrentLocation() {
     }, { enableHighAccuracy: true });
 }
 
+// ============================================================
+// GOOGLE MAPS & CHIA SẺ
+// ============================================================
+
 function openInGoogleMaps() {
     if (itinerary.length < 2) {
         alert("Vui lòng chọn ít nhất 2 địa điểm!");
         return;
     }
 
-    // Lấy danh sách tọa độ từ itinerary
     const coordsList = itinerary.map(key => realCoordinates[key]).filter(c => c);
-    
     if (coordsList.length < 2) return;
 
-    // Điểm khởi đầu
     const origin = `${coordsList[0].lat},${coordsList[0].lng}`;
-    
-    // Điểm kết thúc
     const destination = `${coordsList[coordsList.length - 1].lat},${coordsList[coordsList.length - 1].lng}`;
-    
-    // Các điểm trung gian
+
     let waypoints = "";
     if (coordsList.length > 2) {
         waypoints = coordsList.slice(1, -1).map(c => `${c.lat},${c.lng}`).join('|');
     }
 
-    // travelmode: 'driving' cho ô tô, 'walking' cho đi bộ, 'bicycling' cho xe máy (tùy khu vực)
     const mode = (transportMode === 'car') ? 'driving' : 'motorcycling';
-    
-    // Tạo link Google Maps chuẩn (dùng bản đồ hướng dẫn đường đi)
     const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&waypoints=${waypoints}&travelmode=${mode}`;
-    
+
     window.open(url, '_blank');
 }
-
-
-function shareJourney() {
-    if (itinerary.length < 2) {
-        alert("Vui lòng tạo hành trình trước khi chia sẻ!");
-        return;
-    }
-
-    const coordsList = itinerary.map(key => realCoordinates[key]).filter(c => c);
-    const origin = `${coordsList[0].lat},${coordsList[0].lng}`;
-    const destination = `${coordsList[coordsList.length - 1].lat},${coordsList[coordsList.length - 1].lng}`;
-    const waypoints = coordsList.slice(1, -1).map(c => `${c.lat},${c.lng}`).join('|');
-    const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&waypoints=${waypoints}`;
-
-    // Helper: fallback copy/display
-    const fallbackCopy = (url) => {
-        // Clipboard API requires secure context
-        if (navigator.clipboard && window.isSecureContext) {
-            navigator.clipboard.writeText(url).then(() => {
-                alert("Đã sao chép link hành trình vào bộ nhớ tạm!");
-            }).catch(() => {
-                // If clipboard fails, prompt the user
-                prompt("Sao chép link dưới đây:", url);
-            });
-        } else {
-            // Non‑secure context: just show the URL
-            prompt("Sao chép link dưới đây:", url);
-        }
-    };
-
-    // Try native share API only in secure contexts (required by Web Share)
-    if (navigator.share && window.isSecureContext) {
-        navigator.share({
-            title: 'Hành trình di sản của tôi',
-            text: 'Cùng khám phá lộ trình di sản mình vừa tạo nhé!',
-            url: googleMapsUrl,
-        }).catch(err => {
-            console.error('Share API failed:', err);
-            fallbackCopy(googleMapsUrl);
-        });
-    } else {
-        fallbackCopy(googleMapsUrl);
-    }
-
-    // Open the route in a new tab for immediate preview (should be allowed as a user gesture)
-    window.open(googleMapsUrl, '_blank');
-}
-
 
 function getShareUrl() {
     const coordsList = itinerary.map(key => realCoordinates[key]).filter(c => c);
@@ -214,19 +436,17 @@ function showShareOptions() {
         return;
     }
     const shareUrl = getShareUrl();
-    // Toggle existing container
+
     let container = document.getElementById('share-options');
     if (container) {
         container.style.display = container.style.display === 'none' ? 'block' : 'none';
         return;
     }
-    // Create container
+
     container = document.createElement('div');
     container.id = 'share-options';
-    container.className = 'mt-2 p-2 border rounded mx-auto';
-    container.style.backgroundColor = '#f8f9fa';
-    container.style.maxWidth = '350px';
-    // URL textarea (read‑only)
+    container.className = 'mt-2 p-2 border rounded mx-auto share-options';
+
     const textarea = document.createElement('textarea');
     textarea.id = 'share-url';
     textarea.className = 'form-control mb-2';
@@ -234,10 +454,10 @@ function showShareOptions() {
     textarea.readOnly = true;
     textarea.value = shareUrl;
     container.appendChild(textarea);
-    // Buttons container
+
     const btnGroup = document.createElement('div');
     btnGroup.className = 'd-flex flex-wrap gap-2';
-    // Facebook share
+
     const fbBtn = document.createElement('button');
     fbBtn.type = 'button';
     fbBtn.className = 'btn btn-primary btn-sm flex-fill';
@@ -247,7 +467,7 @@ function showShareOptions() {
         window.open(fbUrl, '_blank', 'width=600,height=400');
     };
     btnGroup.appendChild(fbBtn);
-    // Zalo share (web)
+
     const zaloBtn = document.createElement('button');
     zaloBtn.type = 'button';
     zaloBtn.className = 'btn btn-success btn-sm flex-fill';
@@ -257,20 +477,19 @@ function showShareOptions() {
         window.open(zaloUrl, '_blank', 'width=600,height=400');
     };
     btnGroup.appendChild(zaloBtn);
-    // Messenger share (Facebook Messenger)
+
     const messengerBtn = document.createElement('button');
     messengerBtn.type = 'button';
     messengerBtn.className = 'btn btn-primary btn-sm flex-fill';
     messengerBtn.innerHTML = '<i class="fab fa-facebook-messenger me-1"></i>Messenger';
     messengerBtn.onclick = () => {
-        // Replace YOUR_APP_ID with a real Facebook App ID if you have one
         const appId = 'YOUR_APP_ID';
         const redirectUri = encodeURIComponent(window.location.href);
         const messengerUrl = `https://www.facebook.com/dialog/send?link=${encodeURIComponent(shareUrl)}&app_id=${appId}&redirect_uri=${redirectUri}`;
         window.open(messengerUrl, '_blank', 'width=600,height=400');
     };
     btnGroup.appendChild(messengerBtn);
-    // WhatsApp share
+
     const whatsappBtn = document.createElement('button');
     whatsappBtn.type = 'button';
     whatsappBtn.className = 'btn btn-success btn-sm flex-fill';
@@ -280,7 +499,7 @@ function showShareOptions() {
         window.open(whatsappUrl, '_blank', 'width=600,height=400');
     };
     btnGroup.appendChild(whatsappBtn);
-    // Copy link (text)
+
     const copyBtn = document.createElement('button');
     copyBtn.type = 'button';
     copyBtn.className = 'btn btn-secondary btn-sm flex-fill';
@@ -297,102 +516,82 @@ function showShareOptions() {
         }
     };
     btnGroup.appendChild(copyBtn);
+
     container.appendChild(btnGroup);
-    // Insert after the share button
+
     const shareBtn = document.querySelector('button[onclick="showShareOptions()"]');
     if (shareBtn) {
         shareBtn.parentNode.insertBefore(container, shareBtn.nextSibling);
     }
 }
 
-function exportDetailedPDF() {
-    const element = document.getElementById('route-analysis');
-    if (!element) {
-        alert('Không có nội dung để xuất PDF');
-        return;
-    }
-    const opt = {
-        margin: 0.5,
-        filename: 'lo_trinh.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-    html2pdf().set(opt).from(element).save();
-}
+// ============================================================
+// PHÂN TÍCH LỘ TRÌNH
+// ============================================================
 
 function calculateJourneyStats() {
     if (itinerary.length < 2) return null;
     let totalDistance = 0, totalDrivingTime = 0, segments = [];
 
-    // 1. Tính toán khoảng cách và thời gian di chuyển
     for (let i = 0; i < itinerary.length - 1; i++) {
-        const from = realCoordinates[itinerary[i]], to = realCoordinates[itinerary[i+1]];
+        const from = realCoordinates[itinerary[i]], to = realCoordinates[itinerary[i + 1]];
         if (from && to) {
             const dist = calculateDistance(from.lat, from.lng, to.lat, to.lng);
             const dTime = dist / transportSettings[transportMode].speed;
-            totalDistance += dist; 
+            totalDistance += dist;
             totalDrivingTime += dTime;
-            segments.push({ 
-                from: heritageDataSource[itinerary[i]].title, 
-                to: heritageDataSource[itinerary[i+1]].title, 
-                distance: dist, 
-                drivingTime: dTime 
+            segments.push({
+                from: heritageDataSource[itinerary[i]].title,
+                to: heritageDataSource[itinerary[i + 1]].title,
+                distance: dist,
+                drivingTime: dTime
             });
         }
     }
 
-    // 2. Tính thời gian tham quan (giảm dần nếu đi quá nhiều điểm để tránh kiệt sức)
     const timePerSite = transportSettings[transportMode].timePerSite;
     const totalSiteTime = (itinerary.length * timePerSite) / 60;
     const totalTime = totalDrivingTime + totalSiteTime;
 
-    // 3. Phân tích các trường hợp (Nâng cấp ở đây)
     let suggestedDays = "";
     let suggestedTime = "";
-    let intensity = ""; // Mức độ dày đặc của lịch trình
+    let intensity = "";
 
     if (totalTime <= 5) {
-        // TRƯỜNG HỢP 1: Chuyến đi ngắn trong buổi
         suggestedDays = "Nửa ngày (Sáng hoặc Chiều) - Thời gian di chuyển ngắn, phù hợp cho chuyến đi nhanh.";
         suggestedTime = "Khởi hành lúc 7:30 sáng hoặc 13:30 chiều, lịch trình nhẹ nhàng và không gây áp lực.";
         intensity = "Thoải mái - Nhịp độ nhẹ nhàng, tập trung vào nghỉ ngơi.";
     } else if (totalTime <= 10) {
-        // TRƯỜNG HỢP 2: Chuyến đi trong ngày
         suggestedDays = "1 ngày trọn vẹn - Khám phá các điểm nổi bật trong một ngày.";
         suggestedTime = "Nên khởi hành sớm từ 7:00 để kịp về trước buổi tối, tối đa 10h di chuyển và tham quan.";
         intensity = "Vừa sức - Cân bằng giữa di chuyển và tham quan.";
     } else if (totalTime <= 20) {
-        // TRƯỜNG HỢP 3: Chuyến đi cuối tuần (2 ngày)
         suggestedDays = "2 ngày 1 đêm - Thời gian nghỉ ngơi hợp lý, trải nghiệm sâu hơn.";
-        suggestedTime = "Nên nghỉ đêm tại " + segments[Math.floor(segments.length/2)].to + ", bắt đầu sớm ngày đầu và tiếp tục ngày thứ hai.";
+        suggestedTime = "Nên nghỉ đêm tại " + segments[Math.floor(segments.length / 2)].to + ", bắt đầu sớm ngày đầu và tiếp tục ngày thứ hai.";
         intensity = "Lý tưởng cho cuối tuần - Thời gian vừa đủ, không gấp rối.";
     } else if (totalDistance > 500) {
-        // TRƯỜNG HỢP 4: Hành trình xuyên tỉnh/Xuyên Việt
-        const days = Math.ceil(totalTime / 7); // Mỗi ngày đi 7 tiếng để đảm bảo sức khỏe
+        const days = Math.ceil(totalTime / 7);
         suggestedDays = `${days} ngày ${days - 1} đêm - Hành trình kéo dài, khám phá nhiều địa điểm.`;
         suggestedTime = "Hành trình dài: Cần kiểm tra bảo dưỡng xe, chuẩn bị thể lực, và nghỉ ngơi mỗi ngày để duy trì sức khỏe.";
         intensity = "Khám phá chuyên sâu - Mức độ dày đặc, phù hợp cho du khách yêu thích khám phá.";
     } else {
-        // TRƯỜNG HỢP 5: Các tour trung bình
         const days = Math.ceil(totalTime / 8);
         suggestedDays = `${days} ngày - Lịch trình dàn trải, thích hợp cho gia đình và nhóm.`;
         suggestedTime = "Lịch trình dàn trải, phù hợp đi cùng gia đình, mỗi ngày không quá 8h di chuyển và tham quan.";
         intensity = "Trung bình - Nhịp độ cân bằng, thích hợp cho mọi nhóm.";
     }
 
-    return { 
-        totalDistance, 
-        totalDrivingTime, 
-        totalSiteTime, 
-        totalTime, 
-        segments, 
-        suggestedDays, 
+    return {
+        totalDistance,
+        totalDrivingTime,
+        totalSiteTime,
+        totalTime,
+        segments,
+        suggestedDays,
         suggestedTime,
-        intensity 
+        intensity
     };
 }
-
 
 function updateRouteAnalysis() {
     routeAnalysis.innerHTML = '';
@@ -400,6 +599,7 @@ function updateRouteAnalysis() {
         routeAnalysis.innerHTML = '<div class="text-muted text-center">Thêm ít nhất 2 điểm để xem phân tích.</div>';
         return;
     }
+
     const stats = calculateJourneyStats();
     const formatTime = (h) => `${Math.floor(h)}h ${Math.round((h - Math.floor(h)) * 60)}m`;
 
@@ -407,53 +607,52 @@ function updateRouteAnalysis() {
         <div class="mb-3">
             <span class="info-label">Phương tiện</span>
             <div class="btn-group w-100 mb-3">
-                <button class="btn btn-sm btn-outline-success transport-btn ${transportMode === 'motorcycle'?'active':''}" data-mode="motorcycle"><i class="fas fa-motorcycle"></i> Xe máy</button>
-                <button class="btn btn-sm btn-outline-success transport-btn ${transportMode === 'car'?'active':''}" data-mode="car"><i class="fas fa-car"></i> Ô tô</button>
+                <button class="btn btn-sm btn-outline-success transport-btn ${transportMode === 'motorcycle' ? 'active' : ''}" data-mode="motorcycle"><i class="fas fa-motorcycle"></i> Xe máy</button>
+                <button class="btn btn-sm btn-outline-success transport-btn ${transportMode === 'car' ? 'active' : ''}" data-mode="car"><i class="fas fa-car"></i> Ô tô</button>
             </div>
         </div>
-         <div class="p-3 bg-light rounded-3 mb-3">
-             <div class="h3 mb-1 text-success fw-bold">${stats.totalDistance.toFixed(1)} km</div>
-             <div class="small text-muted mb-2">Tổng thời gian dự kiến: ${formatTime(stats.totalTime)}</div>
-             <div class="small text-muted mb-2">Thời gian tham quan: ${formatTime(stats.totalSiteTime)}</div>
-             <div class="badge bg-success-subtle text-dark p-2 w-100 text-start text-wrap">📅 Ước tính: ${escapeHTML(stats.suggestedDays)}</div>
-             <div class="badge bg-success-subtle text-dark p-2 w-100 text-start text-wrap">⏰ Kế hoạch: ${escapeHTML(stats.suggestedTime)}</div>
-             <div class="badge bg-success-subtle text-dark p-2 w-100 text-start text-wrap">🔥 Mức độ: ${escapeHTML(stats.intensity)}</div>
-         </div>
-<button onclick="openInGoogleMaps()" class="btn btn-primary w-100 mt-2 shadow-sm" style="background:#4285F4; border:none">
-    <i class="fab fa-google me-2"></i> Bắt đầu trên Google Maps
-</button>
-<button onclick="showShareOptions()" class="btn btn-danger w-100 mt-2">
-    <i class="fas fa-share-alt me-2"></i> Chia sẻ lộ trình
-</button>
+        <div class="p-3 bg-light rounded-3 mb-3">
+            <div class="h3 mb-1 text-success fw-bold">${stats.totalDistance.toFixed(1)} km</div>
+            <div class="small text-muted mb-2">Tổng thời gian dự kiến: ${formatTime(stats.totalTime)}</div>
+            <div class="small text-muted mb-2">Thời gian tham quan: ${formatTime(stats.totalSiteTime)}</div>
+            <div class="badge bg-success-subtle text-dark p-2 w-100 text-start text-wrap">📅 Ước tính: ${escapeHTML(stats.suggestedDays)}</div>
+            <div class="badge bg-success-subtle text-dark p-2 w-100 text-start text-wrap">⏰ Kế hoạch: ${escapeHTML(stats.suggestedTime)}</div>
+            <div class="badge bg-success-subtle text-dark p-2 w-100 text-start text-wrap">🔥 Mức độ: ${escapeHTML(stats.intensity)}</div>
+        </div>
+        <button onclick="openInGoogleMaps()" class="btn btn-google-maps w-100 mt-2 shadow-sm">
+            <i class="fab fa-google me-2"></i> Bắt đầu trên Google Maps
+        </button>
+        <button onclick="showShareOptions()" class="btn btn-danger w-100 mt-2">
+            <i class="fas fa-share-alt me-2"></i> Chia sẻ lộ trình
+        </button>
+        <div class="d-flex align-items-center justify-content-center mt-3">
+            <div id="qr-code" class="text-center"></div>
+            <p class="ms-3 mb-0 small text-muted">Quét mã QR để mở lộ trình trên Google Maps</p>
+        </div>
+        <div class="small text-muted">Chi tiết lộ trình:</div>
+        <div class="mt-2 route-segments">
+            ${stats.segments.map((s, i) => `<div class="mb-2 border-bottom pb-1"><strong>${i + 1}.</strong> ${escapeHTML(s.from)} → ${escapeHTML(s.to)} <br> <span class="text-success">${s.distance.toFixed(1)}km</span></div>`).join('')}
+        </div>
+    `;
 
-      
-          <div class="d-flex align-items-center justify-content-center mt-3">
-              <div id="qr-code" class="text-center"></div>
-              <p class="ms-3 mb-0 small text-muted">Quét mã QR để mở lộ trình trên Google Maps</p>
-          </div>
-          <div class="small text-muted">Chi tiết lộ trình:</div>
-          <div class="mt-2" style="max-height: 200px; overflow-y: auto;">
-              ${stats.segments.map((s, i) => `<div class="mb-2 border-bottom pb-1"><strong>${i+1}.</strong> ${s.from} → ${s.to} <br> <span class="text-success">${s.distance.toFixed(1)}km</span></div>`).join('')}
-          </div>
-     `;
-    // Generate QR code for Google Maps link (ensuring clean container)
+    // Tạo QR code
     const qrCoords = itinerary.map(key => realCoordinates[key]).filter(c => c);
     if (qrCoords.length >= 2) {
         const qrOrigin = `${qrCoords[0].lat},${qrCoords[0].lng}`;
         const qrDestination = `${qrCoords[qrCoords.length - 1].lat},${qrCoords[qrCoords.length - 1].lng}`;
         const qrWaypoints = qrCoords.slice(1, -1).map(c => `${c.lat},${c.lng}`).join('|');
         const qrGoogleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${qrOrigin}&destination=${qrDestination}&waypoints=${qrWaypoints}`;
-         // Ensure QR code container exists and is empty
-         let qrDiv = document.getElementById('qr-code');
-         if (!qrDiv) {
-             qrDiv = document.createElement('div');
-             qrDiv.id = 'qr-code';
-             qrDiv.className = 'mt-3 text-center';
-             routeAnalysis.appendChild(qrDiv);
-         } else {
-             qrDiv.innerHTML = '';
-         }
-        console.log('Generating QR code for URL:', qrGoogleMapsUrl);
+
+        let qrDiv = document.getElementById('qr-code');
+        if (!qrDiv) {
+            qrDiv = document.createElement('div');
+            qrDiv.id = 'qr-code';
+            qrDiv.className = 'mt-3 text-center';
+            routeAnalysis.appendChild(qrDiv);
+        } else {
+            qrDiv.innerHTML = '';
+        }
+
         if (typeof QRCode !== 'undefined') {
             new QRCode(qrDiv, {
                 text: qrGoogleMapsUrl,
@@ -469,33 +668,29 @@ function updateRouteAnalysis() {
             qrDiv.appendChild(img);
         }
     }
-
-     // Delegated click handler for transport mode buttons (single listener)
-     document.addEventListener('click', function(e) {
-         const btn = e.target.closest('.transport-btn');
-         if (btn) {
-             transportMode = btn.dataset.mode;
-             updateRouteAnalysis();
-         }
-     });
 }
+
+// ============================================================
+// RENDER DANH SÁCH DI SẢN
+// ============================================================
 
 function renderSiteCards() {
     siteList.innerHTML = '';
     categories[activeCategory].forEach(key => {
         const site = heritageDataSource[key];
         if (!site) return;
+
         const isAdded = itinerary.includes(key);
         const col = document.createElement('div');
         col.className = 'col';
         col.innerHTML = `
             <div class="journey-card card h-100 shadow-sm border-0 d-flex flex-column">
-                <img src="${site.img || 'image/VIETNAM1.jpg'}" class="card-img-top" style="height:150px; object-fit:cover">
+                <img src="${site.img || 'image/VIETNAM1.jpg'}" class="card-img-top" style="height:150px; object-fit:cover" alt="${site.title}">
                 <div class="card-body p-3 d-flex flex-column">
                     <h6 class="fw-bold mb-1">${site.title}</h6>
                     <p class="small text-muted mb-2">${site.location}</p>
-                    <button class="btn btn-sm ${isAdded?'btn-secondary':'btn-success'} w-100 mt-auto" onclick="addToItinerary('${key}')" ${isAdded?'disabled':''}>
-                        ${isAdded?'Đã thêm':'<i class="fas fa-plus"></i> Thêm'}
+                    <button class="btn btn-sm ${isAdded ? 'btn-secondary' : 'btn-success'} w-100 mt-auto" onclick="addToItinerary('${key}')" ${isAdded ? 'disabled' : ''}>
+                        ${isAdded ? 'Đã thêm' : '<i class="fas fa-plus"></i> Thêm'}
                     </button>
                 </div>
             </div>`;
@@ -503,41 +698,90 @@ function renderSiteCards() {
     });
 }
 
-function renderItinerary() {
+// ============================================================
+// RENDER LỊCH TRÌNH (KÉO THẢ + THỜI TIẾT)
+// ============================================================
+
+async function renderItinerary() {
     itineraryList.innerHTML = '';
     emptyItinerary.style.display = itinerary.length ? 'none' : 'block';
+
     itinerary.forEach((key, index) => {
         const site = heritageDataSource[key];
         const li = document.createElement('li');
         li.className = 'itinerary-item d-flex align-items-center mb-2 p-2 bg-white rounded shadow-sm';
         li.draggable = true;
-        li.innerHTML = `<span class="me-2 badge bg-success">${index+1}</span><div class="flex-grow-1 small fw-bold">${site.title}</div><button class="btn btn-sm text-danger" onclick="removeItineraryItem(${index})">×</button>`;
+        li.innerHTML = `
+            <span class="me-2 badge bg-success">${index + 1}</span>
+            <div class="flex-grow-1">
+                <div class="small fw-bold">${site.title}</div>
+                <div class="small text-muted site-weather-display" data-site-key="${key}">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </div>
+            </div>
+            <button class="btn btn-sm text-danger" onclick="removeItineraryItem(${index})">×</button>`;
+
         li.addEventListener('dragstart', () => { dragSourceIndex = index; });
         li.addEventListener('dragover', e => e.preventDefault());
         li.addEventListener('drop', () => {
             const [moved] = itinerary.splice(dragSourceIndex, 1);
             itinerary.splice(index, 0, moved);
-            saveItinerary(); renderItinerary();
+            saveItinerary();
+            renderItinerary();
         });
         itineraryList.appendChild(li);
     });
+
     renderSiteCards();
     updateRouteAnalysis();
+    updateWeather();
+
+    // Gọi thời tiết từng điểm
+    itinerary.forEach(key => {
+        const coord = realCoordinates[key];
+        if (!coord || key.startsWith('custom_')) return;
+        fetchWeather(key).then(w => {
+            if (!w) return;
+            const el = document.querySelector(`.site-weather-display[data-site-key="${key}"]`);
+            if (el) {
+                const icon = getWeatherIcon(w.weathercode);
+                el.innerHTML = `<i class="fas ${icon}"></i> ${Math.round(w.temperature)}°C`;
+            }
+        });
+    });
 }
 
-function addToItinerary(key) { if(!itinerary.includes(key)) { itinerary.push(key); saveItinerary(); renderItinerary(); } }
-function removeItineraryItem(idx) { itinerary.splice(idx, 1); saveItinerary(); renderItinerary(); }
-function clearItinerary() { itinerary = []; saveItinerary(); renderItinerary(); }
+// ============================================================
+// THAO TÁC LỊCH TRÌNH (THÊM / XOÁ / XOÁ TẤT CẢ)
+// ============================================================
 
-physicalBtn.addEventListener('click', () => { activeCategory='physical'; physicalBtn.classList.add('active'); intangibleBtn.classList.remove('active'); renderSiteCards(); });
-intangibleBtn.addEventListener('click', () => { activeCategory='intangible'; intangibleBtn.classList.add('active'); physicalBtn.classList.remove('active'); renderSiteCards(); });
-saveItineraryBtn.addEventListener('click', () => { saveItinerary(); alert('Hành trình đã được lưu!'); });
-clearItineraryBtn.addEventListener('click', clearItinerary);
+function addToItinerary(key) {
+    if (!itinerary.includes(key)) {
+        itinerary.push(key);
+        saveItinerary();
+        renderItinerary();
+    }
+}
+
+function removeItineraryItem(idx) {
+    itinerary.splice(idx, 1);
+    saveItinerary();
+    renderItinerary();
+}
+
+function clearItinerary() {
+    itinerary = [];
+    saveItinerary();
+    renderItinerary();
+}
+
+// ============================================================
+// LƯU / TẢI LỊCH TRÌNH (LOCALSTORAGE)
+// ============================================================
 
 function saveItinerary() {
-    // Lưu danh sách ID
     localStorage.setItem('vhJourney', JSON.stringify(itinerary));
-    // Lưu thêm dữ liệu của các điểm tự tạo (như GPS) để trang khác nạp lại được
+
     const customPoints = {};
     itinerary.forEach(key => {
         if (key.startsWith('custom_')) {
@@ -554,8 +798,7 @@ function loadItinerary() {
     try {
         itinerary = JSON.parse(localStorage.getItem('vhJourney')) || [];
         const customPoints = JSON.parse(localStorage.getItem('vhCustomPoints')) || {};
-        
-        // Nạp lại các điểm GPS vào nguồn dữ liệu hiện tại của trang
+
         for (let key in customPoints) {
             heritageDataSource[key] = customPoints[key].data;
             realCoordinates[key] = customPoints[key].coords;
@@ -565,14 +808,60 @@ function loadItinerary() {
     }
 }
 
-loadItinerary();
-renderItinerary();
+// ============================================================
+// EVENT LISTENERS
+// ============================================================
 
+physicalBtn.addEventListener('click', () => {
+    activeCategory = 'physical';
+    physicalBtn.classList.add('active');
+    intangibleBtn.classList.remove('active');
+    renderSiteCards();
+});
+
+intangibleBtn.addEventListener('click', () => {
+    activeCategory = 'intangible';
+    intangibleBtn.classList.add('active');
+    physicalBtn.classList.remove('active');
+    renderSiteCards();
+});
+
+saveItineraryBtn.addEventListener('click', () => {
+    if (itinerary.length === 0) {
+        alert('Vui lòng thêm điểm vào hành trình trước!');
+        return;
+    }
+    const name = prompt('Đặt tên cho hành trình này:');
+    if (!name || !name.trim()) return;
+    saveNamedItinerary(name.trim());
+    alert(`Đã lưu hành trình "${name.trim()}"!`);
+});
+
+clearItineraryBtn.addEventListener('click', clearItinerary);
+
+document.addEventListener('click', function (e) {
+    const btn = e.target.closest('.transport-btn');
+    if (btn) {
+        transportMode = btn.dataset.mode;
+        updateRouteAnalysis();
+    }
+});
+
+// ============================================================
+// KHỞI ĐỘNG
+// ============================================================
+
+loadItinerary();
+renderSampleTours();
+renderSavedList();
+renderItinerary();
 
 window.addEventListener('storage', (e) => {
     if (e.key === 'vhJourney' || e.key === 'vhCustomPoints') {
-        console.log("Dữ liệu hành trình đã thay đổi từ trang khác, đang cập nhật...");
         loadItinerary();
         renderItinerary();
+    }
+    if (e.key === SAVED_KEY) {
+        renderSavedList();
     }
 });

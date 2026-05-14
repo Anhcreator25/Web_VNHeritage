@@ -1,230 +1,707 @@
 :root {
-            --forest-green: #1a2e1a;
-            --bronze-accent: #c8a96e;
-        }
+    --forest-green: #1a2e1a;
+    --forest-light: #2d4a2d;
+    --bronze-accent: #c8a96e;
+    --bronze-light: #e0c88a;
+    --bronze-dark: #a8894e;
+    --cream-bg: #faf8f4;
+    --card-shadow: 0 4px 20px rgba(26, 46, 26, 0.08);
+    --card-hover-shadow: 0 12px 35px rgba(26, 46, 26, 0.15);
+}
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #fcfcfc;
-        }
+body {
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--cream-bg);
+    color: #2c3a2c;
+}
 
-        /* --- NAVBAR & DROPDOWN --- */
-        .navbar {
-            background-color: var(--forest-green) !important;
-            padding: 1rem 0;
-        }
-        
-        .navbar-brand, .nav-link {
-            color: white !important;
-        }
+/* ============================
+   NAVBAR
+   ============================ */
 
-        .nav-link:hover {
-            color: var(--bronze-accent) !important;
-        }
+.navbar {
+    background-color: var(--forest-green) !important;
+    padding: 1rem 0;
+}
 
-        /* Sửa lỗi Dropdown xấu */
-        .dropdown-menu {
-            background-color: var(--forest-green);
-            border: 1px solid var(--bronze-accent);
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            margin-top: 15px !important;
-            padding: 0;
-            overflow: hidden;
-            min-width: 220px;
-        }
+.navbar-brand,
+.nav-link {
+    color: white !important;
+}
 
-        .dropdown-item {
-            color: white !important;
-            padding: 12px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            transition: all 0.3s;
-        }
+.nav-link:hover {
+    color: var(--bronze-accent) !important;
+}
 
-        .dropdown-item:hover {
-            background-color: var(--bronze-accent) !important;
-            color: var(--forest-green) !important;
-            padding-left: 25px; /* Hiệu ứng đẩy nhẹ */
-        }
+.dropdown-menu {
+    background-color: var(--forest-green);
+    border: 1px solid var(--bronze-accent);
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    margin-top: 15px !important;
+    padding: 0;
+    overflow: hidden;
+    min-width: 220px;
+}
 
-        /* Căn giữa dropdown mũi tên */
-        @media (min-width: 992px) {
-            .dropdown-menu {
-                left: 50% !important;
-                transform: translateX(-50%) !important;
-            }
-        }
-        .text-bronze {
-            color: var(--bronze-accent);
-        }
+.dropdown-item {
+    color: white !important;
+    padding: 12px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s;
+}
 
-       .map-toggle .btn {
-    min-width: 140px;
+.dropdown-item:hover {
+    background-color: var(--bronze-accent) !important;
+    color: var(--forest-green) !important;
+    padding-left: 25px;
+}
+
+@media (min-width: 992px) {
+    .dropdown-menu {
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+    }
+}
+
+.text-bronze {
+    color: var(--bronze-accent);
+}
+
+/* ============================
+   PAGE HEADER
+   ============================ */
+
+.page-header {
+    padding: 1.5rem 0 0.5rem;
+    margin-bottom: 2rem !important;
+    border-bottom: 2px solid rgba(200, 169, 110, 0.2);
+}
+
+.journey-heading {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.page-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3.5vw, 2rem);
+    color: var(--forest-green);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.3px;
+}
+
+.page-title::after {
+    content: '';
+    display: block;
+    width: 50px;
+    height: 3px;
+    background: var(--bronze-accent);
+    margin: 0.7rem auto 0;
+    border-radius: 2px;
+}
+
+.page-description {
+    font-size: clamp(0.85rem, 1.8vw, 1rem);
+    color: #5a6b5a;
+    font-weight: 400;
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* ============================
+   MAP TOGGLE BUTTONS
+   ============================ */
+
+.map-toggle .btn {
+    min-width: 120px;
     border-radius: 999px;
-    padding: 0.85rem 1.2rem;
+    padding: 0.6rem 1.2rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    border: 2px solid var(--forest-green);
+    color: var(--forest-green);
+    transition: all 0.3s ease;
 }
 
 .map-toggle .btn.active {
-    background-color: var(--forest-green);
+    background: var(--forest-green);
     color: white;
     border-color: var(--forest-green);
+    box-shadow: 0 4px 12px rgba(26, 46, 26, 0.2);
 }
+
+.map-toggle .btn:not(.active):hover {
+    background: rgba(26, 46, 26, 0.05);
+}
+
+/* ============================
+   JOURNEY CARDS
+   ============================ */
+
 .journey-card {
-    border-radius: 24px;
+    border-radius: 20px;
     overflow: hidden;
-    border: 1px solid rgba(40, 62, 47, 0.1);
+    border: none;
     background: white;
     display: flex;
     flex-direction: column;
     height: 100%;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-        .journey-card img.card-img-top {
-            width: 100%;
-            height: 160px;
-            object-fit: cover;
-            display: block;
-        }
-        .journey-card-body {
-            padding: 1rem 1rem 1.2rem;
-            flex: 1 1 auto;
-        }
-        .journey-card-title {
-            font-size: 1.05rem;
-            margin-bottom: 0.35rem;
-            line-height: 1.2;
-        }
-        .journey-card-desc {
-            min-height: 56px;
-            color: #52604f;
-        }
-        .journey-card .btn {
-            border-radius: 12px;
-            padding: 0.75rem 1rem;
-            font-weight: 600;
-        }
-        .add-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 80%; /* hoặc 100% nếu muốn full chiều ngang */
-            height: 44px;
-            min-height: 44px;
-            padding: 0 0.75rem;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 0.95rem;
-            align-self: center;
-            margin-top: auto; /* Đẩy nút xuống đáy card */
-            margin-bottom: 1.2rem;
-        }
-        .add-btn[disabled] {
-            opacity: 0.65;
-            pointer-events: none;
-        }
-        .journey-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 1rem;
-        }
-        @media (min-width: 992px) {
-            .journey-grid {
-                grid-template-columns: repeat(3, minmax(0, 1fr));
-            }
-        }
+
+.journey-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--card-hover-shadow);
+}
+
+.journey-card img.card-img-top {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+}
+
+.journey-card:hover img.card-img-top {
+    transform: scale(1.05);
+}
+
+.journey-card .card-body {
+    padding: 1rem 1rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.journey-card .card-body h6 {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--forest-green);
+    margin-bottom: 0.25rem;
+}
+
+.journey-card .card-body p {
+    font-size: 0.82rem;
+    color: #6b7b71;
+    margin-bottom: 0.75rem;
+}
+
+.journey-card .btn {
+    border-radius: 12px;
+    padding: 0.6rem 1rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: all 0.25s ease;
+}
+
+.journey-card .btn-success {
+    background: var(--forest-green);
+    border-color: var(--forest-green);
+}
+
+.journey-card .btn-success:hover {
+    background: var(--forest-light);
+    border-color: var(--forest-light);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(26, 46, 26, 0.25);
+}
+
+.journey-card .btn-secondary {
+    background: #6b7b71;
+    border-color: #6b7b71;
+}
+
+/* ============================
+   JOURNEY GRID
+   ============================ */
+
+.journey-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+@media (min-width: 992px) {
+    .journey-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+/* ============================
+   INFO LABEL + SIDEBAR
+   ============================ */
+
+.info-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--bronze-dark);
+    font-weight: 600;
+}
+
+.schedule-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: 1.3rem;
+    color: var(--forest-green);
+}
+
+.info-panel {
+    border-radius: 20px;
+    position: sticky;
+    top: 100px;
+    border: 1px solid rgba(40, 62, 47, 0.06);
+    box-shadow: 0 8px 30px rgba(26, 46, 26, 0.06);
+}
+
+/* ============================
+   SAVE ACTIONS
+   ============================ */
+
+.save-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
 .save-actions button {
     min-width: 0;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 0.55rem 1rem;
+    transition: all 0.25s ease;
 }
 
-
- .save-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.75rem;
-        }
-
-/* Custom style for location button (outline) */
-.location-btn {
-    transition: background-color 0.2s, color 0.2s;
+.save-actions #save-itinerary-btn {
+    flex: 1;
+    background: var(--forest-green);
+    border-color: var(--forest-green);
 }
-.location-btn:hover {
-    background-color: #1A7F48;
+
+.save-actions #save-itinerary-btn:hover {
+    background: var(--forest-light);
+    border-color: var(--forest-light);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(26, 46, 26, 0.2);
+}
+
+.save-actions .btn-group .btn {
+    min-width: 0;
+    padding: 0.55rem 0.7rem;
+    border-radius: 12px !important;
+    border-color: var(--forest-green);
+    color: var(--forest-green);
+}
+
+.save-actions .btn-group .btn:hover {
+    background: var(--forest-green);
     color: white;
-    border-color: #1A7F48;
 }
-        .itinerary-item {
-            display: grid;
-            grid-template-columns: auto 1fr auto;
-            gap: 0.9rem;
-            align-items: center;
-            background: #fff;
-            border: 1px solid rgba(40, 62, 47, 0.08);
-            border-radius: 16px;
-            padding: 0.9rem 0.9rem 0.9rem 0.75rem;
-            margin-bottom: 0.85rem;
-            cursor: grab;
-            transition: transform 0.2s ease, border-color 0.2s ease;
-        }
-        .itinerary-item.drag-over {
-            border-color: var(--bronze-accent);
-            transform: scale(1.01);
-        }
-        .itinerary-number {
-            min-width: 2rem;
-            min-height: 2rem;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--bronze-accent);
-            color: white;
-            font-weight: 700;
-            border-radius: 999px;
-            font-size: 0.95rem;
-        }
-        .itinerary-body {
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-            color: #334236;
-            font-size: 0.95rem;
-        }
-        .itinerary-body strong {
-            font-size: 1rem;
-        }
-        .itinerary-body span {
-            color: #6b7b71;
-            font-size: 0.88rem;
-        }
-        .marker-number {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 22px;
-            height: 22px;
-            background: var(--forest-green);
-            color: white;
-            border-radius: 50%;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
-        .itinerary-remove {
-            min-width: 2.5rem;
-            min-height: 2.5rem;
-            border: 1px solid rgba(40, 62, 47, 0.08);
-            border-radius: 999px;
-            padding: 0;
-            font-size: 1.2rem;
-            line-height: 1;
-            color: var(--forest-green);
-        }
-        .itinerary-remove:hover {
-            background: rgba(200, 169, 110, 0.1);
-        }
-        .map-panel {
-            min-height: 410px;
-        }
-        .map-wrapper {
-            min-height: 320px;
-        }
-        .journey-heading {
-            max-width: 720px;
-        }
+
+.save-actions #clear-itinerary-btn {
+    padding: 0.55rem 0.75rem;
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+.save-actions #clear-itinerary-btn:hover {
+    background: #dc3545;
+    color: white;
+}
+
+/* ============================
+   LOCATION BUTTON
+   ============================ */
+
+.location-btn {
+    border-radius: 12px;
+    border: 2px dashed var(--bronze-accent);
+    color: var(--bronze-dark);
+    font-weight: 500;
+    font-size: 0.85rem;
+    padding: 0.6rem;
+    transition: all 0.3s ease;
+}
+
+.location-btn:hover {
+    background: linear-gradient(135deg, var(--bronze-accent), var(--bronze-light));
+    color: white;
+    border-color: var(--bronze-accent);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(200, 169, 110, 0.3);
+}
+
+/* ============================
+   TOUR MẪU CARDS
+   ============================ */
+
+.tour-section-header {
+    margin-bottom: 0.6rem;
+}
+
+.tour-section-header h6 {
+    color: var(--forest-green);
+    font-weight: 600;
+}
+
+.tour-scroll-wrapper {
+    overflow-x: auto;
+    padding-bottom: 8px;
+    margin: 0 -0.25rem;
+}
+
+.tour-scroll-wrapper::-webkit-scrollbar {
+    height: 4px;
+}
+
+.tour-scroll-wrapper::-webkit-scrollbar-track {
+    background: #e8ece8;
+    border-radius: 4px;
+}
+
+.tour-scroll-wrapper::-webkit-scrollbar-thumb {
+    background: var(--bronze-accent);
+    border-radius: 4px;
+}
+
+.tour-scroll {
+    display: flex;
+    gap: 0.75rem;
+    min-width: min-content;
+    padding: 0 0.25rem;
+}
+
+.tour-card {
+    flex: 0 0 200px;
+    width: 200px;
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(40, 62, 47, 0.08);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(26, 46, 26, 0.04);
+}
+
+.tour-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(26, 46, 26, 0.12);
+}
+
+.tour-card-img {
+    position: relative;
+    height: 100px;
+    overflow: hidden;
+}
+
+.tour-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.tour-card:hover .tour-card-img img {
+    transform: scale(1.08);
+}
+
+.tour-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(26, 46, 26, 0.75), rgba(26, 46, 26, 0.25));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tour-card-overlay i {
+    font-size: 2rem;
+    color: var(--bronze-accent);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.tour-card-body {
+    padding: 0.65rem 0.75rem 0.75rem;
+}
+
+.tour-card-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: var(--forest-green);
+    line-height: 1.2;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.tour-card-desc {
+    font-size: 0.72rem;
+    color: #6b7b71;
+    margin-bottom: 0.5rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.3;
+}
+
+.tour-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.tour-card-count {
+    font-size: 0.7rem;
+    color: #8a9a8e;
+}
+
+.tour-card-btn {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--forest-green);
+    background: rgba(200, 169, 110, 0.15);
+    padding: 0.2rem 0.55rem;
+    border-radius: 6px;
+    white-space: nowrap;
+    transition: all 0.25s ease;
+}
+
+.tour-card:hover .tour-card-btn {
+    background: var(--bronze-accent);
+    color: white;
+}
+
+/* ============================
+   SAVED ITINERARIES LIST
+   ============================ */
+
+#saved-list .dropdown-item {
+    white-space: normal;
+    padding: 0.5rem 0.75rem;
+    cursor: default;
+    border-radius: 8px;
+}
+
+#saved-list .dropdown-item span {
+    cursor: pointer;
+}
+
+#saved-list .dropdown-item .btn {
+    padding: 0;
+    font-size: 0.9rem;
+}
+
+/* ============================
+   WEATHER DISPLAY
+   ============================ */
+
+.site-weather-display {
+    font-size: 0.78rem;
+    line-height: 1.2;
+    margin-top: 2px;
+    color: #6b7b71;
+}
+
+.site-weather-display .fas {
+    width: 14px;
+    text-align: center;
+    color: var(--bronze-accent);
+}
+
+#weather-summary .fas {
+    width: 14px;
+    text-align: center;
+}
+
+#weather-summary > div {
+    border: 1px solid rgba(200, 169, 110, 0.2) !important;
+    background: linear-gradient(135deg, rgba(200, 169, 110, 0.06), rgba(200, 169, 110, 0.02)) !important;
+}
+
+/* ============================
+   ITINERARY LIST
+   ============================ */
+
+.itinerary-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.7rem;
+    align-items: center;
+    background: #fff;
+    border: 1px solid rgba(40, 62, 47, 0.06);
+    border-radius: 14px;
+    padding: 0.75rem 0.8rem 0.75rem 0.65rem;
+    margin-bottom: 0.7rem;
+    cursor: grab;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(26, 46, 26, 0.03);
+}
+
+.itinerary-item:hover {
+    border-color: rgba(200, 169, 110, 0.3);
+    box-shadow: 0 4px 12px rgba(26, 46, 26, 0.06);
+}
+
+.itinerary-item:active {
+    cursor: grabbing;
+}
+
+.itinerary-item.drag-over {
+    border-color: var(--bronze-accent);
+    transform: scale(1.01);
+    box-shadow: 0 6px 20px rgba(200, 169, 110, 0.15);
+}
+
+.itinerary-item .badge {
+    border-radius: 50% !important;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    background: var(--forest-green) !important;
+}
+
+.itinerary-item .small.fw-bold {
+    font-size: 0.88rem !important;
+    color: var(--forest-green);
+}
+
+.itinerary-item .btn.text-danger {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    border: 1px solid rgba(220, 53, 69, 0.15);
+    transition: all 0.2s ease;
+}
+
+.itinerary-item .btn.text-danger:hover {
+    background: rgba(220, 53, 69, 0.08);
+    border-color: rgba(220, 53, 69, 0.3);
+}
+
+/* ============================
+   ROUTE ANALYSIS
+   ============================ */
+
+#route-analysis {
+    border-top: 1px solid rgba(40, 62, 47, 0.08) !important;
+    padding-top: 1.2rem !important;
+}
+
+.route-segments {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid rgba(40, 62, 47, 0.06);
+    border-radius: 10px;
+    padding: 0.5rem 0.75rem;
+    background: rgba(250, 248, 244, 0.5);
+}
+
+.route-segments::-webkit-scrollbar {
+    width: 4px;
+}
+
+.route-segments::-webkit-scrollbar-thumb {
+    background: var(--bronze-accent);
+    border-radius: 4px;
+}
+
+/* ============================
+   BUTTONS
+   ============================ */
+
+.btn-google-maps {
+    background: #4285F4 !important;
+    border: none !important;
+    color: white !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    padding: 0.65rem !important;
+    transition: all 0.25s ease !important;
+}
+
+.btn-google-maps:hover {
+    background: #3367D6 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(66, 133, 244, 0.3) !important;
+}
+
+.btn-danger {
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    padding: 0.65rem !important;
+    transition: all 0.25s ease !important;
+}
+
+.btn-danger:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(220, 53, 69, 0.25) !important;
+}
+
+/* ============================
+   SHARE OPTIONS
+   ============================ */
+
+.share-options {
+    background-color: #f8f9fa;
+    max-width: 350px;
+    border-radius: 12px;
+}
+
+/* ============================
+   TRANSPORT BUTTONS
+   ============================ */
+
+.transport-btn {
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    font-size: 0.82rem !important;
+    padding: 0.5rem 0.75rem !important;
+}
+
+.transport-btn.active {
+    background: var(--forest-green) !important;
+    border-color: var(--forest-green) !important;
+    color: white !important;
+}
+
+.transport-btn:not(.active):hover {
+    background: rgba(26, 46, 26, 0.05);
+}
+
+/* ============================
+   EMPTY STATE
+   ============================ */
+
+#empty-itinerary {
+    font-size: 0.9rem;
+    padding: 2rem !important;
+    background: rgba(40, 62, 47, 0.03);
+    border-radius: 12px;
+    border: 1px dashed rgba(40, 62, 47, 0.12);
+}
+
+/* ============================
+   QR CODE
+   ============================ */
+
+#qr-code img {
+    border-radius: 8px;
+}
