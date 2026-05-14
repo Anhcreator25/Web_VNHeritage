@@ -938,13 +938,17 @@ async function renderItinerary() {
         const li = document.createElement('li');
         li.className = 'itinerary-item d-flex align-items-center mb-2 p-2 bg-white rounded shadow-sm';
         li.draggable = true;
+        const weatherHtml = key.startsWith('custom_')
+            ? `<div class="small text-muted">📍 ${site.location}</div>`
+            : `<div class="small text-muted site-weather-display" data-site-key="${key}">
+                    <i class="fas fa-spinner fa-spin"></i>
+               </div>`;
+
         li.innerHTML = `
             <span class="me-2 badge bg-success">${index + 1}</span>
             <div class="flex-grow-1">
                 <div class="small fw-bold">${site.title}</div>
-                <div class="small text-muted site-weather-display" data-site-key="${key}">
-                    <i class="fas fa-spinner fa-spin"></i>
-                </div>
+                ${weatherHtml}
             </div>
             <button class="btn btn-sm text-danger" onclick="removeItineraryItem(${index})">×</button>`;
 
@@ -1092,3 +1096,4 @@ window.addEventListener('storage', (e) => {
         renderSavedList();
     }
 });
+

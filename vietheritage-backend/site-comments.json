@@ -1,0 +1,37 @@
+[
+  {
+    "id": "site-cmt-1",
+    "author": "Nguyễn Văn A",
+    "email": "a@example.com",
+    "content": "Trang web rất hữu ích, giúp tôi khám phá nhiều di sản Việt Nam!",
+    "createdAt": "2026-05-11T00:00:00.000Z"
+  },
+  {
+    "id": "site-cmt-2",
+    "author": "Trần Thị B",
+    "email": "b@example.com",
+    "content": "Giao diện đẹp, dễ sử dụng. Tính năng lập lịch trình rất tiện lợi.",
+    "createdAt": "2026-05-07T00:00:00.000Z"
+  },
+  {
+    "id": "site-cmt-3",
+    "author": "Lê Văn C",
+    "email": "c@example.com",
+    "content": "Tôi đã có chuyến đi tuyệt vời nhờ gợi ý từ trang này. Cảm ơn VietHeritage!",
+    "createdAt": "2026-04-30T00:00:00.000Z"
+  },
+  {
+    "id": "site-cmt-4",
+    "author": "Phạm Thị D",
+    "email": "d@example.com",
+    "content": "Mong muốn trang bổ sung thêm nhiều di sản ở miền Nam hơn nữa.",
+    "createdAt": "2026-04-14T00:00:00.000Z"
+  },
+  {
+    "id": "site-cmt-1778759045671",
+    "author": "thaianh",
+    "email": "nguyenthaianh2k7@gmail.com",
+    "content": "Tôi rất thích sử dụng nó",
+    "createdAt": "2026-05-14T11:44:05.671Z"
+  }
+]

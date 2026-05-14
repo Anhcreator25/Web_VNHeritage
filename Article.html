@@ -113,6 +113,25 @@
                         <p><i class="fas fa-compass me-2"></i>Lên lịch ngay chuyến khám phá di sản của riêng mình.</p>
                     </div>
                 </div>
+
+                <div class="comment-section">
+                    <h4 style="font-size:1.05rem;"><i class="fas fa-comments me-2"></i>Bình luận về trang web</h4>
+                    <div id="comments-list"></div>
+                    <div class="comment-box">
+                        <form id="comment-form">
+                            <div class="mb-3">
+                                <input type="text" id="comment-name" class="form-control" placeholder="Tên của bạn..." maxlength="50" required>
+                            </div>
+                            <div class="mb-3">
+                                <input type="email" id="comment-email" class="form-control" placeholder="Email của bạn..." required>
+                            </div>
+                            <div class="mb-3">
+                                <textarea id="comment-content" class="form-control" rows="3" placeholder="Viết bình luận..." maxlength="500" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-submit"><i class="fas fa-paper-plane me-1"></i> Gửi bình luận</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -395,6 +414,106 @@
 
     // Chạy hàm ngay khi trang web mở ra
     loadArticles();
+
+    // ============================================================
+    // BÌNH LUẬN (Backend API)
+    // ============================================================
+
+    const API_BASE = 'http://localhost:5000';
+
+    async function loadComments() {
+        try {
+            const res = await fetch(`${API_BASE}/api/site-comments`);
+            if (!res.ok) throw new Error('Lỗi tải bình luận');
+            return await res.json();
+        } catch (err) {
+            console.error(err);
+            return [];
+        }
+    }
+
+    async function renderComments() {
+        const list = document.getElementById('comments-list');
+        if (!list) return;
+
+        const comments = await loadComments();
+
+        if (comments.length === 0) {
+            list.innerHTML = '<p class="text-muted text-center py-3" style="font-size:0.85rem;">Chưa có bình luận nào.</p>';
+            return;
+        }
+
+        list.innerHTML = comments.toReversed().map(c => `
+            <div class="comment-item">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="comment-author"><i class="fas fa-user-circle me-1"></i>${escapeHtml(c.author || 'Ẩn danh')}</span>
+                    <span class="comment-time">${formatCommentTime(c.createdAt)}</span>
+                </div>
+                <div class="comment-content">${escapeHtml(c.content)}</div>
+            </div>
+        `).join('');
+    }
+
+    async function submitComment(e) {
+        e.preventDefault();
+        const nameInput = document.getElementById('comment-name');
+        const emailInput = document.getElementById('comment-email');
+        const contentInput = document.getElementById('comment-content');
+        const author = nameInput.value.trim();
+        const email = emailInput.value.trim();
+        const content = contentInput.value.trim();
+
+        if (!author || !email || !content) return;
+
+        const btn = e.target.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Đang gửi...';
+
+        try {
+            const res = await fetch(`${API_BASE}/api/site-comments`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ author, email, content }),
+            });
+
+            if (!res.ok) {
+                const err = await res.json();
+                alert(err.error || 'Gửi bình luận thất bại');
+                return;
+            }
+
+            nameInput.value = '';
+            emailInput.value = '';
+            contentInput.value = '';
+            await renderComments();
+        } catch (err) {
+            alert('Không thể kết nối đến server. Hãy chắc chắn Backend đang chạy!');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-paper-plane me-1"></i> Gửi bình luận';
+        }
+    }
+
+    function formatCommentTime(isoString) {
+        const diff = Date.now() - new Date(isoString).getTime();
+        const minutes = Math.floor(diff / 60000);
+        if (minutes < 1) return 'Vừa xong';
+        if (minutes < 60) return `${minutes} phút trước`;
+        const hours = Math.floor(minutes / 60);
+        if (hours < 24) return `${hours} giờ trước`;
+        const days = Math.floor(hours / 24);
+        if (days < 30) return `${days} ngày trước`;
+        return new Date(isoString).toLocaleDateString('vi-VN');
+    }
+
+    function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    document.getElementById('comment-form').addEventListener('submit', submitComment);
+    renderComments();
 </script>
   </body>
 </html>

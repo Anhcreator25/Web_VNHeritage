@@ -26,7 +26,7 @@ const getLatestArticles = () => {
 // Helper for comments storage
 const getComments = () => {
   try {
-    const raw = fs.readFileSync("comments.json", "utf-8");
+    const raw = fs.readFileSync("comments_detail.json", "utf-8");
     return JSON.parse(raw);
   } catch (e) {
     // Nếu chưa có file, trả về mảng rỗng
@@ -114,6 +114,66 @@ app.post("/api/articles/:id/comments", (req, res) => {
   saveComments(comments);
 
   // Return comment – mask email for non‑admin callers
+  const response = {
+    id: newComment.id,
+    author: newComment.author,
+    email: req.isAdmin ? newComment.email : maskEmail(newComment.email),
+    content: newComment.content,
+    createdAt: newComment.createdAt,
+  };
+  res.json(response);
+});
+
+// ============================================================
+// SITE COMMENTS (bình luận về trang web)
+// ============================================================
+
+const getSiteComments = () => {
+  try {
+    const raw = fs.readFileSync("site-comments.json", "utf-8");
+    return JSON.parse(raw);
+  } catch (e) {
+    return [];
+  }
+};
+
+const saveSiteComments = (comments) => {
+  fs.writeFileSync("site-comments.json", JSON.stringify(comments, null, 2));
+};
+
+app.get("/api/site-comments", (req, res) => {
+  const comments = getSiteComments();
+  const result = comments.map(c => ({
+    id: c.id,
+    author: c.author,
+    email: req.isAdmin ? c.email : maskEmail(c.email),
+    content: c.content,
+    createdAt: c.createdAt,
+  }));
+  res.json(result);
+});
+
+app.post("/api/site-comments", (req, res) => {
+  const { author, email, content } = req.body;
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({ error: "Email hợp lệ là bắt buộc" });
+  }
+  if (!content || !content.trim()) {
+    return res.status(400).json({ error: "Nội dung bình luận không được để trống" });
+  }
+
+  const comments = getSiteComments();
+  const newComment = {
+    id: `site-cmt-${Date.now()}`,
+    author: author?.trim() || null,
+    email: email.trim(),
+    content: content.trim(),
+    createdAt: new Date().toISOString(),
+  };
+  comments.push(newComment);
+  saveSiteComments(comments);
+
   const response = {
     id: newComment.id,
     author: newComment.author,
