@@ -31,6 +31,7 @@ const mapPositions = {
     'dong-ho': { left: '33.3%', top: '28%' }
 };
 
+// ====== DOM ELEMENTS ======
 const markerContainer = document.getElementById('marker-container');
 const infoTitle = document.getElementById('info-title');
 const infoImg = document.getElementById('info-img');
@@ -47,10 +48,12 @@ const physicalBtn = document.getElementById('physicalBtn');
 const intangibleBtn = document.getElementById('intangibleBtn');
 const mapImg = document.querySelector('.map-bg');
 
+// ====== STATE ======
 let activeCategory = 'physical';
 let activeSiteKey = categories.physical[0];
 let itinerary = [];
 
+// ====== LOCAL STORAGE ======
 function loadItinerary() {
     try {
         itinerary = JSON.parse(localStorage.getItem('vhJourney')) || [];
@@ -69,6 +72,7 @@ function getSites(category) {
         .map(key => ({ key, ...heritageDataSource[key], ...mapPositions[key] }));
 }
 
+// ====== MARKERS ======
 function renderMarkers() {
     markerContainer.innerHTML = '';
     const sites = getSites(activeCategory);
@@ -162,6 +166,7 @@ function positionMarkers() {
     });
 }
 
+// ====== SELECT SITE ======
 function selectSite(siteKey) {
     if (!heritageDataSource[siteKey]) return;
     activeSiteKey = siteKey;
@@ -179,8 +184,7 @@ function selectSite(siteKey) {
         <button class="btn btn-detail w-100">Xem chi tiết</button>
     `;
     document.querySelector('.btn-detail').addEventListener('click', () => {
-        // navigate directly to the detailed page for this site
-        window.location.href = `Detail.html?id=${siteKey}`;
+        window.location.href = `detail_heritage.html?id=${siteKey}`;
     });
     updateActiveMarker();
     updateItineraryButton();
@@ -192,6 +196,7 @@ function updateActiveMarker() {
     });
 }
 
+// ====== COORDINATES ======
 function getMapCoordinate(siteKey) {
     const pos = mapPositions[siteKey];
     if (!pos || !mapImg) return null;
@@ -204,6 +209,7 @@ function getMapCoordinate(siteKey) {
     };
 }
 
+// ====== ITINERARY ======
 function renderItinerary() {
     itineraryList.innerHTML = '';
     itineraryCount.textContent = `${itinerary.length} điểm`;
@@ -268,6 +274,7 @@ function moveItineraryItem(fromIndex, toIndex) {
     renderItinerary();
 }
 
+// ====== DRAG & DROP ======
 let dragSourceIndex = null;
 function onItineraryDragStart(event) {
     dragSourceIndex = Number(event.currentTarget.dataset.index);
@@ -291,6 +298,7 @@ function onItineraryDrop(event) {
     dragSourceIndex = null;
 }
 
+// ====== ROUTE ======
 function updateRoute() {
     routeSvg.innerHTML = '';
     if (itinerary.length < 2) return;
@@ -329,12 +337,14 @@ function updateRoute() {
     });
 }
 
+// ====== UTILITY ======
 function extractText(html) {
     const container = document.createElement('div');
     container.innerHTML = html || '';
     return container.textContent.replace(/\s+/g, ' ').trim();
 }
 
+// ====== CATEGORY TOGGLE ======
 function setCategory(category) {
     activeCategory = category;
     physicalBtn.classList.toggle('active', category === 'physical');
@@ -347,11 +357,11 @@ function setCategory(category) {
     renderItinerary();
 }
 
+// ====== EVENT LISTENERS ======
 physicalBtn.addEventListener('click', () => setCategory('physical'));
 intangibleBtn.addEventListener('click', () => setCategory('intangible'));
 addItineraryBtn.addEventListener('click', () => addToItinerary(activeSiteKey));
 
-// reposition markers and redraw route when the image or window changes size
 if (mapImg) {
     mapImg.addEventListener('load', () => {
         positionMarkers();
@@ -363,6 +373,7 @@ window.addEventListener('resize', () => {
     updateRoute();
 });
 
+// ====== INIT ======
 renderMarkers();
 selectSite(activeSiteKey);
 loadItinerary();

@@ -16,7 +16,7 @@ body {
     overflow-x: hidden;
 }
 
-/* --- NAVBAR & DROPDOWN --- */
+/* ====== NAVBAR & DROPDOWN ====== */
 .navbar {
     background-color: var(--forest-green) !important;
     padding: 1rem 0;
@@ -57,7 +57,7 @@ body {
     }
 }
 
-/* --- HERO SECTION --- */
+/* ====== HERO SECTION ====== */
 .blog-hero {
     min-height: 65vh;
     background:
@@ -138,7 +138,6 @@ body {
     text-shadow: 0 2px 12px rgba(0,0,0,0.5);
 }
 
-/* Hero accent bar */
 .hero-accent {
     width: 60px;
     height: 3px;
@@ -150,7 +149,7 @@ body {
 .hero-decoration span:nth-child(2) { width: 80px; opacity: 0.5; }
 .hero-decoration span:nth-child(3) { width: 35px; opacity: 0.3; }
 
-/* Search box */
+/* ====== SEARCH BOX ====== */
 .search-box {
     background: white;
     border-radius: 50px;
@@ -193,7 +192,7 @@ body {
     color: var(--forest-green);
 }
 
-/* Search suggestions */
+/* ====== SEARCH SUGGESTIONS ====== */
 #home-search-suggestions {
     border: none;
     border-radius: 12px;
@@ -221,7 +220,7 @@ body {
     padding-left: 22px;
 }
 
-/* Hero scroll indicator */
+/* ====== SCROLL INDICATOR ====== */
 .scroll-indicator {
     position: absolute;
     bottom: 30px;
@@ -245,7 +244,7 @@ body {
     50% { transform: translateX(-50%) translateY(8px); }
 }
 
-/* --- INTRO SECTION --- */
+/* ====== INTRO SECTION ====== */
 .intro-section {
     padding: 70px 0;
     background: #fff;
@@ -314,7 +313,7 @@ body {
     color: var(--forest-green);
 }
 
-/* --- STATS SECTION --- */
+/* ====== STATS SECTION ====== */
 .stats-section {
     padding: 50px 0;
 }
@@ -364,7 +363,7 @@ body {
     margin: 0;
 }
 
-/* --- FEATURED HERITAGE SECTION --- */
+/* ====== FEATURED HERITAGE SECTION ====== */
 .heritage-section {
     padding: 60px 0 80px;
 }
@@ -516,8 +515,7 @@ body {
     color: #fff;
 }
 
-
-/* --- FOOTER --- */
+/* ====== FOOTER ====== */
 footer.bg-dark {
     background-color: #1a2a1a !important;
 }
@@ -527,10 +525,10 @@ footer.bg-dark {
     transition: all 0.3s ease;
 }
 
-/* --- UTILITIES --- */
+/* ====== UTILITIES ====== */
 .text-bronze { color: var(--bronze-accent); }
 
-/* --- ANIMATIONS --- */
+/* ====== ANIMATIONS ====== */
 @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
@@ -541,4 +539,3 @@ footer.bg-dark {
 .fade-in-up:nth-child(1) { animation-delay: 0.1s; }
 .fade-in-up:nth-child(2) { animation-delay: 0.2s; }
 .fade-in-up:nth-child(3) { animation-delay: 0.3s; }
-

@@ -1,11 +1,11 @@
 const heritageData = {
-   //VAT THE
-    
+// ====== TANGIBLE HERITAGE ======
+
     "hue": {
         title: "Quần thể Cố đô Huế",
         year: "1993",
         location: "Thừa Thiên Huế",
-        img: "image/Codohue.jpg",
+        img: "../image/Codohue.jpg",
         content: `
             <p><strong>Quần thể Di tích Cố đô Huế</strong> là trung tâm chính trị, văn hóa và tôn giáo của Việt Nam dưới triều đại nhà Nguyễn – triều đại phong kiến cuối cùng trong lịch sử dân tộc. Được UNESCO công nhận là Di sản Thế giới vào năm 1993, đây là minh chứng sống động nhất cho sự thịnh trị và suy vong của một vương triều kéo dài 143 năm, đồng thời là kiệt tác về quy hoạch đô thị và kiến trúc cảnh quan phương Đông.</p>
             <h5>1. Kiến trúc quân sự và tư duy phong thủy</h5>
@@ -20,7 +20,7 @@ const heritageData = {
         title: "Vịnh Hạ Long",
         year: "1994, 2000",
         location: "Quảng Ninh",
-        img: "image/vhl.jpg",
+        img: "../image/vhl.jpg",
         content: `
             <p><strong>Vịnh Hạ Long</strong> là một kỳ quan thiên nhiên thế giới sở hữu vẻ đẹp ngoạn mục với gần 2.000 hòn đảo đá vôi lớn nhỏ vươn lên từ làn nước xanh lục bảo. Đây là tác phẩm nghệ thuật địa chất được thiên nhiên nhào nặn qua hàng trăm triệu năm, hai lần được UNESCO vinh danh về giá trị thẩm mỹ và địa chất, địa mạo đặc sắc.</p>
             <h5>1. Tuyệt tác của tạo hóa</h5>
@@ -35,7 +35,7 @@ const heritageData = {
         title: "Phố cổ Hội An",
         year: "1999",
         location: "Quảng Nam",
-        img: "image/hoian.jpg",
+        img: "../image/hoian.jpg",
         content: `
             <p><strong>Phố cổ Hội An</strong> là một đô thị cổ nằm ở hạ lưu sông Thu Bồn, Quảng Nam. Đây là biểu tượng của một thương cảng quốc tế sầm uất từ thế kỷ 15 đến thế kỷ 19, nơi giao thoa của nhiều luồng văn hóa từ Nhật Bản, Trung Hoa đến các quốc gia phương Tây.</p>
             <h5>1. Bảo tàng sống về kiến trúc đô thị</h5>
@@ -50,7 +50,7 @@ const heritageData = {
         title: "Thánh địa Mỹ Sơn",
         year: "1999",
         location: "Quảng Nam",
-        img: "image/thanhdiamyson.jpg",
+        img: "../image/thanhdiamyson.jpg",
         content: `
             <p><strong>Thánh địa Mỹ Sơn</strong> là quần thể di tích đền tháp của vương quốc Chăm Pa cổ, nằm sâu trong một thung lũng hẹp bao quanh bởi núi non hùng vĩ. Đây từng là trung tâm cúng tế và là nơi chôn cất các vị vua, thầy tế của triều đại Chăm Pa từ thế kỷ 4 đến thế kỷ 14.</p>
             <h5>1. Kỹ thuật xây gạch huyền thoại</h5>
@@ -65,7 +65,7 @@ const heritageData = {
         title: "Hoàng thành Thăng Long",
         year: "2010",
         location: "Hà Nội",
-        img: "image/httl.jpg",
+        img: "../image/httl.jpg",
         content: `
             <p><strong>Hoàng thành Thăng Long</strong> là quần thể di tích lịch sử quan trọng nhất của Việt Nam, gắn liền với kinh thành Thăng Long - Hà Nội. Được UNESCO công nhận vào đúng dịp kỷ niệm 1.000 năm Thăng Long, di sản này minh chứng cho sự quyền lực chính trị và văn hóa liên tục trong 13 thế kỷ.</p>
             <h5>1. Những lớp tầng lịch sử chồng xếp</h5>
@@ -80,7 +80,7 @@ const heritageData = {
         title: "Vườn quốc gia Phong Nha - Kẻ Bàng",
         year: "2003, 2015",
         location: "Quảng Bình",
-        img: "image/du-lich-dong-phong-nha-ke-bang-quang-binh.jpeg",
+        img: "../image/du-lich-dong-phong-nha-ke-bang-quang-binh.jpeg",
         content: `
             <p><strong>Phong Nha - Kẻ Bàng</strong> sở hữu những kiến tạo karst cổ nhất và lớn nhất thế giới, được mệnh danh là "vương quốc hang động". Với diện tích hơn 120.000 ha, đây là nơi chứa đựng những bí mật vĩ đại nhất của lòng đất và hệ sinh thái rừng nhiệt đới nguyên sinh độc đáo.</p>
             <h5>1. Những kỷ lục thế giới dưới lòng đất</h5>
@@ -95,7 +95,7 @@ const heritageData = {
         title: "Thành Nhà Hồ",
         year: "2011",
         location: "Thanh Hóa",
-        img: "image/thanhnhaho.webp",
+        img: "../image/thanhnhaho.webp",
         content: `
             <p><strong>Thành Nhà Hồ</strong> (còn gọi là Tây Đô) là tòa thành bằng đá độc nhất vô nhị tại Việt Nam và khu vực Đông Nam Á. Được xây dựng vào năm 1397 dưới triều đại nhà Hồ, đây là công trình kiến trúc quân sự kỳ vĩ, minh chứng cho sự đổi mới táo bạo trong kỹ thuật xây dựng và tư duy quy hoạch kinh đô.</p>
             <h5>1. Kỹ thuật lắp ghép đá khổng lồ</h5>
@@ -107,15 +107,12 @@ const heritageData = {
     },
 
 
-
-
-   
-    //PHI VAT THE
+// ====== INTANGIBLE HERITAGE ======
     "nha-nhac": {
         title: "Nhã nhạc - Âm nhạc Cung đình Việt Nam",
         year: "2003",
         location: "Thừa Thiên Huế",
-        img: "image/nhanhacc.jpg",
+        img: "../image/nhanhacc.jpg",
         content: `
             <div class="heritage-detail-rich">
                 <p class="lead"><strong>Nhã nhạc Cung đình Huế</strong> không chỉ là âm nhạc, mà là hiện thân của vương triều nhà Nguyễn, biểu tượng cho sự sang trọng, uy quyền và trí tuệ nghệ thuật tinh tế của dân tộc Việt Nam.</p>
@@ -141,7 +138,7 @@ const heritageData = {
         title: "Không gian văn hóa Cồng chiêng Tây Nguyên",
         year: "2005",
         location: "Gia Lai, Đắk Lắk, Kon Tum, Đắk Nông, Lâm Đồng",
-        img: "image/congchieng.jpg",
+        img: "../image/congchieng.jpg",
         content: `
             <div class="heritage-detail-rich">
                 <p class="lead">Tiếng <strong>Cồng chiêng</strong> là sợi dây tâm linh thiêng liêng nối liền con người với thế giới thần linh (Giàng) giữa đại ngàn Tây Nguyên hùng vĩ.</p>
@@ -166,7 +163,7 @@ const heritageData = {
         title: "Dân ca Quan họ Bắc Ninh",
         year: "2009",
         location: "Bắc Ninh, Bắc Giang",
-        img: "image/quanho1.jpg",
+        img: "../image/quanho1.jpg",
         content: `
             <div class="heritage-detail-rich">
                 <p class="lead"><strong>Quan họ</strong> là tinh hoa văn hóa Kinh Bắc, một hình thức hát đối đáp nam nữ biểu trưng cho sự lịch thiệp, tình nghĩa và nghệ thuật giao tiếp đỉnh cao của người Việt.</p>
@@ -191,7 +188,7 @@ const heritageData = {
         title: "Ca trù - Nghệ thuật hát thính phòng bác học",
         year: "2009",
         location: "Miền Bắc và Bắc Trung Bộ",
-        img: "image/catru.jpg",
+        img: "../image/catru.jpg",
         content: `
             <div class="heritage-detail-rich">
                 <p class="lead"><strong>Ca trù</strong> là dòng nhạc quý tộc, thính phòng bậc nhất của Việt Nam, nơi thơ ca điêu luyện gặp gỡ âm nhạc tinh xảo trong một không gian thâm trầm.</p>
@@ -214,7 +211,7 @@ const heritageData = {
         title: "Hội Gióng đền Sóc và đền Phù Đổng",
         year: "2010",
         location: "Sóc Sơn & Gia Lâm, Hà Nội",
-        img: "image/hoigiong.jpg",
+        img: "../image/hoigiong.jpg",
         content: `
             <div class="heritage-detail-rich">
                 <p class="lead"><strong>Hội Gióng</strong> là một kịch trường dân gian khổng lồ, tái hiện chân thực các trận đánh chống giặc ngoại xâm của vị thánh trẻ tuổi Phù Đổng Thiên Vương.</p>
@@ -235,7 +232,7 @@ const heritageData = {
         title: "Hát Xoan Phú Thọ",
         year: "2011",
         location: "Phú Thọ",
-        img: "image/hatxoan.jpg",
+        img: "../image/hatxoan.jpg",
         content: `
             <div class="heritage-detail-rich">
                 <p class="lead"><strong>Hát Xoan</strong> là nghệ thuật hát thờ thần có từ thời đại Hùng Vương, gắn liền với tín ngưỡng thờ cúng Tổ tiên lâu đời nhất của người Việt.</p>
@@ -253,7 +250,7 @@ const heritageData = {
         title: "Tín ngưỡng thờ cúng Hùng Vương tại Phú Thọ",
         year: "2012",
         location: "Phú Thọ",
-        img: "image/gioto.jpg",
+        img: "../image/gioto.jpg",
         content: `
             <div class="heritage-detail-rich">
                 <p class="lead"><strong>Thờ cúng Hùng Vương</strong> là biểu tượng cao nhất của đạo lý "Uống nước nhớ nguồn", kết nối hàng triệu trái tim Việt Nam chung một cội nguồn, một ngày giỗ Tổ.</p>
@@ -275,7 +272,7 @@ const heritageData = {
         title: "Nghệ thuật Đờn ca tài tử Nam Bộ",
         year: "2013",
         location: "21 tỉnh thành Nam Bộ",
-        img: "image/doncajpg.jpg",
+        img: "../image/doncajpg.jpg",
         content: `
             <div class="heritage-detail-rich">
                 <p class="lead"><strong>Đờn ca tài tử</strong> là loại hình âm nhạc dân gian đặc trưng, phản ánh tâm hồn tự do, phóng khoáng và cốt cách nghĩa hiệp của con người vùng đất phương Nam.</p>
@@ -301,7 +298,7 @@ const heritageData = {
         title: "Dân ca Ví, Giặm Nghệ Tĩnh",
         year: "2014",
         location: "Nghệ An, Hà Tĩnh",
-        img: "image/dcvidam.jpg",
+        img: "../image/dcvidam.jpg",
         content: `
             <div class="heritage-detail-rich">
                 <p class="lead"><strong>Ví, Giặm</strong> là tiếng lòng bền bỉ, sắt son của người dân xứ Nghệ, là bảo tàng sống lưu giữ hồn quê và cốt cách cứng cỏi của con người miền Trung nắng cháy.</p>
@@ -324,7 +321,7 @@ const heritageData = {
         title: "Nghi lễ và trò chơi Kéo co",
         year: "2015",
         location: "Hà Nội, Vĩnh Phúc, Bắc Ninh, Lào Cai",
-        img: "image/keoco.jpg",
+        img: "../image/keoco.jpg",
         content: `
             <div class="heritage-detail-rich">
                 <p class="lead"><strong>Kéo co</strong> không đơn thuần là một trò chơi thể lực, mà là một nghi lễ nông nghiệp cầu mùa lâu đời, thể hiện khát vọng hòa hợp dân tộc và thiên nhiên.</p>
@@ -347,7 +344,7 @@ const heritageData = {
         title: "Thực hành Tín ngưỡng thờ Mẫu Tam phủ của người Việt",
         year: "2016",
         location: "Nhiều tỉnh thành Việt Nam",
-        img: "image/thomau.jpg",
+        img: "../image/thomau.jpg",
         content: `
             <div class="heritage-detail-rich">
                 <p class="lead"><strong>Thờ Mẫu</strong> là niềm tin bản địa thuần khiết, tôn vinh người Mẹ làm vị thần tối cao, phản ánh truyền thống trọng nữ và lòng bao dung của dân tộc Việt.</p>
@@ -368,7 +365,7 @@ const heritageData = {
         title: "Nghệ thuật Bài Chòi Trung Bộ",
         year: "2017",
         location: "Từ Quảng Bình đến Bình Thuận",
-        img: "image/baichoi.jpg",
+        img: "../image/baichoi.jpg",
         content: `
             <div class="heritage-detail-rich">
                 <p class="lead"><strong>Bài Chòi</strong> là sự kết hợp tuyệt vời giữa trò chơi bài dân gian, thơ ca và âm nhạc hóm hỉnh, một "đặc sản" tinh thần không thể thiếu của người dân miền Trung mỗi dịp Tết đến xuân về.</p>
@@ -394,7 +391,7 @@ const heritageData = {
         title: "Thực hành Then của người Tày, Nùng, Thái",
         year: "2019",
         location: "11 tỉnh miền núi phía Bắc",
-        img: "image/thuchanhthen.jpg",
+        img: "../image/thuchanhthen.jpg",
         content: `
             <div class="heritage-detail-rich">
                 <p class="lead"><strong>Then</strong> được ví như nhịp cầu nối linh thiêng giữa trần gian và thiên đình, nơi con người gửi gắm khát vọng về một cuộc sống bình an và no ấm qua tiếng đàn Tính réo rắt.</p>
@@ -416,7 +413,7 @@ const heritageData = {
         title: "Nghệ thuật Xòe Thái của người Thái ở Việt Nam",
         year: "2021",
         location: "Yên Bái, Lai Châu, Sơn La, Điện Biên",
-        img: "image/xoethai.jpg",
+        img: "../image/xoethai.jpg",
         content: `
             <div class="heritage-detail-rich">
                 <p class="lead"><strong>Xòe Thái</strong> là vũ điệu của sự đoàn kết, nơi vòng xòe mở rộng xóa tan mọi khoảng cách, thể hiện khát vọng hòa hợp giữa con người với cộng đồng và thiên nhiên.</p>
@@ -440,7 +437,7 @@ const heritageData = {
         title: "Nghệ thuật làm gốm của người Chăm",
         year: "2022",
         location: "Ninh Thuận (Làng Bàu Trúc), Bình Thuận",
-        img: "image/lamgom_.jpeg",
+        img: "../image/lamgom_.jpeg",
         content: `
             <div class="heritage-detail-rich">
                 <p class="lead"><strong>Gốm Chăm</strong> là một trong những nghề thủ công cổ xưa nhất Đông Nam Á, nơi những đôi bàn tay tài hoa tạo nên những tác phẩm nghệ thuật mà không cần dùng đến bàn xoay.</p>
@@ -466,7 +463,7 @@ const heritageData = {
         title: "Lễ hội Vía Bà Chúa Xứ núi Sam",
         year: "2024",
         location: "An Giang",
-        img: "image/via-ba.jpg",
+        img: "../image/via-ba.jpg",
         content: `
             <div class="heritage-detail-rich">
                 <p class="lead"><strong>Vía Bà Chúa Xứ</strong> là lễ hội tâm linh lớn nhất vùng đồng bằng sông Cửu Long, nơi hội tụ đức tin và sự giao thoa văn hóa rực rỡ của các dân tộc Nam Bộ.</p>
@@ -489,7 +486,7 @@ const heritageData = {
         title: "Nghệ thuật Tranh dân gian Đông Hồ",
         year: "2025",
         location: "Thuận Thành, Bắc Ninh",
-        img: "image/tranhdongho.jpg",
+        img: "../image/tranhdongho.jpg",
         content: `
             <div class="heritage-detail-rich">
                 <p class="lead"><strong>Tranh Đông Hồ</strong> là hồn cốt của làng quê Việt Nam, nơi những màu sắc của thiên nhiên được in lên giấy Điệp óng ánh để kể chuyện nhân gian đầy hóm hỉnh và sâu sắc.</p>
@@ -505,6 +502,5 @@ const heritageData = {
                 </div>
             </div>`
     }
-
 
 };

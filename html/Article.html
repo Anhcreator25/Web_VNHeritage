@@ -17,10 +17,11 @@
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Playfair+Display:wght@700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="Css/Article.css" />
+    <link rel="stylesheet" href="../Css/Article.css" />
     
   </head>
   <body>
+<!-- ====== NAVBAR ====== -->
     <nav class="navbar navbar-expand-lg sticky-top shadow">
       <div class="container">
          <a class="navbar-brand fw-bold fs-3" href="#">
@@ -82,14 +83,13 @@
               </ul>
             </div>
             <a class="nav-link mx-2" href="Article.html">Bài viết</a>
-            <button class="btn text-white ms-lg-3">
-              <i class="fas fa-search"></i>
-            </button>
+            
           </div>
         </div>
       </div>
     </nav>
 
+<!-- ====== MAIN CONTENT ====== -->
     <div class="container mt-5">
     <div class="row">
         <div class="col-md-8">
@@ -114,6 +114,7 @@
                     </div>
                 </div>
 
+<!-- ====== COMMENTS SECTION ====== -->
                 <div class="comment-section">
                     <h4 style="font-size:1.05rem;"><i class="fas fa-comments me-2"></i>Bình luận về trang web</h4>
                     <div id="comments-list"></div>
@@ -136,6 +137,8 @@
         </div>
     </div>
 </div>
+
+<!-- ====== FOOTER ====== -->
  <footer class="bg-dark text-light pt-5 pb-3">
     <div class="container">
         <div class="row g-4">
@@ -190,28 +193,27 @@
     </div>
 </footer>
 
-
-
+<!-- ====== SCRIPTS ====== -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // 1. Hàm gọi dữ liệu từ Backend cổng 5000
+// ====== FETCH ARTICLES FROM BACKEND ======
     let allArticles = [];
     function loadArticles() {
-        console.log("Đang kết nối tới Backend cổng 5000...");
+        console.log("Connecting to Backend on port 5000...");
         
         fetch('http://localhost:5000/api/articles') 
             .then(response => {
-                if (!response.ok) throw new Error('Không thể kết nối server');
+                if (!response.ok) throw new Error('Cannot connect to server');
                 return response.json();
             })
             .then(data => {
-                console.log("Dữ liệu nhận được từ Backend:", data);
-                allArticles = data; // lưu lại danh sách gốc
+                console.log("Data received from Backend:", data);
+                allArticles = data;
                 renderArticleList(); 
                 
             })
             .catch(err => {
-                console.error('Lỗi kết nối:', err);
+                console.error('Connection error:', err);
                 document.getElementById('article-list').innerHTML = `
                     <p class="text-center text-muted">Không thể tải bài viết. Hãy chắc chắn Backend đang chạy!</p>
                 `;
@@ -219,7 +221,7 @@
 
     }
 
-    // 2. Hàm vẽ giao diện bài viết (Đã nâng cấp Đẹp + Đa nguồn)
+// ====== RENDER ARTICLE LIST ======
     function renderArticleList() {
   const container = document.getElementById('article-list');
   const sidebar = document.getElementById('sidebar-articles');
@@ -237,7 +239,7 @@
   if (btnContainer) { btnContainer.style.position = 'relative';
     btnContainer.innerHTML = '';
 
-    // ---- Search bar ----
+    // ====== SEARCH BAR ======
     const searchDiv = document.createElement('div');
     searchDiv.style.position = 'relative';
     searchDiv.className = 'search-box article-search mb-3';
@@ -296,7 +298,6 @@
       suggestionsDiv.style.display = 'block';
     };
 
-    // Update suggestions while typing
     searchInput.addEventListener('input', showSuggestions);
 
     const updateSearch = () => {
@@ -312,7 +313,6 @@
     searchInput.addEventListener('keypress', e => { if (e.key === 'Enter') { showSuggestions(); updateSearch(); } });
   }
 
-  // Show heading if searching
   if (searchQuery) {
     const heading = document.createElement('h4');
     heading.className = 'filter-heading mb-3';
@@ -320,7 +320,7 @@
     container.appendChild(heading);
   }
 
-  // Filter articles based on search term
+// ====== FILTER ARTICLES BY KEYWORD ======
     let displayed = allArticles;
     if (searchQuery) {
       displayed = displayed.filter(a => {
@@ -330,7 +330,7 @@
     }
 
 
-  // Pagination calculation
+// ====== PAGINATION ======
   const totalItems = displayed.length;
   const itemsPerPage = Math.ceil(totalItems / 6) || 1;
   const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
@@ -368,7 +368,7 @@
     `;
     container.appendChild(mainItem);
 
-    // Sidebar items (next 5 articles)
+// ====== SIDEBAR ======
     if (index > 0 && index < 6) {
       const sideItem = document.createElement('a');
       sideItem.href = `Detail_article.html?id=${a.id}`;
@@ -384,7 +384,7 @@
     }
   });
 
-  // ---- Pagination UI (hidden when searching) ----
+// ====== PAGINATION UI ======
   if (!searchQuery) {
   const paginationNav = document.createElement('nav');
   paginationNav.setAttribute('aria-label', 'Page navigation');
@@ -412,12 +412,9 @@
   }
 }
 
-    // Chạy hàm ngay khi trang web mở ra
     loadArticles();
 
-    // ============================================================
-    // BÌNH LUẬN (Backend API)
-    // ============================================================
+// ====== SITE COMMENTS ======
 
     const API_BASE = 'http://localhost:5000';
 

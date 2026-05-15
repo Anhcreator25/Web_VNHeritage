@@ -2,23 +2,23 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const fs = require('fs');
 
-/** Helper: safely get trimmed text */
+// ====== HELPERS ======
+
 function getText($el) {
   return $el && $el.text() ? $el.text().trim() : '';
 }
 
-/** Helper: build article object with new fields */
 function buildArticle({ id, title, img, excerpt, content, link, source, category, date, author = 'Khách', tags = [], location = '', heritageType = '' }) {
   return { id, title, img: img || '', excerpt: excerpt || '', content: content || '', link: link || '', source, category: category || '', date, author, tags, location, heritageType };
 }
 
-/** Main crawl function – gathers articles from all configured sources */
+// ====== MAIN CRAWL ======
+
 async function crawlAll() {
   let allArticles = [];
-  console.log('🚀 Bắt đầu cào dữ liệu đa nguồn...');
+  console.log('Starting multi-source data crawl...');
 
-// ---------- NGUỒN: Heritage Vietnam Airlines (Dị san & Phi vật thể) ----------
-  // Whitelist of heritage titles (exact as shown in UI) – lower‑cased for comparison
+// ====== SOURCE: Heritage Vietnam Airlines ======
   const whitelist = new Set([
     'Quần thể Cố đô Huế',
     'Vịnh Hạ Long',
@@ -51,7 +51,7 @@ async function crawlAll() {
   ];
   for (const src of sourceCategories) {
     try {
-      console.log(`🧐 Đang cào Heritage Vietnam Airlines category ${src.heritageType}...`);
+      console.log(`Crawling Heritage Vietnam Airlines category ${src.heritageType}...`);
       let page = 1;
       let globalIdx = 0;
       while (true) {
@@ -123,32 +123,28 @@ console.log('Extracted title:', title);
         page++;
       }
     } catch (e) {
-      console.log(`⚠️ Lỗi Heritage Vietnam Airlines (${src.heritageType}): `, e.message);
+      console.log(`Error Heritage Vietnam Airlines (${src.heritageType}): `, e.message);
     }
   }
 
-
-  // ---------- Ghi file articles.json ----------
+// ====== WRITE JSON FILE ======
   try {
-    // Loại bỏ trùng lặp dựa trên link (hoặc title)
     const uniq = new Map();
     allArticles.forEach(a => {
       const key = a.link || a.title;
       if (!uniq.has(key)) uniq.set(key, a);
     });
-    // Remove entries with placeholder SVG images (generated for missing previews)
     const filtered = Array.from(uniq.values()).filter(a => !(a.img && a.img.startsWith('data:image')));
-      const filteredWhite = filtered;
-      fs.writeFileSync('articles.json', JSON.stringify(filteredWhite, null, 2), 'utf-8');
-      console.log(`✅ Hoàn thành! Đã lưu ${filteredWhite.length} bài viết vào articles.json`);
+    const filteredWhite = filtered;
+    fs.writeFileSync('articles.json', JSON.stringify(filteredWhite, null, 2), 'utf-8');
+    console.log(`Completed! Saved ${filteredWhite.length} articles to articles.json`);
   } catch (e) {
-    console.log('⚠️ Lỗi ghi file articles.json:', e.message);
+    console.log('Error writing articles.json:', e.message);
   }
 }
 
-// Khi gọi trực tiếp `node crawler.js` thực thi crawlAll
 if (require.main === module) {
-  crawlAll().catch(err => console.error('❌ Lỗi khi chạy crawler:', err));
+  crawlAll().catch(err => console.error('Error running crawler:', err));
 }
 
 module.exports = { crawlAll };

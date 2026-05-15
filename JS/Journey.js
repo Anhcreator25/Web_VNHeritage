@@ -1,6 +1,4 @@
-// ============================================================
-// KHỞI TẠO DỮ LIỆU & BIẾN TOÀN CỤC
-// ============================================================
+// ====== DATA INITIALIZATION & GLOBAL VARIABLES ======
 
 const heritageDataSource = typeof heritageData !== 'undefined' ? heritageData : {};
 
@@ -38,7 +36,7 @@ const realCoordinates = {
     'dong-ho': { lat: 21.1000, lng: 106.1000 }
 };
 
-// DOM elements
+// ====== DOM ELEMENTS ======
 const physicalBtn = document.getElementById('physicalBtn');
 const intangibleBtn = document.getElementById('intangibleBtn');
 const siteList = document.getElementById('site-list');
@@ -51,7 +49,7 @@ const weatherSummary = document.getElementById('weather-summary');
 const savedList = document.getElementById('saved-list');
 const sampleToursContainer = document.getElementById('sample-tours-container');
 
-// State
+// ====== STATE ======
 let activeCategory = 'physical';
 let itinerary = [];
 let dragSourceIndex = null;
@@ -62,9 +60,7 @@ const transportSettings = {
     car: { speed: 60, timePerSite: 90 }
 };
 
-// ============================================================
-// TOUR MẪU GỢI Ý SẴN
-// ============================================================
+// ====== SAMPLE TOURS ======
 
 const sampleTours = [
     {
@@ -155,9 +151,7 @@ function renderSampleTours() {
         </div>`;
 }
 
-// ============================================================
-// LƯU / TẢI NHIỀU HÀNH TRÌNH (LOCALSTORAGE)
-// ============================================================
+// ====== SAVE / LOAD MULTIPLE ITINERARIES ======
 
 const SAVED_KEY = 'vhSavedItineraries';
 
@@ -246,9 +240,7 @@ function renderSavedList() {
     });
 }
 
-// ============================================================
-// HÀM TIỆN ÍCH
-// ============================================================
+// ====== UTILITY FUNCTIONS ======
 
 function escapeHTML(str) {
     if (!str) return '';
@@ -270,9 +262,7 @@ function calculateDistance(lat1, lng1, lat2, lng2) {
     return (R * c) * 1.25;
 }
 
-// ============================================================
-// THỜI TIẾT THEO LỘ TRÌNH
-// ============================================================
+// ====== WEATHER BY ROUTE ======
 
 const weatherCache = {};
 
@@ -372,9 +362,7 @@ async function updateWeather() {
     }
 }
 
-// ============================================================
-// ĐỊNH VỊ GPS
-// ============================================================
+// ====== GPS LOCATION ======
 
 function getCurrentLocation() {
     if (!navigator.geolocation) {
@@ -409,9 +397,7 @@ function getCurrentLocation() {
     }, { enableHighAccuracy: true });
 }
 
-// ============================================================
-// GOOGLE MAPS & CHIA SẺ
-// ============================================================
+// ====== GOOGLE MAPS & CHIA SẺ ======
 
 function openInGoogleMaps() {
     if (itinerary.length < 2) {
@@ -539,9 +525,7 @@ function showShareOptions() {
     }
 }
 
-// ============================================================
-// PHÂN TÍCH LỘ TRÌNH
-// ============================================================
+// ====== ROUTE ANALYSIS ======
 
 function calculateJourneyStats() {
     if (itinerary.length < 2) return null;
@@ -876,9 +860,7 @@ function updateRouteAnalysis() {
     }
 }
 
-// ============================================================
-// RENDER DANH SÁCH DI SẢN
-// ============================================================
+// ====== RENDER HERITAGE SITE LIST ======
 
 function updateSiteStats() {
     const bar = document.getElementById('site-stats');
@@ -925,9 +907,7 @@ function renderSiteCards() {
     updateSiteStats();
 }
 
-// ============================================================
-// RENDER LỊCH TRÌNH (KÉO THẢ + THỜI TIẾT)
-// ============================================================
+// ====== RENDER ITINERARY ======
 
 async function renderItinerary() {
     itineraryList.innerHTML = '';
@@ -967,7 +947,6 @@ async function renderItinerary() {
     updateRouteAnalysis();
     updateWeather();
 
-    // Gọi thời tiết từng điểm
     itinerary.forEach(key => {
         const coord = realCoordinates[key];
         if (!coord || key.startsWith('custom_')) return;
@@ -982,9 +961,7 @@ async function renderItinerary() {
     });
 }
 
-// ============================================================
-// THAO TÁC LỊCH TRÌNH (THÊM / XOÁ / XOÁ TẤT CẢ)
-// ============================================================
+// ====== ITINERARY OPERATIONS ======
 
 function addToItinerary(key) {
     if (!itinerary.includes(key)) {
@@ -1006,9 +983,7 @@ function clearItinerary() {
     renderItinerary();
 }
 
-// ============================================================
-// LƯU / TẢI LỊCH TRÌNH (LOCALSTORAGE)
-// ============================================================
+// ====== SAVE / LOAD ITINERARY (LOCALSTORAGE) ======
 
 function saveItinerary() {
     localStorage.setItem('vhJourney', JSON.stringify(itinerary));
@@ -1039,9 +1014,7 @@ function loadItinerary() {
     }
 }
 
-// ============================================================
-// EVENT LISTENERS
-// ============================================================
+// ====== EVENT LISTENERS ======
 
 physicalBtn.addEventListener('click', () => {
     activeCategory = 'physical';
@@ -1078,9 +1051,7 @@ document.addEventListener('click', function (e) {
     }
 });
 
-// ============================================================
-// KHỞI ĐỘNG
-// ============================================================
+// ====== INIT ======
 
 loadItinerary();
 renderSampleTours();
@@ -1096,4 +1067,3 @@ window.addEventListener('storage', (e) => {
         renderSavedList();
     }
 });
-

@@ -15,24 +15,19 @@ body {
     color: #2c3a2c;
 }
 
-/* ============================
-   NAVBAR
-   ============================ */
-
+/* ====== NAVBAR ====== */
 .navbar {
     background-color: var(--forest-green) !important;
     padding: 1rem 0;
+    border-bottom: 3px solid var(--bronze-accent);
 }
-
 .navbar-brand,
 .nav-link {
     color: white !important;
 }
-
 .nav-link:hover {
     color: var(--bronze-accent) !important;
 }
-
 .dropdown-menu {
     background-color: var(--forest-green);
     border: 1px solid var(--bronze-accent);
@@ -43,47 +38,38 @@ body {
     overflow: hidden;
     min-width: 220px;
 }
-
 .dropdown-item {
     color: white !important;
     padding: 12px 20px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     transition: all 0.3s;
 }
-
 .dropdown-item:hover {
     background-color: var(--bronze-accent) !important;
     color: var(--forest-green) !important;
     padding-left: 25px;
 }
-
 @media (min-width: 992px) {
     .dropdown-menu {
         left: 50% !important;
         transform: translateX(-50%) !important;
     }
 }
-
 .text-bronze {
     color: var(--bronze-accent);
 }
 
-/* ============================
-   PAGE HEADER
-   ============================ */
-
+/* ====== PAGE HEADER ====== */
 .page-header {
     padding: 1.5rem 0 0.5rem;
     margin-bottom: 2rem !important;
     border-bottom: 2px solid rgba(200, 169, 110, 0.2);
 }
-
 .journey-heading {
     max-width: 800px;
     margin: 0 auto;
     text-align: center;
 }
-
 .page-title {
     font-family: 'Playfair Display', serif;
     font-weight: 700;
@@ -92,7 +78,6 @@ body {
     margin-bottom: 0.5rem;
     letter-spacing: -0.3px;
 }
-
 .page-title::after {
     content: '';
     display: block;
@@ -102,7 +87,6 @@ body {
     margin: 0.7rem auto 0;
     border-radius: 2px;
 }
-
 .page-description {
     font-size: clamp(0.85rem, 1.8vw, 1rem);
     color: #5a6b5a;
@@ -112,10 +96,7 @@ body {
     margin: 0 auto;
 }
 
-/* ============================
-   MAP TOGGLE BUTTONS
-   ============================ */
-
+/* ====== MAP TOGGLE BUTTONS ====== */
 .map-toggle .btn {
     min-width: 120px;
     border-radius: 999px;
@@ -126,22 +107,17 @@ body {
     color: var(--forest-green);
     transition: all 0.3s ease;
 }
-
 .map-toggle .btn.active {
     background: var(--forest-green);
     color: white;
     border-color: var(--forest-green);
     box-shadow: 0 4px 12px rgba(26, 46, 26, 0.2);
 }
-
 .map-toggle .btn:not(.active):hover {
     background: rgba(26, 46, 26, 0.05);
 }
 
-/* ============================
-   JOURNEY CARDS
-   ============================ */
-
+/* ====== JOURNEY CARDS ====== */
 .journey-card {
     border-radius: 20px;
     overflow: hidden;
@@ -153,12 +129,10 @@ body {
     box-shadow: var(--card-shadow);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
 .journey-card:hover {
     transform: translateY(-4px);
     box-shadow: var(--card-hover-shadow);
 }
-
 .journey-card img.card-img-top {
     width: 100%;
     height: 160px;
@@ -166,30 +140,25 @@ body {
     display: block;
     transition: transform 0.4s ease;
 }
-
 .journey-card:hover img.card-img-top {
     transform: scale(1.05);
 }
-
 .journey-card .card-body {
     padding: 1rem 1rem 1.1rem;
     display: flex;
     flex-direction: column;
 }
-
 .journey-card .card-body h6 {
     font-weight: 600;
     font-size: 0.95rem;
     color: var(--forest-green);
     margin-bottom: 0.25rem;
 }
-
 .journey-card .card-body p {
     font-size: 0.82rem;
     color: #6b7b71;
     margin-bottom: 0.75rem;
 }
-
 .journey-card .btn {
     border-radius: 12px;
     padding: 0.6rem 1rem;
@@ -197,49 +166,38 @@ body {
     font-size: 0.85rem;
     transition: all 0.25s ease;
 }
-
 .journey-card .btn-success {
     background: var(--forest-green);
     border-color: var(--forest-green);
 }
-
 .journey-card .btn-success:hover {
     background: var(--forest-light);
     border-color: var(--forest-light);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(26, 46, 26, 0.25);
 }
-
 .journey-card .btn-secondary {
     background: #6b7b71;
     border-color: #6b7b71;
 }
 
-/* ============================
-   JOURNEY GRID
-   ============================ */
-
+/* ====== JOURNEY GRID ====== */
 .journey-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1rem;
 }
-
 @media (min-width: 992px) {
     .journey-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
 
-/* ============================
-   SITE STATS BAR
-   ============================ */
-
+/* ====== SITE STATS BAR ====== */
 .site-stats-bar {
     border-top: 1px solid rgba(40, 62, 47, 0.06);
     padding-top: 0.75rem;
 }
-
 .site-stats-inner {
     display: flex;
     flex-wrap: wrap;
@@ -248,21 +206,16 @@ body {
     color: #5a6b5a;
     align-items: center;
 }
-
 .site-stats-inner i {
     width: 14px;
     text-align: center;
     margin-right: 0.25rem;
     color: var(--bronze-accent);
 }
-
 .site-stats-inner .fa-check-circle { color: #28a745 !important; }
 .site-stats-inner .fa-plus-circle { color: #8a9a8e !important; }
 
-/* ============================
-   INFO LABEL + SIDEBAR
-   ============================ */
-
+/* ====== INFO LABEL + SIDEBAR ====== */
 .info-label {
     font-size: 0.72rem;
     text-transform: uppercase;
@@ -270,16 +223,12 @@ body {
     color: var(--bronze-dark);
     font-weight: 600;
 }
-
 .schedule-title {
     font-family: 'Playfair Display', serif;
     font-weight: 600;
     font-size: 1.3rem;
     color: var(--forest-green);
 }
-
-
-
 .info-panel {
     border-radius: 20px;
     position: sticky;
@@ -288,16 +237,12 @@ body {
     box-shadow: 0 8px 30px rgba(26, 46, 26, 0.06);
 }
 
-/* ============================
-   SAVE ACTIONS
-   ============================ */
-
+/* ====== SAVE ACTIONS ====== */
 .save-actions {
     display: flex;
     gap: 0.5rem;
     align-items: center;
 }
-
 .save-actions button {
     min-width: 0;
     border-radius: 12px;
@@ -306,20 +251,17 @@ body {
     padding: 0.55rem 1rem;
     transition: all 0.25s ease;
 }
-
 .save-actions #save-itinerary-btn {
     flex: 1;
     background: var(--forest-green);
     border-color: var(--forest-green);
 }
-
 .save-actions #save-itinerary-btn:hover {
     background: var(--forest-light);
     border-color: var(--forest-light);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(26, 46, 26, 0.2);
 }
-
 .save-actions .btn-group .btn {
     min-width: 0;
     padding: 0.55rem 0.7rem;
@@ -327,27 +269,21 @@ body {
     border-color: var(--forest-green);
     color: var(--forest-green);
 }
-
 .save-actions .btn-group .btn:hover {
     background: var(--forest-green);
     color: white;
 }
-
 .save-actions #clear-itinerary-btn {
     padding: 0.55rem 0.75rem;
     border-color: #dc3545;
     color: #dc3545;
 }
-
 .save-actions #clear-itinerary-btn:hover {
     background: #dc3545;
     color: white;
 }
 
-/* ============================
-   LOCATION BUTTON
-   ============================ */
-
+/* ====== LOCATION BUTTON ====== */
 .location-btn {
     border-radius: 12px;
     border: 2px dashed var(--bronze-accent);
@@ -357,7 +293,6 @@ body {
     padding: 0.6rem;
     transition: all 0.3s ease;
 }
-
 .location-btn:hover {
     background: linear-gradient(135deg, var(--bronze-accent), var(--bronze-light));
     color: white;
@@ -366,46 +301,36 @@ body {
     box-shadow: 0 4px 15px rgba(200, 169, 110, 0.3);
 }
 
-/* ============================
-   TOUR MẪU CARDS
-   ============================ */
-
+/* ====== TOUR MẪU CARDS ====== */
 .tour-section-header {
     margin-bottom: 0.6rem;
 }
-
 .tour-section-header h6 {
     color: var(--forest-green);
     font-weight: 600;
 }
-
 .tour-scroll-wrapper {
     overflow-x: auto;
     padding-bottom: 8px;
     margin: 0 -0.25rem;
 }
-
 .tour-scroll-wrapper::-webkit-scrollbar {
     height: 4px;
 }
-
 .tour-scroll-wrapper::-webkit-scrollbar-track {
     background: #e8ece8;
     border-radius: 4px;
 }
-
 .tour-scroll-wrapper::-webkit-scrollbar-thumb {
     background: var(--bronze-accent);
     border-radius: 4px;
 }
-
 .tour-scroll {
     display: flex;
     gap: 0.75rem;
     min-width: min-content;
     padding: 0 0.25rem;
 }
-
 .tour-card {
     flex: 0 0 200px;
     width: 200px;
@@ -417,29 +342,24 @@ body {
     transition: all 0.3s ease;
     box-shadow: 0 2px 8px rgba(26, 46, 26, 0.04);
 }
-
 .tour-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 12px 30px rgba(26, 46, 26, 0.12);
 }
-
 .tour-card-img {
     position: relative;
     height: 100px;
     overflow: hidden;
 }
-
 .tour-card-img img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.4s ease;
 }
-
 .tour-card:hover .tour-card-img img {
     transform: scale(1.08);
 }
-
 .tour-card-overlay {
     position: absolute;
     inset: 0;
@@ -448,18 +368,15 @@ body {
     align-items: center;
     justify-content: center;
 }
-
 .tour-card-overlay i {
     font-size: 2rem;
     color: var(--bronze-accent);
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
-
 .tour-card-body {
     padding: 0.65rem 0.75rem 0.75rem;
 }
-
 .tour-card-title {
     font-size: 0.85rem;
     font-weight: 600;
@@ -471,7 +388,6 @@ body {
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
-
 .tour-card-desc {
     font-size: 0.72rem;
     color: #6b7b71;
@@ -482,18 +398,15 @@ body {
     overflow: hidden;
     line-height: 1.3;
 }
-
 .tour-card-footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
-
 .tour-card-count {
     font-size: 0.7rem;
     color: #8a9a8e;
 }
-
 .tour-card-btn {
     font-size: 0.7rem;
     font-weight: 600;
@@ -504,63 +417,48 @@ body {
     white-space: nowrap;
     transition: all 0.25s ease;
 }
-
 .tour-card:hover .tour-card-btn {
     background: var(--bronze-accent);
     color: white;
 }
 
-/* ============================
-   SAVED ITINERARIES LIST
-   ============================ */
-
+/* ====== SAVED ITINERARIES LIST ====== */
 #saved-list .dropdown-item {
     white-space: normal;
     padding: 0.5rem 0.75rem;
     cursor: default;
     border-radius: 8px;
 }
-
 #saved-list .dropdown-item span {
     cursor: pointer;
 }
-
 #saved-list .dropdown-item .btn {
     padding: 0;
     font-size: 0.9rem;
 }
 
-/* ============================
-   WEATHER DISPLAY
-   ============================ */
-
+/* ====== WEATHER DISPLAY ====== */
 .site-weather-display {
     font-size: 0.78rem;
     line-height: 1.2;
     margin-top: 2px;
     color: #6b7b71;
 }
-
 .site-weather-display .fas {
     width: 14px;
     text-align: center;
     color: var(--bronze-accent);
 }
-
 #weather-summary .fas {
     width: 14px;
     text-align: center;
 }
-
 #weather-summary > div {
     border: 1px solid rgba(200, 169, 110, 0.2) !important;
     background: linear-gradient(135deg, rgba(200, 169, 110, 0.06), rgba(200, 169, 110, 0.02)) !important;
 }
 
-/* ============================
-   ITINERARY LIST
-   ============================ */
-
+/* ====== ITINERARY LIST ====== */
 .itinerary-item {
     display: grid;
     grid-template-columns: auto 1fr auto;
@@ -575,22 +473,18 @@ body {
     transition: all 0.2s ease;
     box-shadow: 0 2px 6px rgba(26, 46, 26, 0.03);
 }
-
 .itinerary-item:hover {
     border-color: rgba(200, 169, 110, 0.3);
     box-shadow: 0 4px 12px rgba(26, 46, 26, 0.06);
 }
-
 .itinerary-item:active {
     cursor: grabbing;
 }
-
 .itinerary-item.drag-over {
     border-color: var(--bronze-accent);
     transform: scale(1.01);
     box-shadow: 0 6px 20px rgba(200, 169, 110, 0.15);
 }
-
 .itinerary-item .badge {
     border-radius: 50% !important;
     width: 26px;
@@ -602,12 +496,10 @@ body {
     font-weight: 700;
     background: var(--forest-green) !important;
 }
-
 .itinerary-item .small.fw-bold {
     font-size: 0.88rem !important;
     color: var(--forest-green);
 }
-
 .itinerary-item .btn.text-danger {
     width: 30px;
     height: 30px;
@@ -620,29 +512,21 @@ body {
     border: 1px solid rgba(220, 53, 69, 0.15);
     transition: all 0.2s ease;
 }
-
 .itinerary-item .btn.text-danger:hover {
     background: rgba(220, 53, 69, 0.08);
     border-color: rgba(220, 53, 69, 0.3);
 }
 
-/* ============================
-   ROUTE ANALYSIS
-   ============================ */
-
+/* ====== ROUTE ANALYSIS ====== */
 #route-analysis {
     border-top: 1px solid rgba(40, 62, 47, 0.08) !important;
     padding-top: 1.2rem !important;
 }
-
 #route-analysis > * + * {
     margin-top: 0.5rem;
 }
 
-/* ============================
-   BUTTONS
-   ============================ */
-
+/* ====== BUTTONS ====== */
 .btn-google-maps {
     background: #4285F4 !important;
     border: none !important;
@@ -652,60 +536,46 @@ body {
     padding: 0.65rem !important;
     transition: all 0.25s ease !important;
 }
-
 .btn-google-maps:hover {
     background: #3367D6 !important;
     transform: translateY(-1px);
     box-shadow: 0 6px 20px rgba(66, 133, 244, 0.3) !important;
 }
-
 .btn-danger {
     border-radius: 12px !important;
     font-weight: 600 !important;
     padding: 0.65rem !important;
     transition: all 0.25s ease !important;
 }
-
 .btn-danger:hover {
     transform: translateY(-1px);
     box-shadow: 0 6px 20px rgba(220, 53, 69, 0.25) !important;
 }
 
-/* ============================
-   SHARE OPTIONS
-   ============================ */
-
+/* ====== SHARE OPTIONS ====== */
 .share-options {
     background-color: #f8f9fa;
     max-width: 350px;
     border-radius: 12px;
 }
 
-/* ============================
-   TRANSPORT BUTTONS
-   ============================ */
-
+/* ====== TRANSPORT BUTTONS ====== */
 .transport-btn {
     border-radius: 10px !important;
     font-weight: 600 !important;
     font-size: 0.82rem !important;
     padding: 0.5rem 0.75rem !important;
 }
-
 .transport-btn.active {
     background: var(--forest-green) !important;
     border-color: var(--forest-green) !important;
     color: white !important;
 }
-
 .transport-btn:not(.active):hover {
     background: rgba(26, 46, 26, 0.05);
 }
 
-/* ============================
-   EMPTY STATE
-   ============================ */
-
+/* ====== EMPTY STATE ====== */
 #empty-itinerary {
     font-size: 0.9rem;
     padding: 2rem !important;
@@ -714,18 +584,12 @@ body {
     border: 1px dashed rgba(40, 62, 47, 0.12);
 }
 
-/* ============================
-   QR CODE
-   ============================ */
-
+/* ====== QR CODE ====== */
 #qr-code img {
     border-radius: 8px;
 }
 
-/* ============================
-   ANALYSIS CARDS
-   ============================ */
-
+/* ====== ANALYSIS CARDS ====== */
 .analysis-card {
     background: #fff;
     border: 1px solid rgba(40, 62, 47, 0.08);
@@ -734,11 +598,9 @@ body {
     box-shadow: 0 2px 8px rgba(26, 46, 26, 0.04);
     transition: box-shadow 0.3s ease;
 }
-
 .analysis-card:hover {
     box-shadow: 0 4px 16px rgba(26, 46, 26, 0.08);
 }
-
 .analysis-card-header {
     display: flex;
     align-items: center;
@@ -752,27 +614,21 @@ body {
     letter-spacing: 0.5px;
     color: var(--forest-green);
 }
-
 .analysis-card-header i {
     color: var(--bronze-accent);
     font-size: 0.85rem;
     width: 18px;
     text-align: center;
 }
-
 .analysis-card-body {
     padding: 0.85rem 1rem;
 }
 
-/* ============================
-   STATS ROW
-   ============================ */
-
+/* ====== STATS ROW ====== */
 .stats-row {
     display: flex;
     gap: 0.5rem;
 }
-
 .stat-card {
     flex: 1;
     border-radius: 14px;
@@ -783,44 +639,35 @@ body {
     box-shadow: 0 2px 6px rgba(26, 46, 26, 0.03);
     transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
-
 .stat-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(26, 46, 26, 0.08);
 }
-
 .stat-card-distance { border-top: 3px solid #1a2e1a; }
 .stat-card-time { border-top: 3px solid #c8a96e; }
 .stat-card-cost { border-top: 3px solid #dc3545; }
-
 .stat-value {
     font-size: 1.1rem;
     font-weight: 800;
     color: var(--forest-green);
     line-height: 1.2;
 }
-
 .stat-value .stat-unit {
     font-size: 0.7rem;
     font-weight: 600;
     color: #6b7b71;
 }
-
 .stat-label {
     font-size: 0.65rem;
     color: #8a9a8e;
     font-weight: 500;
     margin-top: 0.2rem;
 }
-
 .stat-label i {
     font-size: 0.6rem;
 }
 
-/* ============================
-   PLAN ROW
-   ============================ */
-
+/* ====== PLAN ROW ====== */
 .plan-row {
     font-size: 0.82rem;
     color: #3a4a3a;
@@ -830,7 +677,6 @@ body {
     gap: 0.5rem;
     line-height: 1.5;
 }
-
 .plan-row i {
     color: var(--bronze-accent);
     width: 16px;
@@ -838,10 +684,7 @@ body {
     flex-shrink: 0;
 }
 
-/* ============================
-   INTENSITY BADGE
-   ============================ */
-
+/* ====== INTENSITY BADGE ====== */
 .intensity-badge {
     display: inline-block;
     padding: 0.4rem 0.75rem;
@@ -852,14 +695,10 @@ body {
     line-height: 1.3;
 }
 
-/* ============================
-   CATEGORY BAR
-   ============================ */
-
+/* ====== CATEGORY BAR ====== */
 .category-bar-container {
     padding: 0.25rem 0;
 }
-
 .category-bar {
     display: flex;
     height: 24px;
@@ -867,19 +706,15 @@ body {
     overflow: hidden;
     background: #e8ece8;
 }
-
 .category-bar-fill {
     transition: width 0.5s ease;
 }
-
 .category-bar-fill.category-physical {
     background: linear-gradient(135deg, #1a2e1a, #2d4a2d);
 }
-
 .category-bar-fill.category-intangible {
     background: linear-gradient(135deg, #c8a96e, #e0c88a);
 }
-
 .category-legend {
     display: flex;
     justify-content: space-between;
@@ -888,7 +723,6 @@ body {
     margin-top: 0.4rem;
     font-weight: 500;
 }
-
 .legend-dot {
     display: inline-block;
     width: 8px;
@@ -897,28 +731,22 @@ body {
     margin-right: 0.3rem;
 }
 
-/* ============================
-   REGION BARS
-   ============================ */
-
+/* ====== REGION BARS ====== */
 .region-row {
     display: flex;
     align-items: center;
     gap: 0.6rem;
     margin-bottom: 0.45rem;
 }
-
 .region-row:last-child {
     margin-bottom: 0;
 }
-
 .region-name {
     font-size: 0.75rem;
     font-weight: 600;
     color: #3a4a3a;
     min-width: 80px;
 }
-
 .region-bar-bg {
     flex: 1;
     height: 10px;
@@ -926,13 +754,11 @@ body {
     border-radius: 5px;
     overflow: hidden;
 }
-
 .region-bar-fill {
     height: 100%;
     border-radius: 5px;
     transition: width 0.5s ease;
 }
-
 .region-count {
     font-size: 0.7rem;
     font-weight: 600;
@@ -941,20 +767,15 @@ body {
     text-align: right;
 }
 
-/* ============================
-   TIMELINE
-   ============================ */
-
+/* ====== TIMELINE ====== */
 .timeline {
     padding: 0.25rem 0;
 }
-
 .timeline-item {
     display: flex;
     gap: 0.6rem;
     position: relative;
 }
-
 .timeline-marker {
     width: 28px;
     height: 28px;
@@ -970,24 +791,20 @@ body {
     z-index: 1;
     margin-top: 0.15rem;
 }
-
 .timeline-marker-end {
     background: var(--bronze-accent);
     font-size: 0.8rem;
 }
-
 .timeline-content {
     flex: 1;
     padding-bottom: 0.8rem;
 }
-
 .timeline-site {
     font-size: 0.82rem;
     font-weight: 600;
     color: var(--forest-green);
     padding-top: 0.2rem;
 }
-
 .timeline-connector {
     display: flex;
     align-items: center;
@@ -998,7 +815,6 @@ body {
     padding-left: 1.6rem;
     margin-top: 0.1rem;
 }
-
 .timeline-dist {
     font-size: 0.7rem;
     font-weight: 600;
@@ -1007,26 +823,20 @@ body {
     padding: 0.1rem 0.4rem;
     border-radius: 4px;
 }
-
 .timeline-time {
     font-size: 0.65rem;
     color: #8a9a8e;
 }
-
 .timeline-item:last-child .timeline-content {
     padding-bottom: 0;
 }
 
-/* ============================
-   TIPS LIST
-   ============================ */
-
+/* ====== TIPS LIST ====== */
 .tips-list {
     list-style: none;
     padding: 0;
     margin: 0;
 }
-
 .tips-list li {
     font-size: 0.8rem;
     color: #3a4a3a;
@@ -1036,21 +846,16 @@ body {
     line-height: 1.45;
     border-bottom: 1px solid rgba(40, 62, 47, 0.04);
 }
-
 .tips-list li:last-child {
     border-bottom: none;
 }
-
 .tips-list li i {
     margin-top: 0.2rem;
     flex-shrink: 0;
     font-size: 0.75rem;
 }
 
-/* ============================
-   SHARE BUTTON
-   ============================ */
-
+/* ====== SHARE BUTTON ====== */
 .btn-share {
     background: #dc3545 !important;
     border: none !important;
@@ -1060,17 +865,13 @@ body {
     padding: 0.65rem !important;
     transition: all 0.25s ease !important;
 }
-
 .btn-share:hover {
     background: #c82333 !important;
     transform: translateY(-1px);
     box-shadow: 0 6px 20px rgba(220, 53, 69, 0.25) !important;
 }
 
-/* ============================
-   QR SECTION
-   ============================ */
-
+/* ====== QR SECTION ====== */
 .qr-section {
     display: flex;
     flex-direction: column;
@@ -1081,15 +882,11 @@ body {
     border-radius: 14px;
     border: 1px dashed rgba(200, 169, 110, 0.25);
 }
-
 .qr-section p i {
     color: var(--bronze-accent);
 }
 
-/* ============================
-   ROUTE SEGMENTS (retained for compatibility)
-   ============================ */
-
+/* ====== ROUTE SEGMENTS ====== */
 .route-segments {
     max-height: 200px;
     overflow-y: auto;
@@ -1098,13 +895,10 @@ body {
     padding: 0.5rem 0.75rem;
     background: rgba(250, 248, 244, 0.5);
 }
-
 .route-segments::-webkit-scrollbar {
     width: 4px;
 }
-
 .route-segments::-webkit-scrollbar-thumb {
     background: var(--bronze-accent);
     border-radius: 4px;
 }
-

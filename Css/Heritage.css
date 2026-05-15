@@ -22,24 +22,18 @@ body {
     color: #2c3a2c;
 }
 
-/* ============================
-   NAVBAR
-   ============================ */
-
+/* ====== NAVBAR ====== */
 .navbar {
     background-color: var(--forest-green) !important;
     padding: 1rem 0;
 }
-
 .navbar-brand,
 .nav-link {
     color: white !important;
 }
-
 .nav-link:hover {
     color: var(--bronze-accent) !important;
 }
-
 .dropdown-menu {
     background-color: var(--forest-green);
     border: 1px solid var(--bronze-accent);
@@ -50,20 +44,17 @@ body {
     overflow: hidden;
     min-width: 220px;
 }
-
 .dropdown-item {
     color: white !important;
     padding: 12px 20px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     transition: all 0.3s;
 }
-
 .dropdown-item:hover {
     background-color: var(--bronze-accent) !important;
     color: var(--forest-green) !important;
     padding-left: 25px;
 }
-
 @media (min-width: 992px) {
     .dropdown-menu {
         left: 50% !important;
@@ -71,16 +62,12 @@ body {
     }
 }
 
-/* ============================
-   PAGE HEADER
-   ============================ */
-
+/* ====== PAGE HEADER ====== */
 header.py-5 {
     padding: 2.5rem 0 2rem !important;
     background: white !important;
     border-bottom: 2px solid rgba(200, 169, 110, 0.2) !important;
 }
-
 header.py-5 h2 {
     font-family: 'Playfair Display', serif;
     font-weight: 700;
@@ -89,7 +76,6 @@ header.py-5 h2 {
     margin-bottom: 0.5rem !important;
     letter-spacing: -0.3px;
 }
-
 header.py-5 h2::after {
     content: '';
     display: block;
@@ -100,21 +86,16 @@ header.py-5 h2::after {
     border-radius: 2px;
 }
 
-/* ============================
-   SEARCH BAR
-   ============================ */
-
+/* ====== SEARCH BAR ====== */
 .search-wrapper {
     max-width: 600px;
     margin: 1.5rem auto 2rem !important;
 }
-
 .search-wrapper .input-group {
     box-shadow: 0 2px 12px rgba(26, 46, 26, 0.06);
     border-radius: 50px;
     overflow: hidden;
 }
-
 .form-control {
     border-radius: 50px 0 0 50px !important;
     border: 2px solid rgba(40, 62, 47, 0.12);
@@ -123,13 +104,11 @@ header.py-5 h2::after {
     background: white;
     transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
-
 .form-control:focus {
     border-color: var(--bronze-accent);
     box-shadow: 0 0 0 3px rgba(200, 169, 110, 0.15);
     outline: none;
 }
-
 .btn-search {
     background-color: var(--forest-green) !important;
     border: 2px solid var(--forest-green) !important;
@@ -138,22 +117,17 @@ header.py-5 h2::after {
     color: white;
     transition: all 0.25s ease;
 }
-
 .btn-search:hover {
     background-color: var(--forest-light) !important;
     border-color: var(--forest-light) !important;
 }
 
-/* ============================
-   TAB BUTTONS
-   ============================ */
-
+/* ====== TAB BUTTONS ====== */
 #mainTab {
     background: transparent;
     display: inline-flex;
     gap: 0.75rem;
 }
-
 .main-tab-btn {
     border: 2px solid rgba(40, 62, 47, 0.15);
     background: rgba(255, 255, 255, 0.5);
@@ -171,14 +145,11 @@ header.py-5 h2::after {
     opacity: 0.55;
     backdrop-filter: blur(4px);
 }
-
 .main-tab-btn i {
     font-size: 1.1rem;
     color: #8a9a8e;
     transition: all 0.3s ease;
 }
-
-/* Vật thể - active = màu đồng */
 #vat-the-tab.active {
     border-color: var(--bronze-accent);
     background: linear-gradient(135deg, var(--bronze-accent), #d4b87a);
@@ -186,12 +157,9 @@ header.py-5 h2::after {
     opacity: 1;
     box-shadow: 0 4px 15px rgba(200, 169, 110, 0.3);
 }
-
 #vat-the-tab.active i {
     color: white;
 }
-
-/* Phi vật thể - active = màu xanh lá */
 #phi-vat-the-tab.active {
     border-color: var(--forest-green);
     background: linear-gradient(135deg, var(--forest-green), var(--forest-light));
@@ -199,28 +167,21 @@ header.py-5 h2::after {
     opacity: 1;
     box-shadow: 0 4px 15px rgba(26, 46, 26, 0.3);
 }
-
 #phi-vat-the-tab.active i {
     color: var(--bronze-accent);
 }
-
-/* Hover cho nút ko active */
 .main-tab-btn:not(.active):hover {
     opacity: 0.8;
     border-color: rgba(40, 62, 47, 0.25);
     background: rgba(255, 255, 255, 0.7);
 }
-
 .btn-label {
     font-weight: 600;
     letter-spacing: 0.3px;
     margin: 0;
 }
 
-/* ============================
-   HERITAGE CARDS
-   ============================ */
-
+/* ====== HERITAGE CARDS ====== */
 .heritage-card-v2 {
     border-radius: 20px;
     overflow: hidden;
@@ -230,19 +191,16 @@ header.py-5 h2::after {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     height: 100%;
 }
-
 .heritage-card-v2:hover {
     transform: translateY(-5px);
     box-shadow: var(--card-hover-shadow) !important;
 }
-
 .img-container {
     width: 100%;
     height: 200px;
     overflow: hidden;
     position: relative;
 }
-
 .img-container::after {
     content: '';
     position: absolute;
@@ -250,31 +208,26 @@ header.py-5 h2::after {
     background: linear-gradient(180deg, transparent 50%, rgba(0, 0, 0, 0.03));
     pointer-events: none;
 }
-
 .img-container img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.5s ease;
 }
-
 .heritage-card-v2:hover .img-container img {
     transform: scale(1.1);
 }
-
 .heritage-card-v2 .card-body {
     background: white;
     padding: 1rem 1.15rem 1.15rem;
     border-left: 4px solid var(--bronze-accent) !important;
 }
-
 .heritage-card-v2 .card-body .badge {
     font-size: 0.72rem;
     font-weight: 600;
     padding: 0.3rem 0.7rem;
     border-radius: 8px;
 }
-
 .heritage-card-v2 .card-body h5 {
     font-size: 0.95rem;
     font-weight: 600;
@@ -282,44 +235,32 @@ header.py-5 h2::after {
     margin-bottom: 0.3rem;
     line-height: 1.3;
 }
-
 .heritage-card-v2 .card-body p {
     font-size: 0.82rem;
     color: #6b7b71;
     line-height: 1.4;
 }
-
-/* Intangible card different border */
 #phi-vat-the-content .heritage-card-v2 .card-body {
     border-left-color: var(--forest-green) !important;
 }
-
 #phi-vat-the-content .heritage-card-v2 .card-body .badge {
     background-color: var(--forest-green) !important;
     color: white !important;
 }
 
-/* ============================
-   MAIN CONTENT
-   ============================ */
-
+/* ====== MAIN CONTENT ====== */
 main.py-5 {
     padding-top: 2rem !important;
 }
-
 main.container {
     max-width: 1200px;
 }
 
-/* ============================
-   FOOTER
-   ============================ */
-
+/* ====== FOOTER ====== */
 footer.bg-dark {
     background: var(--forest-green) !important;
     border-top: 2px solid var(--bronze-accent);
 }
-
 footer p {
     font-size: 0.85rem;
     opacity: 0.8;

@@ -6,11 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="Css/Home.css">
+    <link rel="stylesheet" href="../Css/Home.css">
 </head>
 
 <body>
-<!-- Navbar -->
+<!-- ====== NAVBAR ====== -->
     <nav class="navbar navbar-expand-lg sticky-top shadow">
         <div class="container">
             <a class="navbar-brand fw-bold fs-3" href="#">
@@ -44,12 +44,13 @@
                         </ul>
                     </div>
                     <a class="nav-link mx-2" href="Article.html">Bài viết</a>
-                    <button class="btn text-white ms-lg-3"><i class="fas fa-search"></i></button>
+                
                 </div>
             </div>
         </div>
     </nav>
 
+<!-- ====== HERO SECTION ====== -->
    <section class="blog-hero">
     <div class="container">
         <div style="animation: fadeInUp 0.8s ease;">
@@ -81,6 +82,7 @@
     </div>
 </section>
 
+<!-- ====== INTRO SECTION ====== -->
     <section class="intro-section">
         <div class="container">
             <div class="row align-items-center">
@@ -96,12 +98,13 @@
                     </div>
                 </div>
                 <div class="col-lg-6 fade-in-up mt-4 mt-lg-0">
-                    <img src="image/thanhdiamyson.jpg" alt="Vietnam heritage" class="w-100 rounded-4 shadow" style="height:320px; object-fit:cover;">
+                    <img src="../image/thanhdiamyson.jpg" alt="Vietnam heritage" class="w-100 rounded-4 shadow" style="height:320px; object-fit:cover;">
                 </div>
             </div>
         </div>
     </section>
 
+<!-- ====== STATS SECTION ====== -->
     <section class="stats-section container">
         <div class="row g-4">
             <div class="col-md-4 fade-in-up">
@@ -128,6 +131,7 @@
         </div>
     </section>
 
+<!-- ====== FEATURED HERITAGE SECTION ====== -->
     <section class="heritage-section container">
         <div class="section-header">
             <div>
@@ -141,9 +145,9 @@
             <div class="col-md-4 fade-in-up">
                 <div class="heritage-card">
                     <div class="heritage-card-img-wrap">
-                        <img src="image/vhl.jpg" alt="Vịnh Hạ Long">
+                        <img src="../image/vhl.jpg" alt="Vịnh Hạ Long">
                         <div class="heritage-card-overlay">
-                            <a href="Detail.html?id=ha-long" class="overlay-btn">Khám phá →</a>
+                            <a href="detail_heritage.html?id=ha-long" class="overlay-btn">Khám phá →</a>
                         </div>
                         <span class="heritage-card-badge">Thiên nhiên</span>
                     </div>
@@ -157,9 +161,9 @@
             <div class="col-md-4 fade-in-up">
                 <div class="heritage-card">
                     <div class="heritage-card-img-wrap">
-                        <img src="image/hoian.jpg" alt="Phố cổ Hội An">
+                        <img src="../image/hoian.jpg" alt="Phố cổ Hội An">
                         <div class="heritage-card-overlay">
-                            <a href="Detail.html?id=hoi-an" class="overlay-btn">Khám phá →</a>
+                            <a href="detail_heritage.html?id=hoi-an" class="overlay-btn">Khám phá →</a>
                         </div>
                         <span class="heritage-card-badge">Văn hóa</span>
                     </div>
@@ -173,9 +177,9 @@
             <div class="col-md-4 fade-in-up">
                 <div class="heritage-card">
                     <div class="heritage-card-img-wrap">
-                        <img src="image/congchieng.jpg" alt="Cồng chiêng Tây Nguyên">
+                        <img src="../image/congchieng.jpg" alt="Cồng chiêng Tây Nguyên">
                         <div class="heritage-card-overlay">
-                            <a href="Detail.html?id=cong-chieng" class="overlay-btn">Khám phá →</a>
+                            <a href="detail_heritage.html?id=cong-chieng" class="overlay-btn">Khám phá →</a>
                         </div>
                         <span class="heritage-card-badge">Phi vật thể</span>
                     </div>
@@ -189,7 +193,7 @@
         </div>
     </section>
 
-   
+<!-- ====== FOOTER ====== -->   
     <footer class="bg-dark text-light pt-5 pb-3">
     <div class="container">
         <div class="row g-4">
@@ -244,7 +248,8 @@
     </div>
 </footer>
 
-    <script src="JS/Detail_info.js"></script>
+<!-- ====== SCRIPTS ====== -->
+    <script src="../JS/Detail_info.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         const input   = document.getElementById('home-search');
@@ -283,7 +288,7 @@
                 const a = document.createElement('a');
                 a.className = 'list-group-item list-group-item-action';
                 if (item.type === 'heritage') {
-                    a.href = `Detail.html?id=${item.id}`;
+                    a.href = `detail_heritage.html?id=${item.id}`;
                     a.innerHTML = `<i class="fas fa-landmark me-2 text-bronze"></i>${item.d.title} <small class="text-muted">(${item.d.location || ''})</small>`;
                 } else {
                     a.href = item.url;

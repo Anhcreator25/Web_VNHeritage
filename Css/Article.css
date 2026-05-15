@@ -15,7 +15,7 @@ body {
     color: var(--text-dark);
 }
 
-/* --- NAVBAR & DROPDOWN --- */
+/* ====== NAVBAR & DROPDOWN ====== */
 .navbar {
     background-color: var(--forest-green) !important;
     padding: 1rem 0;
@@ -54,7 +54,7 @@ body {
     }
 }
 
-/* ===== SECTION HEADING ===== */
+/* ====== SECTION HEADING ====== */
 .section-heading {
     font-family: 'Playfair Display', serif;
     font-size: 1.6rem;
@@ -66,7 +66,7 @@ body {
     position: relative;
 }
 
-/* ===== SEARCH BAR ===== */
+/* ====== SEARCH BAR ====== */
 .search-box {
     background: white;
     border: 1px solid var(--border-light);
@@ -108,7 +108,7 @@ body {
     color: var(--forest-green);
 }
 
-/* Suggestion list */
+/* ====== SUGGESTION LIST ====== */
 .search-box .list-group {
     max-height: 320px;
     overflow-y: auto;
@@ -135,7 +135,7 @@ body {
     padding-left: 20px;
 }
 
-/* ===== ARTICLE CARDS ===== */
+/* ====== ARTICLE CARDS ====== */
 .main-article-wrapper {
     margin-bottom: 28px;
     background: #fff;
@@ -259,14 +259,13 @@ body {
     overflow: hidden;
 }
 
-/* Filter heading */
 .filter-heading {
     color: var(--forest-green);
     font-family: 'Playfair Display', serif;
     font-weight: 700;
 }
 
-/* ===== SIDEBAR ===== */
+/* ====== SIDEBAR ====== */
 .navbar-spacer { height: 20px; }
 
 .sidebar-heading {
@@ -314,7 +313,6 @@ body {
     color: var(--red-accent) !important;
 }
 
-/* Sidebar promo card */
 .sidebar-promo {
     margin-top: 20px;
     border-radius: 14px;
@@ -339,7 +337,7 @@ body {
     margin-bottom: 0;
 }
 
-/* ===== PAGINATION ===== */
+/* ====== PAGINATION ====== */
 .pagination {
     margin-top: 40px;
     gap: 6px;
@@ -366,7 +364,7 @@ body {
     transform: translateY(-2px);
 }
 
-/* ===== DETAIL PAGE STYLES ===== */
+/* ====== DETAIL PAGE STYLES ====== */
 
 /* Breadcrumb */
 .breadcrumb-custom {
@@ -465,7 +463,7 @@ body {
     padding: 0 20px;
 }
 
-/* ===== RELATED SECTION ===== */
+/* ====== RELATED SECTION ====== */
 .related-section {
     margin-top: 60px;
     padding-top: 35px;
@@ -621,7 +619,7 @@ body {
 .related-card:nth-child(3) { animation-delay: 0.25s; }
 .related-card:nth-child(4) { animation-delay: 0.35s; }
 
-/* ===== COMMENTS ===== */
+/* ====== COMMENTS ====== */
 .comment-section {
     margin-top: 50px;
     padding-top: 30px;
@@ -694,7 +692,7 @@ body {
     font-size: 0.92rem;
 }
 
-/* ===== RESPONSIVE ===== */
+/* ====== RESPONSIVE ====== */
 @media (max-width: 768px) {
     .article-horizontal-item {
         flex-direction: column;
@@ -715,7 +713,7 @@ body {
     .article-full-content { font-size: 1rem; }
 }
 
-/* --- FOOTER --- */
+/* ====== FOOTER ====== */
 footer.bg-dark {
     background-color: #1a2a1a !important;
 }
