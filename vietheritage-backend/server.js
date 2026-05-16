@@ -23,7 +23,7 @@ const getLatestArticles = () => {
 
 const getComments = () => {
   try {
-    const raw = fs.readFileSync("comments_detail.json", "utf-8");
+    const raw = fs.readFileSync("comment_detail.json", "utf-8");
     return JSON.parse(raw);
   } catch (e) {
     return [];
@@ -31,7 +31,7 @@ const getComments = () => {
 };
 
 const saveComments = (comments) => {
-  fs.writeFileSync("comments.json", JSON.stringify(comments, null, 2));
+  fs.writeFileSync("comment_detail.json", JSON.stringify(comments, null, 2));
 };
 
 const maskEmail = (email) => {
@@ -120,7 +120,7 @@ app.post("/api/articles/:id/comments", (req, res) => {
 
 const getSiteComments = () => {
   try {
-    const raw = fs.readFileSync("site-comments.json", "utf-8");
+    const raw = fs.readFileSync("site_comment.json", "utf-8");
     return JSON.parse(raw);
   } catch (e) {
     return [];
@@ -128,7 +128,7 @@ const getSiteComments = () => {
 };
 
 const saveSiteComments = (comments) => {
-  fs.writeFileSync("site-comments.json", JSON.stringify(comments, null, 2));
+  fs.writeFileSync("site_comment.json", JSON.stringify(comments, null, 2));
 };
 
 app.get("/api/site-comments", (req, res) => {
