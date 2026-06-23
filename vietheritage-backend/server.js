@@ -2,9 +2,13 @@ const fs = require("fs");
 const express = require("express");
 const cors = require("cors");
 const app = express();
+require('dotenv').config();
 require('./cron');
 
 const ADMIN_SECRET = process.env.ADMIN_SECRET || "super-secret-admin";
+const mongoose = require('mongoose');
+const ArticleComment = require('./models/ArticleComment');
+const SiteComment = require('./models/SiteComment');
 
 app.use(cors());
 app.use(express.json());
@@ -21,18 +25,7 @@ const getLatestArticles = () => {
   }
 };
 
-const getComments = () => {
-  try {
-    const raw = fs.readFileSync("comment_detail.json", "utf-8");
-    return JSON.parse(raw);
-  } catch (e) {
-    return [];
-  }
-};
-
-const saveComments = (comments) => {
-  fs.writeFileSync("comment_detail.json", JSON.stringify(comments, null, 2));
-};
+// Comment storage moved to MongoDB
 
 const maskEmail = (email) => {
   const [local, domain] = email.split("@");
@@ -70,116 +63,127 @@ app.get("/api/articles/search", (req, res) => {
 
 // ====== ARTICLE COMMENTS API ======
 
-app.get("/api/articles/:id/comments", (req, res) => {
-  const articleId = req.params.id;
-  const allComments = getComments().filter((c) => c.articleId === articleId);
-  const result = allComments.map((c) => ({
-    id: c.id,
-    author: c.author,
-    email: req.isAdmin ? c.email : maskEmail(c.email),
-    content: c.content,
-    createdAt: c.createdAt,
-  }));
-  res.json(result);
+app.get("/api/articles/:id/comments", async (req, res) => {
+  try {
+    const comments = await ArticleComment.find({ articleId: req.params.id })
+                                        .sort({ createdAt: -1 });
+    const result = comments.map(c => ({
+      id: c._id.toString(),
+      author: c.author,
+      email: req.isAdmin ? c.email : maskEmail(c.email),
+      content: c.content,
+      createdAt: c.createdAt,
+    }));
+    res.json(result);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Không tải được bình luận bài viết" });
+  }
 });
 
-app.post("/api/articles/:id/comments", (req, res) => {
+app.post("/api/articles/:id/comments", async (req, res) => {
   const articleId = req.params.id;
   const { author, email, content } = req.body;
+  console.log('POST comment body:', req.body);
 
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return res.status(400).json({ error: "Email hợp lệ là bắt buộc" });
+   if (!email || !/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(email.trim())) {
+      return res.status(400).json({ error: "Email hợp lệ là bắt buộc" });
+    }
+    if (!content || !content.trim()) {
+      return res.status(400).json({ error: "Nội dung bình luận không được để trống" });
+    }
+
+  try {
+    const comment = await ArticleComment.create({
+      articleId,
+      author: author?.trim() || null,
+      email: email.trim(),
+      content: content.trim(),
+      createdAt: new Date(),
+    });
+
+    res.json({
+      id: comment._id.toString(),
+      author: comment.author,
+      email: req.isAdmin ? comment.email : maskEmail(comment.email),
+      content: comment.content,
+      createdAt: comment.createdAt,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Không lưu được bình luận bài viết" });
   }
-  if (!content || !content.trim()) {
-    return res.status(400).json({ error: "Nội dung bình luận không được để trống" });
-  }
-
-  const comments = getComments();
-  const newComment = {
-    id: `cmt-${Date.now()}`,
-    articleId,
-    author: author?.trim() || null,
-    email: email.trim(),
-    content: content.trim(),
-    createdAt: new Date().toISOString(),
-  };
-  comments.push(newComment);
-  saveComments(comments);
-
-  const response = {
-    id: newComment.id,
-    author: newComment.author,
-    email: req.isAdmin ? newComment.email : maskEmail(newComment.email),
-    content: newComment.content,
-    createdAt: newComment.createdAt,
-  };
-  res.json(response);
 });
 
 // ====== SITE COMMENTS API ======
 
-const getSiteComments = () => {
+// Site comment storage moved to MongoDB
+
+app.get("/api/site-comments", async (req, res) => {
   try {
-    const raw = fs.readFileSync("site_comment.json", "utf-8");
-    return JSON.parse(raw);
-  } catch (e) {
-    return [];
+    const comments = await SiteComment.find().sort({ createdAt: -1 });
+    const result = comments.map(c => ({
+      id: c._id.toString(),
+      author: c.author,
+      email: req.isAdmin ? c.email : maskEmail(c.email),
+      content: c.content,
+      createdAt: c.createdAt,
+    }));
+    res.json(result);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Không tải được bình luận site" });
   }
-};
-
-const saveSiteComments = (comments) => {
-  fs.writeFileSync("site_comment.json", JSON.stringify(comments, null, 2));
-};
-
-app.get("/api/site-comments", (req, res) => {
-  const comments = getSiteComments();
-  const result = comments.map(c => ({
-    id: c.id,
-    author: c.author,
-    email: req.isAdmin ? c.email : maskEmail(c.email),
-    content: c.content,
-    createdAt: c.createdAt,
-  }));
-  res.json(result);
 });
 
-app.post("/api/site-comments", (req, res) => {
+app.post("/api/site-comments", async (req, res) => {
   const { author, email, content } = req.body;
+  console.log('POST comment body:', req.body);
 
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  if (!email || !/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(email.trim())) {
     return res.status(400).json({ error: "Email hợp lệ là bắt buộc" });
   }
   if (!content || !content.trim()) {
     return res.status(400).json({ error: "Nội dung bình luận không được để trống" });
   }
 
-  const comments = getSiteComments();
-  const newComment = {
-    id: `site-cmt-${Date.now()}`,
-    author: author?.trim() || null,
-    email: email.trim(),
-    content: content.trim(),
-    createdAt: new Date().toISOString(),
-  };
-  comments.push(newComment);
-  saveSiteComments(comments);
+  try {
+    const comment = await SiteComment.create({
+      author: author?.trim() || null,
+      email: email.trim(),
+      content: content.trim(),
+      createdAt: new Date(),
+    });
 
-  const response = {
-    id: newComment.id,
-    author: newComment.author,
-    email: req.isAdmin ? newComment.email : maskEmail(newComment.email),
-    content: newComment.content,
-    createdAt: newComment.createdAt,
-  };
-  res.json(response);
+    res.json({
+      id: comment._id.toString(),
+      author: comment.author,
+      email: req.isAdmin ? comment.email : maskEmail(comment.email),
+      content: comment.content,
+      createdAt: comment.createdAt,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Không lưu được bình luận site" });
+  }
 });
 
 // ====== SERVER STARTUP ======
 
 const PORT = 5000;
-app.listen(PORT, () => {
-  console.log(`---`);
-  console.log(`BACKEND RUNNING AT: http://localhost:${PORT}/api/articles`);
-  console.log(`Run 'node crawler.js' to update the latest data!`);
-  console.log(`---`);
-});
+
+mongoose
+  .connect(process.env.MONGODB_URI)   // không truyền options
+  .then(() => {
+    console.log('✅ Connected to MongoDB');
+    app.listen(PORT, () => {
+      console.log('---');
+      console.log(`BACKEND RUNNING AT: http://localhost:${PORT}/api/articles`);
+      console.log(`Run 'node crawler.js' to update the latest data!`);
+      console.log('---');
+    });
+  })
+  .catch(err => {
+    console.error('❌ MongoDB connection error:', err);
+    process.exit(1);
+  });
