@@ -86,7 +86,7 @@ app.post("/api/articles/:id/comments", async (req, res) => {
   const { author, email, content } = req.body;
   console.log('POST comment body:', req.body);
 
-   if (!email || !/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(email.trim())) {
+   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/u.test(email.trim())) {
       return res.status(400).json({ error: "Email hợp lệ là bắt buộc" });
     }
     if (!content || !content.trim()) {
@@ -140,7 +140,7 @@ app.post("/api/site-comments", async (req, res) => {
   const { author, email, content } = req.body;
   console.log('POST comment body:', req.body);
 
-  if (!email || !/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(email.trim())) {
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/u.test(email.trim())) {
     return res.status(400).json({ error: "Email hợp lệ là bắt buộc" });
   }
   if (!content || !content.trim()) {
