@@ -203,7 +203,7 @@
         <div class="comment-box">
             <h6 class="fw-bold mb-3" style="color: var(--forest-green);"><i class="far fa-edit me-2"></i>Để lại ý kiến của bạn</h6>
             <input type="text" id="comment-author" class="form-control mb-2" placeholder="Tên của bạn (tùy chọn)">
-            <input type="email" id="comment-email" class="form-control mb-2" placeholder="Email của bạn (bắt buộc)" required>
+            <input type="text" id="comment-email" class="form-control mb-2" placeholder="Email của bạn (bắt buộc)" required>
             <textarea id="comment-input" class="form-control mb-3" rows="3" placeholder="Chia sẻ suy nghĩ của bạn về bài viết..."></textarea>
             <div class="text-end">
                 <button id="comment-submit" type="button" class="btn btn-submit"><i class="fas fa-paper-plane me-1"></i> Gửi bình luận</button>
@@ -317,7 +317,7 @@
         const email = document.getElementById('comment-email').value.trim();
         const content = document.getElementById('comment-input').value.trim();
         if (!email) { alert('Email là bắt buộc'); return; }
-        if (!/^\S+@\S+\.\S+$/.test(email)) { alert('Email không hợp lệ'); return; }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/u.test(email)) { alert('Email không hợp lệ'); return; }
         if (!content) return;
         const headers = { 'Content-Type': 'application/json' };
         if (isAdmin && adminSecret) {

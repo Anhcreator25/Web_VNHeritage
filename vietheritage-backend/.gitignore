@@ -1,0 +1,15 @@
+#===================
+# Backend cleanup .gitignore
+#===================
+# Log files (runtime logs, not needed in repo)
+*.log
+
+# Temporary test JSON files
+tmp_*.json
+
+# Environment configuration (keep locally, do not commit)
+.env
+.env.*
+
+# Ignore node_modules if not already ignored (often in .gitignore of root project)
+node_modules/

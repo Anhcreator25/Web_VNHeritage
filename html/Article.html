@@ -124,7 +124,7 @@
                                 <input type="text" id="comment-name" class="form-control" placeholder="Tên của bạn..." maxlength="50" required>
                             </div>
                             <div class="mb-3">
-                                <input type="email" id="comment-email" class="form-control" placeholder="Email của bạn..." required>
+                                <input type="text" id="comment-email" class="form-control" placeholder="Email của bạn..." required>
                             </div>
                             <div class="mb-3">
                                 <textarea id="comment-content" class="form-control" rows="3" placeholder="Viết bình luận..." maxlength="500" required></textarea>
@@ -461,6 +461,7 @@
         const content = contentInput.value.trim();
 
         if (!author || !email || !content) return;
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/u.test(email)) { alert('Email không hợp lệ'); return; }
 
         const btn = e.target.querySelector('button[type="submit"]');
         btn.disabled = true;
