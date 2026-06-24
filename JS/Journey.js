@@ -60,6 +60,9 @@ const transportSettings = {
     car: { speed: 60, timePerSite: 90 }
 };
 
+// Base URL for API calls (backend runs on port 5000)
+const API_BASE = 'http://localhost:5000';
+
 // ====== SAMPLE TOURS ======
 
 const sampleTours = [
@@ -151,93 +154,121 @@ function renderSampleTours() {
         </div>`;
 }
 
-// ====== SAVE / LOAD MULTIPLE ITINERARIES ======
+// ====== SAVE / LOAD MULTIPLE ITINERARIES (SERVER) ======
 
-const SAVED_KEY = 'vhSavedItineraries';
-
-function getSavedItineraries() {
-    try { return JSON.parse(localStorage.getItem(SAVED_KEY)) || {}; } catch { return {}; }
+// Helper to get auth token
+function getAuthHeaders() {
+  const token = localStorage.getItem('token');
+  return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
-function saveNamedItinerary(name) {
-    const saved = getSavedItineraries();
-    const customPoints = {};
-    itinerary.forEach(key => {
-        if (key.startsWith('custom_')) {
-            customPoints[key] = { data: heritageDataSource[key], coords: realCoordinates[key] };
-        }
-    });
-    saved[name] = {
-        itinerary: [...itinerary],
-        customPoints: customPoints,
-        savedAt: new Date().toISOString()
-    };
-    localStorage.setItem(SAVED_KEY, JSON.stringify(saved));
-    renderSavedList();
+// Fetch saved itineraries for current user
+async function fetchUserItineraries() {
+  const headers = { ...getAuthHeaders() };
+  const resp = await fetch(`${API_BASE}/api/itineraries`, { headers });
+  if (!resp.ok) {
+    console.error('Failed to fetch itineraries');
+    return [];
+  }
+  return await resp.json();
 }
 
-function loadNamedItinerary(name) {
-    const saved = getSavedItineraries();
-    const entry = saved[name];
-    if (!entry) return;
-
-    if (entry.customPoints) {
-        for (let key in entry.customPoints) {
-            heritageDataSource[key] = entry.customPoints[key].data;
-            realCoordinates[key] = entry.customPoints[key].coords;
-        }
+// Save current itinerary to server with a title
+async function saveCurrentItinerary(title) {
+  const customPoints = {};
+  itinerary.forEach(key => {
+    if (key.startsWith('custom_')) {
+      customPoints[key] = { data: heritageDataSource[key], coords: realCoordinates[key] };
     }
-    itinerary = [...(entry.itinerary || [])];
-    saveItinerary();
-    renderItinerary();
+  });
+  const body = {
+    title,
+    itinerary: [...itinerary],
+    customPoints,
+  };
+  const resp = await fetch(`${API_BASE}/api/itineraries`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+    body: JSON.stringify(body),
+  });
+  if (!resp.ok) {
+    const err = await resp.json();
+    throw new Error(err.error || 'Save failed');
+  }
+  return await resp.json();
 }
 
-function deleteSavedItinerary(name) {
-    const saved = getSavedItineraries();
-    delete saved[name];
-    localStorage.setItem(SAVED_KEY, JSON.stringify(saved));
-    renderSavedList();
-}
-
-function renderSavedList() {
-    const saved = getSavedItineraries();
-    const names = Object.keys(saved);
-
-    savedList.innerHTML = '';
-    if (names.length === 0) {
-        savedList.innerHTML = '<li><span class="dropdown-item text-muted">Chưa có hành trình nào</span></li>';
-        return;
+// Load an itinerary by its ID
+async function loadItineraryById(id) {
+  const resp = await fetch(`${API_BASE}/api/itineraries/${id}`, { headers: getAuthHeaders() });
+  if (!resp.ok) {
+    console.error('Failed to load itinerary');
+    return;
+  }
+  const data = await resp.json();
+  // Restore any custom points
+  if (data.customPoints) {
+    for (let key in data.customPoints) {
+      heritageDataSource[key] = data.customPoints[key].data;
+      realCoordinates[key] = data.customPoints[key].coords;
     }
+  }
+  // Use stored itinerary array (list of keys)
+  itinerary = data.itinerary ? [...data.itinerary] : [];
+  renderItinerary();
+}
 
-    names.forEach(name => {
-        const li = document.createElement('li');
-        li.className = 'dropdown-item d-flex align-items-center justify-content-between';
-        li.style.cursor = 'default';
+// Delete an itinerary by its ID
+async function deleteItineraryById(id) {
+  const resp = await fetch(`${API_BASE}/api/itineraries/${id}`, {
+    method: 'DELETE',
+    headers: getAuthHeaders(),
+  });
+  if (!resp.ok) {
+    console.error('Failed to delete itinerary');
+    return;
+  }
+  // Refresh list after deletion
+  await renderSavedList();
+}
 
-        const nameSpan = document.createElement('span');
-        nameSpan.className = 'flex-grow-1 py-1';
-        nameSpan.style.cursor = 'pointer';
-        nameSpan.innerHTML = `<i class="fas fa-map-marked-alt me-2 text-bronze"></i>${escapeHTML(name)} <small class="text-muted ms-1">(${(saved[name].itinerary || []).length} điểm)</small>`;
-        nameSpan.addEventListener('click', (e) => {
-            e.stopPropagation();
-            loadNamedItinerary(name);
-        });
+// Render dropdown list of saved itineraries
+async function renderSavedList() {
+  const itineraries = await fetchUserItineraries();
+  savedList.innerHTML = '';
+  if (itineraries.length === 0) {
+    savedList.innerHTML = '<li><span class="dropdown-item text-muted">Chưa có hành trình nào</span></li>';
+    return;
+  }
+  itineraries.forEach(it => {
+    const li = document.createElement('li');
+    li.className = 'dropdown-item d-flex align-items-center justify-content-between';
+    li.style.cursor = 'default';
 
-        const delBtn = document.createElement('button');
-        delBtn.className = 'btn btn-sm text-danger ms-2';
-        delBtn.title = 'Xoá';
-        delBtn.innerHTML = '<i class="fas fa-times"></i>';
-        delBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (confirm(`Xoá "${name}"?`)) {
-                deleteSavedItinerary(name);
-            }
-        });
-
-        li.appendChild(nameSpan);
-        li.appendChild(delBtn);
-        savedList.appendChild(li);
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'flex-grow-1 py-1';
+    nameSpan.style.cursor = 'pointer';
+    nameSpan.innerHTML = `<i class="fas fa-map-marked-alt me-2 text-bronze"></i>${escapeHTML(it.title)} <small class="text-muted ms-1">(${(it.itinerary || []).length} điểm)</small>`;
+    nameSpan.addEventListener('click', (e) => {
+      e.stopPropagation();
+      loadItineraryById(it._id);
     });
+
+    const delBtn = document.createElement('button');
+    delBtn.className = 'btn btn-sm text-danger ms-2';
+    delBtn.title = 'Xoá';
+    delBtn.innerHTML = '<i class="fas fa-times"></i>';
+    delBtn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      if (confirm(`Xoá "${it.title}"?`)) {
+        await deleteItineraryById(it._id);
+      }
+    });
+
+    li.appendChild(nameSpan);
+    li.appendChild(delBtn);
+    savedList.appendChild(li);
+  });
 }
 
 // ====== UTILITY FUNCTIONS ======
@@ -1030,15 +1061,21 @@ intangibleBtn.addEventListener('click', () => {
     renderSiteCards();
 });
 
-saveItineraryBtn.addEventListener('click', () => {
-    if (itinerary.length === 0) {
-        alert('Vui lòng thêm điểm vào hành trình trước!');
-        return;
-    }
-    const name = prompt('Đặt tên cho hành trình này:');
-    if (!name || !name.trim()) return;
-    saveNamedItinerary(name.trim());
+saveItineraryBtn.addEventListener('click', async () => {
+  if (itinerary.length === 0) {
+    alert('Vui lòng thêm điểm vào hành trình trước!');
+    return;
+  }
+  const name = prompt('Đặt tên cho hành trình này:');
+  if (!name || !name.trim()) return;
+  try {
+    await saveCurrentItinerary(name.trim());
     alert(`Đã lưu hành trình "${name.trim()}"!`);
+    await renderSavedList();
+  } catch (e) {
+    console.error(e);
+    alert('Lưu hành trình thất bại');
+  }
 });
 
 clearItineraryBtn.addEventListener('click', clearItinerary);
@@ -1059,11 +1096,8 @@ renderSavedList();
 renderItinerary();
 
 window.addEventListener('storage', (e) => {
-    if (e.key === 'vhJourney' || e.key === 'vhCustomPoints') {
-        loadItinerary();
-        renderItinerary();
-    }
-    if (e.key === SAVED_KEY) {
-        renderSavedList();
-    }
+  if (e.key === 'vhJourney' || e.key === 'vhCustomPoints') {
+    loadItinerary();
+    renderItinerary();
+  }
 });

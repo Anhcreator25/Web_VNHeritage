@@ -9,6 +9,12 @@ const ADMIN_SECRET = process.env.ADMIN_SECRET || "super-secret-admin";
 const mongoose = require('mongoose');
 const ArticleComment = require('./models/ArticleComment');
 const SiteComment = require('./models/SiteComment');
+// New auth dependencies
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const User = require('./models/User');
+
+const JWT_SECRET = process.env.JWT_SECRET || 'default_jwt_secret';
 
 app.use(cors());
 app.use(express.json());
@@ -165,6 +171,289 @@ app.post("/api/site-comments", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Không lưu được bình luận site" });
+  }
+});
+
+// ====== AUTH & USER ROUTES ======
+// Register new user
+// ====== ITINERARIES API ======
+const Itinerary = require('./models/Itinerary');
+
+// List user's itineraries
+app.get('/api/itineraries', authenticate, async (req, res) => {
+  try {
+    const its = await Itinerary.find({ user: req.userId }).sort({ savedAt: -1 });
+    res.json(its);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Lỗi tải lịch trình' });
+  }
+});
+
+// Create itinerary
+app.post('/api/itineraries', authenticate, async (req, res) => {
+  const { title, description, itinerary, customPoints } = req.body;
+  if (!title || !itinerary) return res.status(400).json({ error: 'Tiêu đề và hành trình là bắt buộc' });
+  try {
+    const newIt = await Itinerary.create({
+      user: req.userId,
+      title,
+      description: description || '',
+      itinerary,
+      customPoints: customPoints || {}
+    });
+    res.json(newIt);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Lưu lịch trình thất bại' });
+  }
+});
+
+// Get specific itinerary
+app.get('/api/itineraries/:id', authenticate, async (req, res) => {
+  try {
+    const it = await Itinerary.findOne({ _id: req.params.id, user: req.userId });
+    if (!it) return res.status(404).json({ error: 'Không tìm thấy lịch trình' });
+    res.json(it);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Lỗi tải lịch trình' });
+  }
+});
+
+// Update itinerary
+app.put('/api/itineraries/:id', authenticate, async (req, res) => {
+  const { title, description, itinerary, customPoints } = req.body;
+  try {
+    const it = await Itinerary.findOneAndUpdate(
+      { _id: req.params.id, user: req.userId },
+      { title, description, itinerary, customPoints },
+      { new: true }
+    );
+    if (!it) return res.status(404).json({ error: 'Không tìm thấy lịch trình' });
+    res.json(it);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Cập nhật lịch trình thất bại' });
+  }
+});
+
+// Delete itinerary
+app.delete('/api/itineraries/:id', authenticate, async (req, res) => {
+  try {
+    const result = await Itinerary.findOneAndDelete({ _id: req.params.id, user: req.userId });
+    if (!result) return res.status(404).json({ error: 'Không tìm thấy lịch trình' });
+    res.json({ message: 'Xóa lịch trình thành công' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Xóa lịch trình thất bại' });
+  }
+});
+app.post('/api/register', async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email và mật khẩu là bắt buộc' });
+  }
+  try {
+    const existing = await User.findOne({ email });
+    if (existing) return res.status(409).json({ error: 'Email đã được đăng ký' });
+    const passwordHash = await bcrypt.hash(password, 10);
+    const user = await User.create({ email, passwordHash, favorites: [] });
+    const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
+    res.json({ token });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Đăng ký thất bại' });
+  }
+});
+
+// Login
+app.post('/api/login', async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email và mật khẩu là bắt buộc' });
+  }
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(401).json({ error: 'Sai thông tin' });
+    const match = await bcrypt.compare(password, user.passwordHash);
+    if (!match) return res.status(401).json({ error: 'Sai thông tin' });
+    const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
+    res.json({ token });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Đăng nhập thất bại' });
+  }
+});
+
+// Middleware to verify JWT
+function authenticate(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return res.status(401).json({ error: 'Thiếu token' });
+  const token = authHeader.split(' ')[1];
+  try {
+    const payload = jwt.verify(token, JWT_SECRET);
+    req.userId = payload.id;
+    next();
+  } catch (e) {
+    return res.status(401).json({ error: 'Token không hợp lệ' });
+  }
+}
+
+// Middleware to require admin role
+function requireAdmin(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return res.status(401).json({ error: 'Thiếu token' });
+  const token = authHeader.split(' ')[1];
+  try {
+    const payload = jwt.verify(token, JWT_SECRET);
+    if (payload.role !== 'admin') {
+      return res.status(403).json({ error: 'Không đủ quyền' });
+    }
+    next();
+  } catch (e) {
+    return res.status(401).json({ error: 'Token không hợp lệ' });
+  }
+}
+
+// Get current user profile (email + favorites)
+app.get('/api/me', authenticate, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select('email favorites');
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    res.json({ email: user.email, favorites: user.favorites });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Lỗi máy chủ' });
+  }
+});
+
+// Toggle favorite (add/remove)
+app.post('/api/me/favorites', authenticate, async (req, res) => {
+  const { itemId, type } = req.body; // type: 'article' or 'heritage'
+  if (!itemId || !type) {
+    return res.status(400).json({ error: 'itemId và type là bắt buộc' });
+  }
+  const key = `${type}:${itemId}`;
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    const idx = user.favorites.indexOf(key);
+    if (idx === -1) {
+      user.favorites.push(key);
+    } else {
+      user.favorites.splice(idx, 1);
+    }
+    await user.save();
+    res.json({ favorites: user.favorites });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Lỗi cập nhật yêu thích' });
+  }
+});
+
+// ====== ADMIN ROUTES ======
+
+// Get all comments (articles + sites)
+app.get('/api/admin/comments', requireAdmin, async (req, res) => {
+  try {
+    const articleComments = await ArticleComment.find().sort({ createdAt: -1 });
+    const siteComments = await SiteComment.find().sort({ createdAt: -1 });
+    const formatted = [
+      ...articleComments.map(c => ({
+        id: c._id,
+        type: 'article',
+        author: c.author,
+        email: c.email,
+        content: c.content,
+        createdAt: c.createdAt
+      })),
+      ...siteComments.map(c => ({
+        id: c._id,
+        type: 'site',
+        author: c.author,
+        email: c.email,
+        content: c.content,
+        createdAt: c.createdAt
+      }))
+    ];
+    res.json(formatted);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Lỗi tải bình luận' });
+  }
+});
+
+// Update comment (article or site)
+app.put('/api/admin/comments/:type/:id', requireAdmin, async (req, res) => {
+  const { type, id } = req.params;
+  const { content } = req.body;
+  if (!content) return res.status(400).json({ error: 'Nội dung trống' });
+  let Model;
+  if (type === 'article') Model = ArticleComment;
+  else if (type === 'site') Model = SiteComment;
+  else return res.status(400).json({ error: 'Loại không hợp lệ' });
+  try {
+    const updated = await Model.findByIdAndUpdate(id, { content }, { new: true });
+    if (!updated) return res.status(404).json({ error: 'Không tìm thấy' });
+    res.json({ message: 'Cập nhật thành công' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Lỗi cập nhật' });
+  }
+});
+
+// Delete comment
+app.delete('/api/admin/comments/:type/:id', requireAdmin, async (req, res) => {
+  const { type, id } = req.params;
+  let Model;
+  if (type === 'article') Model = ArticleComment;
+  else if (type === 'site') Model = SiteComment;
+  else return res.status(400).json({ error: 'Loại không hợp lệ' });
+  try {
+    const del = await Model.findByIdAndDelete(id);
+    if (!del) return res.status(404).json({ error: 'Không tìm thấy' });
+    res.json({ message: 'Xóa thành công' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Lỗi xóa' });
+  }
+});
+
+// Get all users (admin view)
+app.get('/api/admin/users', requireAdmin, async (req, res) => {
+  try {
+    const users = await User.find().select('email role createdAt');
+    res.json(users);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Lỗi tải người dùng' });
+  }
+});
+
+// Update user role
+app.patch('/api/admin/users/:id', requireAdmin, async (req, res) => {
+  const { role } = req.body;
+  if (!role) return res.status(400).json({ error: 'Vai trò trống' });
+  try {
+    const user = await User.findByIdAndUpdate(req.params.id, { role }, { new: true });
+    if (!user) return res.status(404).json({ error: 'Không tìm thấy' });
+    res.json({ message: 'Cập nhật thành công' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Lỗi cập nhật' });
+  }
+});
+
+// Delete user
+app.delete('/api/admin/users/:id', requireAdmin, async (req, res) => {
+  try {
+    const del = await User.findByIdAndDelete(req.params.id);
+    if (!del) return res.status(404).json({ error: 'Không tìm thấy' });
+    res.json({ message: 'Xóa thành công' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Lỗi xóa' });
   }
 });
 
