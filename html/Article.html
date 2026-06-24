@@ -118,16 +118,16 @@
                 <div class="comment-section">
                     <h4 style="font-size:1.05rem;"><i class="fas fa-comments me-2"></i>Bình luận về trang web</h4>
                     <div id="comments-list"></div>
-                    <div class="comment-box">
+                    <div class="comment-box" id="comment-box">
                         <form id="comment-form">
                             <div class="mb-3">
-                                <input type="text" id="comment-name" class="form-control" placeholder="Tên của bạn..." maxlength="50" required>
+                                <input type="text" id="comment-name" name="author" class="form-control" placeholder="Tên của bạn..." maxlength="50" required>
                             </div>
                             <div class="mb-3">
-                                <input type="text" id="comment-email" class="form-control" placeholder="Email của bạn..." required>
+                                <input type="text" id="comment-email" name="email" class="form-control" placeholder="Email của bạn..." required>
                             </div>
                             <div class="mb-3">
-                                <textarea id="comment-content" class="form-control" rows="3" placeholder="Viết bình luận..." maxlength="500" required></textarea>
+                                <textarea id="comment-content" name="content" class="form-control" rows="3" placeholder="Viết bình luận..." maxlength="500" required></textarea>
                             </div>
                             <button type="submit" class="btn btn-submit"><i class="fas fa-paper-plane me-1"></i> Gửi bình luận</button>
                         </form>
@@ -417,6 +417,24 @@
 // ====== SITE COMMENTS ======
 
     const API_BASE = 'http://localhost:5000';
+    const token = localStorage.getItem('token');
+
+    // Manage comment UI based on authentication state
+    const commentBox = document.querySelector('.comment-box');
+    const commentSection = document.querySelector('.comment-section');
+
+    // Hide and disable name/email inputs (they're not needed for posting)
+    const nameInput = document.getElementById('comment-name');
+    const emailInput = document.getElementById('comment-email');
+    if (nameInput) {
+        nameInput.parentElement.style.display = 'none';
+        nameInput.disabled = true;
+    }
+    if (emailInput) {
+        emailInput.parentElement.style.display = 'none';
+        emailInput.disabled = true;
+    }
+
 
     async function loadComments() {
         try {
@@ -443,7 +461,7 @@
         list.innerHTML = comments.toReversed().map(c => `
             <div class="comment-item">
                 <div class="d-flex justify-content-between align-items-center">
-                    <span class="comment-author"><i class="fas fa-user-circle me-1"></i>${escapeHtml(c.author || 'Ẩn danh')}</span>
+                    <span class="comment-author"><i class="fas fa-user-circle me-1"></i>${c.author ? escapeHtml(c.author) : ''}</span>
                     <span class="comment-time">${formatCommentTime(c.createdAt)}</span>
                 </div>
                 <div class="comment-content">${escapeHtml(c.content)}</div>
@@ -453,15 +471,18 @@
 
     async function submitComment(e) {
         e.preventDefault();
+        const token = localStorage.getItem('token');
+        if (!token) {
+            requireLogin('đăng bình luận');
+            return;
+        }
         const nameInput = document.getElementById('comment-name');
         const emailInput = document.getElementById('comment-email');
         const contentInput = document.getElementById('comment-content');
-        const author = nameInput.value.trim();
-        const email = emailInput.value.trim();
+        const author = nameInput ? nameInput.value.trim() : '';
         const content = contentInput.value.trim();
 
-        if (!author || !email || !content) return;
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/u.test(email)) { alert('Email không hợp lệ'); return; }
+        if (!content) return;
 
         const btn = e.target.querySelector('button[type="submit"]');
         btn.disabled = true;
@@ -470,8 +491,8 @@
         try {
             const res = await fetch(`${API_BASE}/api/site-comments`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ author, email, content }),
+                headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+                body: JSON.stringify({ author, content })
             });
 
             if (!res.ok) {
@@ -480,8 +501,8 @@
                 return;
             }
 
-            nameInput.value = '';
-            emailInput.value = '';
+            if (nameInput) nameInput.value = '';
+            if (emailInput) emailInput.value = '';
             contentInput.value = '';
             await renderComments();
         } catch (err) {
@@ -513,6 +534,25 @@
     document.getElementById('comment-form').addEventListener('submit', submitComment);
     renderComments();
 </script>
+<!-- Login prompt modal -->
+<div class="modal fade" id="loginPromptModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Bạn cần đăng nhập</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Để <span id="login-action-text"></span>, bạn phải <strong>đăng nhập</strong> tài khoản.
+      </div>
+      <div class="modal-footer">
+        <a href="Login.html" class="btn btn-primary">Đăng nhập ngay</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="../JS/common-auth.js"></script>
 <script src="../JS/navbar-auth.js"></script>
   </body>
 </html>

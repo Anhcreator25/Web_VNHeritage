@@ -71,15 +71,31 @@ app.get("/api/articles/search", (req, res) => {
 
 app.get("/api/articles/:id/comments", async (req, res) => {
   try {
+    // Identify user email from token if provided (optional authentication)
+    let currentUserEmail = null;
+    const authHeader = req.headers.authorization;
+    if (authHeader) {
+      const token = authHeader.split(' ')[1];
+      try {
+        const payload = jwt.verify(token, JWT_SECRET);
+        const user = await User.findById(payload.id).select('email');
+        if (user) currentUserEmail = user.email;
+      } catch (e) {
+        // ignore token errors
+      }
+    }
     const comments = await ArticleComment.find({ articleId: req.params.id })
-                                        .sort({ createdAt: -1 });
-    const result = comments.map(c => ({
-      id: c._id.toString(),
-      author: c.author,
-      email: req.isAdmin ? c.email : maskEmail(c.email),
-      content: c.content,
-      createdAt: c.createdAt,
-    }));
+                                          .sort({ createdAt: -1 });
+    const result = comments.map(c => {
+      const isOwner = currentUserEmail && c.email === currentUserEmail;
+      return {
+        id: c._id.toString(),
+        author: c.author,
+        email: req.isAdmin ? c.email : (isOwner ? '' : maskEmail(c.email)),
+        content: c.content,
+        createdAt: c.createdAt,
+      };
+    });
     res.json(result);
   } catch (err) {
     console.error(err);
@@ -92,17 +108,22 @@ app.post("/api/articles/:id/comments", async (req, res) => {
   const { author, email, content } = req.body;
   console.log('POST comment body:', req.body);
 
-  // Determine email: if JWT token provided, use authenticated user's email
+  // Determine email and author from JWT if token provided
   let finalEmail = email?.trim();
+  let finalAuthor = author?.trim();
+
   const authHeader = req.headers.authorization;
   if (authHeader) {
     const token = authHeader.split(' ')[1];
     try {
       const payload = jwt.verify(token, JWT_SECRET);
-      const user = await User.findById(payload.id).select('email');
-      if (user) finalEmail = user.email;
+      const user = await User.findById(payload.id).select('email displayName');
+      if (user) {
+        if (!finalEmail) finalEmail = user.email;
+        if (!finalAuthor) finalAuthor = user.displayName || user.email.split('@')[0];
+      }
     } catch (e) {
-      // ignore token errors, fallback to provided email
+      // ignore token errors, fallback to provided values
     }
   }
 
@@ -117,7 +138,7 @@ app.post("/api/articles/:id/comments", async (req, res) => {
   try {
     const comment = await ArticleComment.create({
       articleId,
-      author: author?.trim() || null,
+      author: finalAuthor,
       email: finalEmail,
       content: content.trim(),
       createdAt: new Date(),
@@ -142,14 +163,30 @@ app.post("/api/articles/:id/comments", async (req, res) => {
 
 app.get("/api/site-comments", async (req, res) => {
   try {
+    // Identify user email if token present
+    let currentUserEmail = null;
+    const authHeader = req.headers.authorization;
+    if (authHeader) {
+      const token = authHeader.split(' ')[1];
+      try {
+        const payload = jwt.verify(token, JWT_SECRET);
+        const user = await User.findById(payload.id).select('email');
+        if (user) currentUserEmail = user.email;
+      } catch (e) {
+        // ignore token errors
+      }
+    }
     const comments = await SiteComment.find().sort({ createdAt: -1 });
-    const result = comments.map(c => ({
-      id: c._id.toString(),
-      author: c.author,
-      email: req.isAdmin ? c.email : maskEmail(c.email),
-      content: c.content,
-      createdAt: c.createdAt,
-    }));
+    const result = comments.map(c => {
+      const isOwner = currentUserEmail && c.email === currentUserEmail;
+      return {
+        id: c._id.toString(),
+        author: c.author,
+        email: req.isAdmin ? c.email : (isOwner ? '' : maskEmail(c.email)),
+        content: c.content,
+        createdAt: c.createdAt,
+      };
+    });
     res.json(result);
   } catch (err) {
     console.error(err);
@@ -161,7 +198,27 @@ app.post("/api/site-comments", async (req, res) => {
   const { author, email, content } = req.body;
   console.log('POST comment body:', req.body);
 
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/u.test(email.trim())) {
+  // Determine email and author from JWT if token provided
+  let finalEmail = email?.trim();
+  let finalAuthor = author?.trim();
+
+  const authHeader = req.headers.authorization;
+  if (authHeader) {
+    const token = authHeader.split(' ')[1];
+    try {
+      const payload = jwt.verify(token, JWT_SECRET);
+      const user = await User.findById(payload.id).select('email displayName');
+      if (user) {
+        if (!finalEmail) finalEmail = user.email;
+        if (!finalAuthor) finalAuthor = user.displayName || user.email.split('@')[0];
+      }
+    } catch (e) {
+      // ignore token errors
+    }
+  }
+
+  // Validate email and content
+  if (!finalEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/u.test(finalEmail)) {
     return res.status(400).json({ error: "Email hợp lệ là bắt buộc" });
   }
   if (!content || !content.trim()) {
@@ -170,8 +227,8 @@ app.post("/api/site-comments", async (req, res) => {
 
   try {
     const comment = await SiteComment.create({
-      author: author?.trim() || null,
-      email: email.trim(),
+      author: finalAuthor,
+      email: finalEmail,
       content: content.trim(),
       createdAt: new Date(),
     });
@@ -265,16 +322,19 @@ app.delete('/api/itineraries/:id', authenticate, async (req, res) => {
   }
 });
 app.post('/api/register', async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).json({ error: 'Email và mật khẩu là bắt buộc' });
+  const { email, password, name } = req.body;
+  // Yêu cầu bắt buộc email, password và tên (displayName)
+  if (!email || !password || !name) {
+    return res.status(400).json({ error: 'Email, mật khẩu và tên là bắt buộc' });
   }
   try {
     const existing = await User.findOne({ email });
     if (existing) return res.status(409).json({ error: 'Email đã được đăng ký' });
     const passwordHash = await bcrypt.hash(password, 10);
-    const user = await User.create({ email, passwordHash, favorites: [] });
-    const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
+    // Lưu tên người dùng vào displayName
+    const user = await User.create({ email, passwordHash, displayName: name.trim(), favorites: [] });
+    // Thêm displayName vào payload JWT
+    const token = jwt.sign({ id: user._id, role: user.role, displayName: user.displayName }, JWT_SECRET, { expiresIn: '7d' });
     res.json({ token });
   } catch (err) {
     console.error(err);
@@ -293,7 +353,7 @@ app.post('/api/login', async (req, res) => {
     if (!user) return res.status(401).json({ error: 'Sai thông tin' });
     const match = await bcrypt.compare(password, user.passwordHash);
     if (!match) return res.status(401).json({ error: 'Sai thông tin' });
-    const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ id: user._id, role: user.role, displayName: user.displayName }, JWT_SECRET, { expiresIn: '7d' });
     res.json({ token });
   } catch (err) {
     console.error(err);
@@ -334,9 +394,9 @@ function requireAdmin(req, res, next) {
 // Get current user profile (email + favorites)
 app.get('/api/me', authenticate, async (req, res) => {
   try {
-    const user = await User.findById(req.userId).select('email favorites');
-    if (!user) return res.status(404).json({ error: 'User not found' });
-    res.json({ email: user.email, favorites: user.favorites });
+const user = await User.findById(req.userId).select('email displayName favorites');
+      if (!user) return res.status(404).json({ error: 'User not found' });
+      res.json({ email: user.email, displayName: user.displayName, favorites: user.favorites });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Lỗi máy chủ' });

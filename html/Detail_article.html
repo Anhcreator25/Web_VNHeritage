@@ -200,11 +200,11 @@
     <div class="comment-section">
         <h4><i class="fas fa-comments me-2" style="color: var(--bronze-accent);"></i>Bình luận (<span id="comment-count">0</span>)</h4>
         <div id="comment-list" class="mb-4"></div>
-        <div class="comment-box">
+        <div class="comment-box" id="comment-box">
             <h6 class="fw-bold mb-3" style="color: var(--forest-green);"><i class="far fa-edit me-2"></i>Để lại ý kiến của bạn</h6>
-            <input type="text" id="comment-author" class="form-control mb-2" placeholder="Tên của bạn (tùy chọn)">
-            <input type="text" id="comment-email" class="form-control mb-2" placeholder="Email của bạn (bắt buộc)" required>
-            <textarea id="comment-input" class="form-control mb-3" rows="3" placeholder="Chia sẻ suy nghĩ của bạn về bài viết..."></textarea>
+            <input type="text" id="comment-author" name="author" class="form-control mb-2" placeholder="Tên của bạn (tùy chọn)">
+            <input type="text" id="comment-email" name="email" class="form-control mb-2" placeholder="Email của bạn (bắt buộc)" required>
+            <textarea id="comment-input" name="content" class="form-control mb-3" rows="3" placeholder="Chia sẻ suy nghĩ của bạn về bài viết..."></textarea>
             <div class="text-end">
                 <button id="comment-submit" type="button" class="btn btn-submit"><i class="fas fa-paper-plane me-1"></i> Gửi bình luận</button>
             </div>
@@ -226,13 +226,21 @@ const ADMIN_SECRET = "super-secret-admin";
     const isAdmin = adminSecret === ADMIN_SECRET;
     // Detect logged‑in user
     const token = localStorage.getItem('token');
-    if (token) {
-      // Ẩn trường tên và email khi đã đăng nhập
-      const authorGroup = document.getElementById('comment-author').parentElement;
-      const emailGroup = document.getElementById('comment-email').parentElement;
-      if (authorGroup) authorGroup.style.display = 'none';
-      if (emailGroup) emailGroup.style.display = 'none';
-    }
+    // Manage comment UI based on authentication state
+    const commentBox = document.getElementById('comment-box');
+    const commentSection = document.querySelector('.comment-section');
+        // Hide and disable name/email inputs (they're not needed for posting)
+        const authorInput = document.getElementById('comment-author');
+        const emailInput = document.getElementById('comment-email');
+        if (authorInput) {
+            authorInput.parentElement.style.display = 'none';
+            authorInput.disabled = true;
+        }
+        if (emailInput) {
+            emailInput.parentElement.style.display = 'none';
+            emailInput.disabled = true;
+        }
+
 
   // ====== FETCH DATA FROM SERVER ======
     fetch('http://localhost:5000/api/articles')
@@ -298,28 +306,37 @@ const ADMIN_SECRET = "super-secret-admin";
         });
 
 // ====== COMMENTS ======
-    function loadComments() {
+    async function loadComments() {
         const headers = {};
         if (isAdmin && adminSecret) {
             headers['X-Admin-Secret'] = adminSecret;
         }
-        fetch(`http://localhost:5000/api/articles/${articleId}/comments`, { headers })
-            .then(r => r.json())
-            .then(list => {
-                document.getElementById('comment-count').innerText = list.length;
-                const listDiv = document.getElementById('comment-list');
-                listDiv.innerHTML = list.map(c => `
+        // If token present, pass it so server can identify own comments
+        const token = localStorage.getItem('token');
+        if (token) headers['Authorization'] = 'Bearer ' + token;
+        try {
+            const res = await fetch(`http://localhost:5000/api/articles/${articleId}/comments`, { headers });
+            const list = await res.json();
+            document.getElementById('comment-count').innerText = list.length;
+            const listDiv = document.getElementById('comment-list');
+            listDiv.innerHTML = list.map(c => {
+                const isOwn = !c.email; // server returns empty string for own comment
+                const authorHtml = isOwn ? '' : `<span class="comment-author">${c.author || 'Bạn đọc ẩn danh'}</span>`;
+                const emailHtml = isOwn ? '' : `<div class="comment-email">${c.email}</div>`;
+                return `
                     <div class="comment-item">
                         <div class="d-flex justify-content-between align-items-center">
-                            <span class="comment-author">${c.author || 'Bạn đọc ẩn danh'}</span>
+                            ${authorHtml}
                             <span class="comment-time">${new Date(c.createdAt).toLocaleString()}</span>
                         </div>
-                        <div class="comment-email">${c.email}</div>
+                        ${emailHtml}
                         <div class="comment-content">${c.content}</div>
                     </div>
-                `).join('');
-            })
-            .catch(err => console.error('Error loading comments', err));
+                `;
+            }).join('');
+        } catch (err) {
+            console.error('Error loading comments', err);
+        }
     }
 
 function postComment() {
