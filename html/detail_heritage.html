@@ -200,6 +200,7 @@
             </div>
             <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
                 <h1 class="heritage-header mb-0">${item.title}</h1>
+                <button id="bookmark-btn" class="btn btn-outline-primary btn-sm"><i class="far fa-bookmark"></i> Yêu thích</button>
                 <a href="Heritage.html" class="btn btn-back rounded-pill"><i class="fas fa-arrow-left"></i> Quay lại</a>
             </div>
             <div class="heritage-meta-bar">
@@ -229,6 +230,43 @@
                 </a>
             </div>`;
         }).join('');
+        // ---- Bookmark handling for heritage ----
+        const token = localStorage.getItem('token');
+        if (token) {
+          fetch('http://localhost:5000/api/me', {
+            headers: { Authorization: 'Bearer ' + token }
+          })
+            .then(r => r.json())
+            .then(userData => {
+              const favKey = `heritage:${heritageId}`;
+              const btn = document.getElementById('bookmark-btn');
+              if (!btn) return;
+              if (userData.favorites && userData.favorites.includes(favKey)) {
+                btn.innerHTML = '<i class="fas fa-bookmark"></i> Đã lưu';
+                btn.classList.remove('btn-outline-primary');
+                btn.classList.add('btn-primary');
+              }
+              btn.addEventListener('click', () => {
+                fetch('http://localhost:5000/api/me/favorites', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: 'Bearer ' + token
+                  },
+                  body: JSON.stringify({ itemId: heritageId, type: 'heritage' })
+                })
+                  .then(r => r.json())
+                  .then(res => {
+                    const isFav = res.favorites && res.favorites.includes(`heritage:${heritageId}`);
+                    btn.innerHTML = isFav ? '<i class="fas fa-bookmark"></i> Đã lưu' : '<i class="far fa-bookmark"></i> Yêu thích';
+                    btn.classList.toggle('btn-primary', isFav);
+                    btn.classList.toggle('btn-outline-primary', !isFav);
+                  })
+                  .catch(err => console.error('Bookmark error', err));
+              });
+            })
+            .catch(err => console.error('User fetch error', err));
+        }
     } else {
         document.getElementById('detail-content').innerHTML = `
             <div class="text-center py-5">
@@ -238,5 +276,6 @@
         `;
     }
 </script>
+<script src="../JS/navbar-auth.js"></script>
 </body>
 </html>

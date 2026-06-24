@@ -1062,6 +1062,11 @@ intangibleBtn.addEventListener('click', () => {
 });
 
 saveItineraryBtn.addEventListener('click', async () => {
+  // Yêu cầu đăng nhập trước khi lưu
+  if (!isAuthenticated()) {
+    requireLogin('lưu lịch trình');
+    return;
+  }
   if (itinerary.length === 0) {
     alert('Vui lòng thêm điểm vào hành trình trước!');
     return;

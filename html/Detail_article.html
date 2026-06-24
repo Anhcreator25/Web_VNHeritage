@@ -221,11 +221,20 @@
 // ====== GET ID FROM URL ======
     const urlParams = new URLSearchParams(window.location.search);
     const articleId = urlParams.get('id');
-    const ADMIN_SECRET = "super-secret-admin";
+const ADMIN_SECRET = "super-secret-admin";
     const adminSecret = urlParams.get('adminSecret') || '';
     const isAdmin = adminSecret === ADMIN_SECRET;
+    // Detect logged‑in user
+    const token = localStorage.getItem('token');
+    if (token) {
+      // Ẩn trường tên và email khi đã đăng nhập
+      const authorGroup = document.getElementById('comment-author').parentElement;
+      const emailGroup = document.getElementById('comment-email').parentElement;
+      if (authorGroup) authorGroup.style.display = 'none';
+      if (emailGroup) emailGroup.style.display = 'none';
+    }
 
-// ====== FETCH DATA FROM SERVER ======
+  // ====== FETCH DATA FROM SERVER ======
     fetch('http://localhost:5000/api/articles')
         .then(res => res.json())
         .then(data => {
@@ -239,6 +248,7 @@
                     <div class="article-header">
                         <div class="d-flex justify-content-between align-items-start gap-3">
                             <h1 class="mb-0">${article.title}</h1>
+                            <button id="bookmark-btn" class="btn btn-outline-primary btn-sm"><i class="far fa-bookmark"></i> Yêu thích</button>
                             <a href="Article.html" class="btn btn-back rounded-pill"><i class="fas fa-arrow-left"></i> Quay lại</a>
                         </div>
                     </div>
@@ -312,34 +322,60 @@
             .catch(err => console.error('Error loading comments', err));
     }
 
-    function postComment() {
+function postComment() {
+        const token = localStorage.getItem('token');
+        // Nếu chưa đăng nhập, yêu cầu đăng nhập
+        if (!token) {
+            requireLogin('đăng bình luận');
+            return;
+        }
         const author = document.getElementById('comment-author').value.trim();
-        const email = document.getElementById('comment-email').value.trim();
         const content = document.getElementById('comment-input').value.trim();
-        if (!email) { alert('Email là bắt buộc'); return; }
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/u.test(email)) { alert('Email không hợp lệ'); return; }
         if (!content) return;
-        const headers = { 'Content-Type': 'application/json' };
+        const headers = { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token };
         if (isAdmin && adminSecret) {
             headers['X-Admin-Secret'] = adminSecret;
         }
+        // Không gửi email vì đã có trong token
         fetch(`http://localhost:5000/api/articles/${articleId}/comments`, {
             method: 'POST',
             headers,
-            body: JSON.stringify({ author, email, content })
+            body: JSON.stringify({ author, content })
         })
-            .then(r => r.json())
-            .then(() => {
+        .then(r => r.json())
+        .then(() => {
+            // Xóa nội dung input (author chỉ nếu tồn tại)
+            if (document.getElementById('comment-author')) {
                 document.getElementById('comment-author').value = '';
-                document.getElementById('comment-email').value = '';
-                document.getElementById('comment-input').value = '';
-                loadComments();
-            })
-            .catch(err => console.error('Error posting comment', err));
+            }
+            document.getElementById('comment-input').value = '';
+            loadComments();
+        })
+        .catch(err => console.error('Error posting comment', err));
     }
 
     document.getElementById('comment-submit').addEventListener('click', postComment);
 
 </script>
+<!-- Login prompt modal -->
+<div class="modal fade" id="loginPromptModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Bạn cần đăng nhập</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Để <span id="login-action-text"></span>, bạn phải <strong>đăng nhập</strong> tài khoản.
+      </div>
+      <div class="modal-footer">
+        <a href="Login.html" class="btn btn-primary">Đăng nhập ngay</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="../JS/common-auth.js"></script>
+<script src="../JS/navbar-auth.js"></script>
 </body>
 </html>
