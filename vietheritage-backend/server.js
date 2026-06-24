@@ -92,18 +92,33 @@ app.post("/api/articles/:id/comments", async (req, res) => {
   const { author, email, content } = req.body;
   console.log('POST comment body:', req.body);
 
-   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/u.test(email.trim())) {
-      return res.status(400).json({ error: "Email hợp lệ là bắt buộc" });
+  // Determine email: if JWT token provided, use authenticated user's email
+  let finalEmail = email?.trim();
+  const authHeader = req.headers.authorization;
+  if (authHeader) {
+    const token = authHeader.split(' ')[1];
+    try {
+      const payload = jwt.verify(token, JWT_SECRET);
+      const user = await User.findById(payload.id).select('email');
+      if (user) finalEmail = user.email;
+    } catch (e) {
+      // ignore token errors, fallback to provided email
     }
-    if (!content || !content.trim()) {
-      return res.status(400).json({ error: "Nội dung bình luận không được để trống" });
-    }
+  }
+
+  // Validate email and content
+  if (!finalEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/u.test(finalEmail)) {
+    return res.status(400).json({ error: "Email hợp lệ là bắt buộc" });
+  }
+  if (!content || !content.trim()) {
+    return res.status(400).json({ error: "Nội dung bình luận không được để trống" });
+  }
 
   try {
     const comment = await ArticleComment.create({
       articleId,
       author: author?.trim() || null,
-      email: email.trim(),
+      email: finalEmail,
       content: content.trim(),
       createdAt: new Date(),
     });
